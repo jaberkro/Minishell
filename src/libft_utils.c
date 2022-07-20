@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 16:11:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/19 18:38:03 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/20 16:31:20 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,3 +96,43 @@ void	*ft_calloc(size_t count, size_t size)
 	ft_memset(out, 0, size * count);
 	return (out);
 }
+
+char	*ft_strdup(const char *s1)
+{
+	char	*out;
+	int		len;
+
+	len = ft_strlen(s1);
+	out = malloc(len + 1);
+	if (out == NULL)
+		return (NULL);
+	ft_strlcpy(out, s1, len + 1);
+	return (out);
+}
+
+void	ft_bzero(void *s, size_t n)
+{
+	if (n != 0)
+		ft_memset(s, '\0', n);
+}
+
+// int	ft_putnbr_fd(int n, int fd)
+// {
+// 	if (n == -2147483648)
+// 		ft_putstr_fd("-2147483648", fd);
+// 	else if (n == 0)
+// 		return (ft_putchar_fd('0', fd));
+// 	else if (n < 0)
+// 	{
+// 		ft_putchar_fd('-', fd);
+// 		ft_putnbr_fd(-n, fd);
+// 	}
+// 	else if (n > 9)
+// 	{
+// 		ft_putnbr_fd(n / 10, fd);
+// 		ft_putchar_fd((n % 10) + 48, fd);
+// 	}
+// 	else if (n >= 0)
+// 		ft_putchar_fd((n % 10) + 48, fd);
+// 	return (ft_intlen(n));
+// }

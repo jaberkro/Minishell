@@ -6,28 +6,30 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/20 10:33:05 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/20 17:35:37 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include <string.h>
-
-char	**g_env_variables;
+# include <stdio.h>
 
 /*
-	t_part stores information about one part of the user input
-	@str contains one part of the input sentence. 
-	@ls contains the left border sign of this part.
-	@rs contains the right border sign of this part.
-	Possible borders: | < > [ ] 0
+	t_part stores information about one part of the user input seperated by pipes
+	@in contains the name of the inputfile. 
+	@cmd contains the commands to be executed. 
+	@out contains the name of the outputfile. 
+	@in_r shows the sign before the infile. < or [
+	@out_r shows the sign before the outfile. > or ]
 */
 typedef struct s_part
 {
-	char	*str;
-	char	lb;
-	char	rb;
+	char	*in;
+	char	*cmd;
+	char	*out;
+	char	in_r;
+	char	out_r;
 }	t_part;
 
 void	error_exit(char *message, int exit_code);
@@ -46,5 +48,8 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 void	*ft_memset(void	*b, int c, size_t len);
 void	*ft_calloc(size_t count, size_t size);
 char	**ft_split(char const *s, char c);
+char	*ft_strdup(const char *s1);
+void	ft_bzero(void *s, size_t n);
+int	ft_putnbr_fd(int n, int fd);
 
 #endif

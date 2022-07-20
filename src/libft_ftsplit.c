@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 18:34:05 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/19 18:39:31 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/20 16:51:56 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ static int	count_words(char const *s, char c)
 			last = 0;
 		s++;
 	}
+	// printf("words: %d\n", words);
 	return (words);
 }
 

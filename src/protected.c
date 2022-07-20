@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 17:25:30 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/19 17:44:04 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/20 10:32:54 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,14 @@ void	protected_dup2s(int writefd, int readfd)
 		error_exit("Dup2 failed", 1);
 	if (dup2(readfd, STDIN_FILENO) < 0)
 		error_exit("Dup2 failed", 1);
+}
+
+char	**protected_split(char *to_split, char delimiter)
+{
+	char	**output;
+
+	output = ft_split(to_split, delimiter);
+	if (output == NULL)
+		error_exit("Malloc failed", 1);
+	return (output);
 }
