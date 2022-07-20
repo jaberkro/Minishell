@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/19 18:39:05 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/20 10:33:05 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int		executer(int i, int max, int readfd, t_part *parts);
 void	protected_pipe(int fd[2]);
 int		protected_fork(void);
 void	protected_dup2s(int writefd, int readfd);
+char	**protected_split(char *to_split, char delimiter);
 
 //libft functions:
 size_t	ft_strlen(const char *s);
