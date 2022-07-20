@@ -6,7 +6,7 @@
 #    By: jaberkro <jaberkro@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/07/19 13:50:27 by jaberkro      ########   odam.nl          #
+#    Updated: 2022/07/19 18:37:32 by jaberkro      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,11 @@ INC = -I ./include
 SRC_DIR = src
 BUILD_DIR = obj
 
-SRC =	$(SRC_DIR)/main.c
+SRC =	$(SRC_DIR)/main.c \
+		$(SRC_DIR)/executer.c \
+		$(SRC_DIR)/protected.c \
+		$(SRC_DIR)/libft_utils.c \
+		$(SRC_DIR)/libft_ftsplit.c
 OBJ = $(subst $(SRC_DIR), $(BUILD_DIR), $(SRC:.c=.o))
 
 # COLORS
