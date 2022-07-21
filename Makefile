@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME = minishell
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -lreadline
 INC = -I ./libft -I ./include
 
 LIBFT_DIR = libft/
@@ -37,7 +37,7 @@ $(BUILD_DIR):
 	mkdir $(BUILD_DIR)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	CC $(FLAGS) $(INC) -c $^ -o $@
+	CC $(FLAGS) $(INC) $^ -o $@
 
 $(NAME): $(LIBFT) $(OBJ)
 	cp $(LIBFT) ./$(NAME)
