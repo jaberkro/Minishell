@@ -6,13 +6,16 @@
 #    By: jaberkro <jaberkro@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/07/19 13:50:27 by jaberkro      ########   odam.nl          #
+#    Updated: 2022/07/21 15:10:25 by jaberkro      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 FLAGS = -Wall -Wextra -Werror
-INC = -I ./include
+INC = -I ./libft -I ./include
+
+LIBFT_DIR = libft/
+LIBFT = libft/libft.a
 
 SRC_DIR = src
 BUILD_DIR = obj
@@ -36,12 +39,17 @@ $(BUILD_DIR):
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	CC $(FLAGS) $(INC) -c $^ -o $@
 
-$(NAME): $(OBJ)
-	CC $(FLAGS) $(OBJ) $(INC) -o $(NAME)
+$(NAME): $(LIBFT) $(OBJ)
+	cp $(LIBFT) ./$(NAME)
+	CC $(FLAGS) $(OBJ) $(LIBFT) $(INC) -o $(NAME)
 	@echo "$(RED)Done $(GREEN)COM$(YELLOW)PI$(BLUE)LING $(PINK)MINISHELL$(RESET):)"
 
+$(LIBFT):
+	$(MAKE) bonus -C $(LIBFT_DIR)
+	
 clean:
 	rm -rf $(BUILD_DIR)
+	$(MAKE) fclean -C $(LIBFT_DIR)
 	@echo "$(RED)Done $(GREEN)CLEANING$(YELLOW) MINISHELL$(PINK) :)$(RESET)"
 
 fclean: clean
