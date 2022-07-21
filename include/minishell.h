@@ -6,20 +6,20 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/21 15:35:30 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/07/21 15:37:59 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stddef.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include "libft.h"
+# include <stdlib.h>
+# include <unistd.h>
+# include <stdio.h>
+# include <stddef.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include "libft.h"
 
 /*
 	t_part stores information about one part of the user input seperated by pipes
