@@ -6,12 +6,12 @@
 #    By: jaberkro <jaberkro@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/07/19 13:50:27 by jaberkro      ########   odam.nl          #
+#    Updated: 2022/07/21 15:16:59 by bsomers       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -lreadline
 INC = -I ./include
 
 SRC_DIR = src
@@ -34,7 +34,7 @@ $(BUILD_DIR):
 	mkdir $(BUILD_DIR)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	CC $(FLAGS) $(INC) -c $^ -o $@
+	CC $(FLAGS) $(INC) $^ -o $@
 
 $(NAME): $(OBJ)
 	CC $(FLAGS) $(OBJ) $(INC) -o $(NAME)
