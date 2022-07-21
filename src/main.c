@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:52:29 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/20 18:36:46 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/21 13:31:26 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,52 +64,65 @@ t_part	part_maker(int i, int max)
 	part.in_r = '\0';
 	part.out_r = '\0';
 
-	
+	// part.cmd = ft_strdup("cat");
+	// part.out = ft_strdup("out3");
+
+	//JORIEN
+	max = 0;
+	r = 0;
 	// command
-	r = rand() % 3;
-	if (r == 0)
-		part.cmd = ft_strdup("cat");
-	else if (r == 1)
+	// r = rand() % 5;
+	// if (r == 0)
+	// 	part.cmd = ft_strdup("grep s");
+	// else if (r == 1)
+	// 	part.cmd = ft_strdup("grep e");
+	// else 
+	// 	part.cmd = ft_strdup("cat");
+	if (i == 0 || i == 2)
+	{
 		part.cmd = ft_strdup("ls");
-	else 
-		part.cmd = ft_strdup("grep e");
+	}
+	else if (i == 1)
+	{
+		part.cmd = ft_strdup("sleep 10");
+	}
 	// printf("cmd: |%s|\n", part.cmd);
 
-	//in_r
-	if (i == 0 || i == max % 4)
-	{
-		// infile
-		r = rand() % 3;
-		if (r == 0)
-			part.in = ft_strdup("in1");
-		else if (r == 1)
-			part.in = ft_strdup("in2");
-		else if (r == 2)
-			part.in = ft_strdup("in3");
-		part.in_r = '<';
-	// 	// printf("in: |%s|\n", part.in);
-	}
+	// //in_r
+	// if (i == 0 || i == max % 4)
+	// {
+	// 	// infile
+	// 	r = rand() % 3;
+	// 	if (r == 0)
+	// 		part.in = ft_strdup("in1");
+	// 	else if (r == 1)
+	// 		part.in = ft_strdup("in2");
+	// 	else if (r == 2)
+	// 		part.in = ft_strdup("in3");
+	// 	part.in_r = '<';
+	// // 	// printf("in: |%s|\n", part.in);
+	// }
 
-	// //out_r
-	if (i == max - 1 || i == max % 5)
-	{
-		//outfile
-		r = rand() % 6;
-		if (r == 0)
-			part.out = ft_strdup("out1");
-		else if (r == 1)
-			part.out = ft_strdup("out2");
-		else if (r == 2)
-			part.out = ft_strdup("out3");
-		else if (r == 3)
-			part.out = ft_strdup("out4");
-		else if (r == 4)
-			part.out = ft_strdup("out5");
-		else if (r == 5)
-			part.out = ft_strdup("out6");
-		// printf("out: |%s|\n", part.out);
-		part.out_r = '>';
-	}
+	//out_r
+	// if ( i == max % 5)
+	// {
+	// 	//outfile
+	// 	r = rand() % 6;
+	// 	if (r == 0)
+	// 		part.out = ft_strdup("out1");
+	// 	else if (r == 1)
+	// 		part.out = ft_strdup("out2");
+	// 	else if (r == 2)
+	// 		part.out = ft_strdup("out3");
+	// 	else if (r == 3)
+	// 		part.out = ft_strdup("out4");
+	// 	else if (r == 4)
+	// 		part.out = ft_strdup("out5");
+	// 	else if (r == 5)
+	// 		part.out = ft_strdup("out6");
+	// 	// printf("out: |%s|\n", part.out);
+	// 	part.out_r = '>';
+	// }
 	return (part);
 }
 
@@ -120,8 +133,9 @@ int	main()
 	int		pipes;
 	int		pid;
 	int		status;
+	int		save_in;
 
-	pipes = 7;
+	pipes = 3;
 	i = 0;
 	parts = malloc ((pipes + 1) * sizeof(t_part));
 	while (i < pipes)
@@ -137,8 +151,14 @@ int	main()
 	printf("_____________________________\n");
 	print_parts(parts, pipes);
 	printf("_____________________________\n");
-	pid = executer(0, pipes, -1, parts);
+	save_in = dup(STDIN_FILENO);
+	pid = executer(0, pipes, save_in, parts);
 	waitpid(pid, &status, 0);
+	i = 1;
+	while (i < pipes)
+	{
+		wait(NULL);
+		i++;
+	}
 	exit(WEXITSTATUS(status));
-
 }

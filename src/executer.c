@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/20 18:34:02 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/21 13:15:42 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,10 @@ int	update_readfd(int i, int readfd, t_part *parts)
 	return (readfd);
 }
 
-int	update_writefd(int i, int writefd, t_part *parts)
+int	update_writefd(int i, int max, int writefd, t_part *parts)
 {
+	int	save_out;
+
 	if (parts[i].out_r == '>' || parts[i].out_r == ']')
 	{
 		if (parts[i].out_r == '>')
@@ -60,55 +62,12 @@ int	update_writefd(int i, int writefd, t_part *parts)
 		if (writefd < 0)
 			error_exit(parts[i].out, 1);
 	}
-	// else
-	// 	writefd = 1;
-	return (writefd);
-}
-
-static char	*make_path(char *path)
-{
-	char	*command;
-	char	*tmp;
-
-	command = ft_strdup(path);
-	if (command == NULL)
-		error_exit("Malloc failed", 1);
-	tmp = command;
-	command = ft_strjoin(command, "/");
-	free(tmp);
-	if (command == NULL)
-		error_exit("Malloc failed", 1);
-	return (command);
-}
-
-char	*command_in_paths(char	*argument, char **paths)
-{
-	int		i;
-	char	*command;
-	char	*tmp;
-
-	i = 0;
-	if (access(argument, X_OK) != -1)
-		return (argument);
-	if (!paths)
-		write_exit_argument(argument, ": No such file or directory\n", 127);
-	if (!argument)
-		write_exit(": command not found\n", 127);
-	while (paths && paths[i])
+	else if (i == max - 1)
 	{
-		command = make_path(paths[i]);
-		tmp = command;
-		command = ft_strjoin(command, argument);
-		free(tmp);
-		if (command == NULL)
-			error_exit("Malloc failed", 1);
-		if (access(command, X_OK) != -1)
-			return (command);
-		free(command);
-		i++;
+		save_out = dup(STDOUT_FILENO);
+		writefd = save_out;
 	}
-	write_exit_argument(argument, ": command not found\n", 127);
-	return (NULL);
+	return (writefd);
 }
 
 int	executer(int i, int max, int readfd, t_part *parts)
@@ -117,13 +76,12 @@ int	executer(int i, int max, int readfd, t_part *parts)
 	int		pid;
 	char	*path;
 
-	printf("%d\n", i);
 	protected_pipe(fd);
 	pid = protected_fork();
 	if (pid == 0)
 	{
 		readfd = update_readfd(i, readfd, parts);
-		fd[1] = update_writefd(i, fd[1], parts);
+		fd[1] = update_writefd(i, max, fd[1], parts);
 		path = command_in_paths(protected_split(parts[i].cmd, ' ')[0], protected_split("/Users/jaberkro/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:/usr/local/munki:~/.dotnet/tools:/Users/jaberkro/.brew/bin", ':'));
 		protected_dup2s(fd[1], readfd);
 		close(readfd);
