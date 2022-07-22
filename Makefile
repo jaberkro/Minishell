@@ -6,7 +6,7 @@
 #    By: jaberkro <jaberkro@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/07/22 15:43:31 by jaberkro      ########   odam.nl          #
+#    Updated: 2022/07/22 15:46:18 by jaberkro      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,8 +21,7 @@ LIBFT = libft/libft.a
 SRC_DIR = src
 BUILD_DIR = obj
 
-SRC = 	$(SRC_DIR)/main.c \
-		$(SRC_DIR)/global.c \
+SRC = 	$(SRC_DIR)/global.c \
 		$(SRC_DIR)/executer.c \
 		$(SRC_DIR)/protected.c \
 		$(SRC_DIR)/path.c \
