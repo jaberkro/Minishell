@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/07/22 15:33:02 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/07/22 17:07:44 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	assign_parts(t_part *part, char *str)
 		//printf("Str to be checked: %s\n", str);
 		if (str[i] == '>' && str[i + 1] != '>' && str[i - 1] != '>')//dus woord hierna is outfile
 		{
-			part->in_r = '>';
+			part->out_r = '>';
 			str[i] = ' ';
 			while (ft_isspace(str[i]) != 0)
 				i++;
@@ -75,7 +75,7 @@ void	assign_parts(t_part *part, char *str)
 		}
 		else if (str[i] == '>' && str[i + 1] == '>') //dus woord hierna is outfile
 		{
-			part->in_r = ']';
+			part->out_r = ']';
 			str[i] = ' ';
 			str[i + 1] = ' ';
 			while (ft_isspace(str[i]) != 0)
@@ -87,7 +87,7 @@ void	assign_parts(t_part *part, char *str)
 		}
 		else if (str[i] == '<' && str[i + 1] != '<' && str[i - 1] != '<')//dus woord hierna is infile
 		{
-			part->out_r = '<';
+			part->in_r = '<';
 			str[i] = ' ';
 			while (ft_isspace(str[i]) != 0)
 				i++;
@@ -98,7 +98,7 @@ void	assign_parts(t_part *part, char *str)
 		}
 		else if (str[i] == '<' && str[i + 1] == '<') //Bij heredoc <<, dus woord hierna is stopwoord
 		{
-			part->out_r = '[';
+			part->in_r = '[';
 			str[i] = ' ';
 			str[i + 1] = ' ';
 			while (ft_isspace(str[i]) != 0)
