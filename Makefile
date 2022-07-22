@@ -6,7 +6,7 @@
 #    By: jaberkro <jaberkro@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/07/22 15:46:18 by jaberkro      ########   odam.nl          #
+#    Updated: 2022/07/22 17:21:10 by bsomers       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,8 +25,6 @@ SRC = 	$(SRC_DIR)/global.c \
 		$(SRC_DIR)/executer.c \
 		$(SRC_DIR)/protected.c \
 		$(SRC_DIR)/path.c \
-		$(SRC_DIR)/libft_utils.c \
-		$(SRC_DIR)/libft_ftsplit.c \
 		$(SRC_DIR)/parse.c \
 		$(SRC_DIR)/parse_utils.c \
 		$(SRC_DIR)/builtin.c

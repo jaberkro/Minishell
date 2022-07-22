@@ -6,11 +6,12 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 17:25:30 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/20 10:32:54 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/22 17:19:28 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "libft.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
