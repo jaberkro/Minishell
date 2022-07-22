@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 13:04:24 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/22 13:15:20 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/22 14:03:10 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,18 @@ char	*command_in_paths(char	*argument, char **paths)
 	}
 	write_exit_argument(argument, ": command not found\n", 127);
 	return (NULL);
+}
+
+char	**get_paths(void)
+{
+	int		i;
+	char	**splitted_paths;
+	char	*paths;
+
+	i = 0;
+	paths = get_env_variable("PATH=");
+	if (!paths)
+		return (NULL);
+	splitted_paths = protected_split(paths, ':');
+	return (splitted_paths);
 }

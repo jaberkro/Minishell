@@ -6,21 +6,21 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/22 13:32:43 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/22 14:42:03 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-# include <string.h>
-# include <stdio.h>
+// # include <string.h>
+// # include <stdio.h>
 
-# include <stdlib.h>
-# include <unistd.h>
-# include <stddef.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include "libft.h"
+// # include <stdlib.h>
+// # include <unistd.h>
+// # include <stddef.h>
+// # include <readline/readline.h>
+// # include <readline/history.h>
+// # include "libft.h"
 
 typedef struct s_env_info
 {
@@ -48,7 +48,13 @@ typedef struct s_part
 }	t_part;
 
 char	*readline(const char *prompt);
-void	create_global(char **env);
+void	init_global(char **env);
+char	*get_env_variable(char *to_find);
+int		set_env_variable(char *variable);
+char	**get_paths(void);
+
+// builtin functions
+void	execute_pwd(void);
 
 //executer functions
 void	error_exit(char *message, int exit_code);
