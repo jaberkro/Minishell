@@ -6,7 +6,7 @@
 #    By: jaberkro <jaberkro@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/07/22 15:39:09 by bsomers       ########   odam.nl          #
+#    Updated: 2022/07/22 15:43:31 by jaberkro      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,14 +21,16 @@ LIBFT = libft/libft.a
 SRC_DIR = src
 BUILD_DIR = obj
 
-SRC =	$(SRC_DIR)/main.c \
+SRC = 	$(SRC_DIR)/main.c \
+		$(SRC_DIR)/global.c \
 		$(SRC_DIR)/executer.c \
 		$(SRC_DIR)/protected.c \
 		$(SRC_DIR)/path.c \
 		$(SRC_DIR)/libft_utils.c \
 		$(SRC_DIR)/libft_ftsplit.c \
 		$(SRC_DIR)/parse.c \
-		$(SRC_DIR)/parse_utils.c
+		$(SRC_DIR)/parse_utils.c \
+		$(SRC_DIR)/builtin.c
 OBJ = $(subst $(SRC_DIR), $(BUILD_DIR), $(SRC:.c=.o))
 
 # COLORS
