@@ -6,13 +6,13 @@
 #    By: jaberkro <jaberkro@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/07/22 13:26:30 by jaberkro      ########   odam.nl          #
+#    Updated: 2022/07/22 15:39:09 by bsomers       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
-FLAGS = -Wall -Wextra -Werror
-LDFLAGS = -L /Users/$(USER)/.brew/opt/readline/lib -lreadline
+FLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
+LDFLAGS = -L /Users/$(USER)/.brew/opt/readline/lib -lreadline -g3 -fsanitize=address
 INC = -I ./libft -I ./include -I/Users/$(USER)/.brew/opt/readline/include
 
 LIBFT_DIR = libft/
@@ -26,7 +26,9 @@ SRC =	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/protected.c \
 		$(SRC_DIR)/path.c \
 		$(SRC_DIR)/libft_utils.c \
-		$(SRC_DIR)/libft_ftsplit.c
+		$(SRC_DIR)/libft_ftsplit.c \
+		$(SRC_DIR)/parse.c \
+		$(SRC_DIR)/parse_utils.c
 OBJ = $(subst $(SRC_DIR), $(BUILD_DIR), $(SRC:.c=.o))
 
 # COLORS
