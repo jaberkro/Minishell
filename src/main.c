@@ -6,11 +6,18 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 15:10:44 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/21 15:11:26 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/22 13:08:59 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	main(void)
+#include "minishell.h"
+#include <stdio.h>
+
+int	main(int argc, char **argv, char **env)
 {
+	argc++;
+	(void)argv;
+	create_global(env);
+	printf("%s\n", g_info.env[0]);
 	return (0);
 }
