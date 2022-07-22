@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/22 18:57:03 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/22 19:12:51 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,50 @@
 #include "libft.h"
 #include <stdio.h>
 
-void	execute_export(char *command)
+void	execute_history(void)
 {
-	if (!command)
-		//show sorted list
-	if (ft_strchr(command, '='))
-	{
-		if (!set_env_variable(command))
-			exit(1);
-	}
+	printf("showing history...\n");
 	exit(0);
 }
 
-int	find_builtin_function(char *command, int max)
+void	execute_exit(void)
+{
+	printf("exiting...\n");
+	exit(0);
+}
+
+void	execute_unset(char *command)
+{
+	printf("unsetting %s...\n", command);
+	exit(0);
+}
+
+void	execute_export(char *command, int max)
+{
+	if (ft_strchr(command, '=') && max == 1)
+		printf("Exporting %s...\n", command);
+	exit(0);
+}
+
+void	execute_cd(char *command)
+{
+	printf("changing to directory %s...\n", command);
+	exit(0);
+}
+
+void	find_builtin_function(char *command, int max)
 {
 	char	*first_command;
 
 	first_command = protected_split(command, ' ')[0];
 	if (ft_strncmp(first_command, "cd", 3) == 0)
-		return (1);
-	if (ft_strncmp(first_command, "export", 3) == 0 && max == 1)
-		execute_export(protected_split(command, ' ')[1]);
+		execute_cd(protected_split(command, ' ')[1]);
+	if (ft_strncmp(first_command, "export", 3) == 0)
+		execute_export(protected_split(command, ' ')[1], max);
 	if (ft_strncmp(first_command, "unset", 3) == 0)
-		return (3);
+		execute_unset(protected_split(command, ' ')[1]);
 	if (ft_strncmp(first_command, "exit", 3) == 0)
-		return (4);
+		execute_exit();
 	if (ft_strncmp(first_command, "history", 3) == 0)
-		return (5);
-	return (0);
+		execute_history();
 }
-
-// void	execute_pwd(void)
-// {
-// 	printf("%s\n", get_env_variable("PWD="));
-// }
