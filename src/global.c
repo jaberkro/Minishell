@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 12:54:31 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/22 15:25:30 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/22 18:23:20 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	set_env_variable(char *variable)
 	if (!g_info.env[i])
 	{
 		tmp = g_info.env;
-		g_info.env = malloc((i + 1) * sizeof(char *));
+		g_info.env = malloc((i + 2) * sizeof(char *));
 		if (g_info.env == NULL)
 			return (0);
 		while (j < i)
@@ -55,6 +55,7 @@ int	set_env_variable(char *variable)
 		}
 		g_info.env[j] = variable;
 		g_info.env[j + 1] = NULL;
+		free (tmp);
 	}
 	else
 	{
@@ -63,8 +64,30 @@ int	set_env_variable(char *variable)
 	return (1);
 }
 
+int	init_env_variables(char **env)
+{
+	int	i;
+	int	len;
+
+	i = 0;
+	len = 0;
+	while (env[len])
+		len++;
+	g_info.env = malloc((len + 1) * sizeof(char *));
+	if (g_info.env == NULL)
+		return (0);
+	while (i < len)
+	{
+		g_info.env[i] = env[i];
+		i++;
+	}
+	g_info.env[i] = NULL;
+	return (1);
+}
+
 void	init_global(char **env)
 {
-	g_info.env = env;
+	if (!init_env_variables(env))
+		printf("MALLOC FAILED\n"); // uitwerken
 	g_info.paths = get_paths();
 }
