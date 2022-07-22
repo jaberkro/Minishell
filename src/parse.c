@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/07/20 16:14:03 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/07/21 16:44:10 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,16 +90,48 @@ char	set_b(char *str)
 		return(str[0]);
 }
 
-void	make_parts(t_part *part, char *str)
+void	make_parts_cmd(t_part *part, char *str)
 {
-	if (ft_strncmp(str, "<\0", 2) == 0)
-		part->out_r = '<';
-	else if (ft_strncmp(str, ">\0", 2) == 0)
-		part->in_r = '>';
-	else if (ft_strncmp(str, "<<\0", 3) == 0)
-		part->out_r = '[';
-	else if (ft_strncmp(str, ">>\0", 3) == 0)
-		part->in_r = ']';
+
+}
+
+void	make_parts_file(t_part *part, char *str)
+{
+	int	i;
+
+	i = 0;
+	while (i < (ft_strlen(str)))
+	{
+		//HIERRRRRR
+		if (ft_strncmp(str[i], "<", 1) == 0)
+			part->out_r = '<';
+		else if (ft_strncmp(str[i], ">", 1) == 0)
+			part->in_r = '>';
+		else if (ft_strncmp((str[i] + str[i+1]), "<<", 2) == 0)
+			part->out_r = '[';
+		else if (ft_strncmp((str[i] + str[i+1]), ">>", 2) == 0)
+			part->in_r = ']';
+		i++;
+	}
+}
+
+void	make_parts_r(t_part *part, char *str)
+{
+	int	i;
+
+	i = 0;
+	while (i < (ft_strlen(str)))
+	{
+		if (ft_strncmp(str[i], "<", 1) == 0)
+			part->out_r = '<';
+		else if (ft_strncmp(str[i], ">", 1) == 0)
+			part->in_r = '>';
+		else if (ft_strncmp((str[i] + str[i+1]), "<<", 2) == 0)
+			part->out_r = '[';
+		else if (ft_strncmp((str[i] + str[i+1]), ">>", 2) == 0)
+			part->in_r = ']';
+		i++;
+	}
 }
 
 void	set_zero_parts(t_part *part)
@@ -129,7 +161,10 @@ void	exec_minishell(char *input)
 	while (i < (count_pipe + 1))
 	{
 		set_zero_parts(parts[i]);
-		make_parts(parts[i], input_split[i]);
+		make_parts_r(parts[i], input_split[i]);
+		///HIERONDER
+		make_parts_cmd(parts[i], input_split[i]);
+		make_parts_file(parts[i], input_split[i]);
 		i++;
 	}
 	i = 0;
