@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/21 15:35:08 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/22 13:10:35 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,14 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft.h"
+
+typedef struct s_env_info
+{
+	char	**env;
+	char	**paths;
+}	t_env_info;
+
+t_env_info	g_info;
 
 /*
 	t_part stores information about one part of the user input seperated by pipes
@@ -38,6 +46,7 @@ typedef struct s_part
 	char	out_r;
 }	t_part;
 
-char *readline (const char *prompt);
+char	*readline(const char *prompt);
+void	create_global(char **env);
 
 #endif
