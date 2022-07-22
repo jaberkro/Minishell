@@ -6,13 +6,14 @@
 #    By: jaberkro <jaberkro@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/07/21 15:30:05 by bsomers       ########   odam.nl          #
+#    Updated: 2022/07/22 12:24:51 by bsomers       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
-FLAGS = -Wall -Wextra -Werror -lreadline
-INC = -I ./libft -I ./include
+FLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
+LDFLAGS = -L /Users/$(USER)/.brew/opt/readline/lib -lreadline -g3 -fsanitize=address
+INC = -I ./libft -I ./include -I/Users/$(USER)/.brew/opt/readline/include
 
 LIBFT_DIR = libft/
 LIBFT = libft/libft.a
@@ -20,7 +21,8 @@ LIBFT = libft/libft.a
 SRC_DIR = src
 BUILD_DIR = obj
 
-SRC =	$(SRC_DIR)/parse.c
+SRC = 	$(SRC_DIR)/parse.c \
+		$(SRC_DIR)/parse_utils.c
 OBJ = $(subst $(SRC_DIR), $(BUILD_DIR), $(SRC:.c=.o))
 
 # COLORS
@@ -37,16 +39,19 @@ $(BUILD_DIR):
 	mkdir $(BUILD_DIR)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	CC $(FLAGS) $(INC) $^ -o $@
+	CC $(FLAGS) $(INC) -c $^ -o $@
 
-$(NAME): $(LIBFT) $(OBJ)
+$(NAME): $(LIBFT) $(OBJ) 
 	cp $(LIBFT) ./$(NAME)
-	CC $(FLAGS) $(OBJ) $(LIBFT) $(INC) -o $(NAME)
+	CC $(LDFLAGS) $(OBJ) $(LIBFT) $(INC) -o $(NAME)
 	@echo "$(RED)Done $(GREEN)COM$(YELLOW)PI$(BLUE)LING $(PINK)MINISHELL$(RESET):)"
 
 $(LIBFT):
 	$(MAKE) bonus -C $(LIBFT_DIR)
-	
+
+run: $(NAME)
+	@./$(NAME)
+
 clean:
 	rm -rf $(BUILD_DIR)
 	$(MAKE) fclean -C $(LIBFT_DIR)
