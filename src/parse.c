@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/07/22 15:33:02 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/07/22 17:04:16 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <sys/wait.h>
 
 void	print_info(t_part *parts)
 {
@@ -32,7 +33,7 @@ void	print_info(t_part *parts)
 int	count_pipes(char *str)
 {
 	int	i;
-	int j;
+	int	j;
 
 	i = 0;
 	j = 0;
@@ -63,7 +64,7 @@ void	assign_parts(t_part *part, char *str)
 		//printf("Str to be checked: %s\n", str);
 		if (str[i] == '>' && str[i + 1] != '>' && str[i - 1] != '>')//dus woord hierna is outfile
 		{
-			part->in_r = '>';
+			part->out_r = '>';
 			str[i] = ' ';
 			while (ft_isspace(str[i]) != 0)
 				i++;
@@ -75,7 +76,7 @@ void	assign_parts(t_part *part, char *str)
 		}
 		else if (str[i] == '>' && str[i + 1] == '>') //dus woord hierna is outfile
 		{
-			part->in_r = ']';
+			part->out_r = ']';
 			str[i] = ' ';
 			str[i + 1] = ' ';
 			while (ft_isspace(str[i]) != 0)
@@ -87,7 +88,7 @@ void	assign_parts(t_part *part, char *str)
 		}
 		else if (str[i] == '<' && str[i + 1] != '<' && str[i - 1] != '<')//dus woord hierna is infile
 		{
-			part->out_r = '<';
+			part->in_r = '<';
 			str[i] = ' ';
 			while (ft_isspace(str[i]) != 0)
 				i++;
@@ -98,7 +99,7 @@ void	assign_parts(t_part *part, char *str)
 		}
 		else if (str[i] == '<' && str[i + 1] == '<') //Bij heredoc <<, dus woord hierna is stopwoord
 		{
-			part->out_r = '[';
+			part->in_r = '[';
 			str[i] = ' ';
 			str[i + 1] = ' ';
 			while (ft_isspace(str[i]) != 0)
@@ -129,6 +130,8 @@ void	exec_minishell(char *input)
 	char **input_split;
 	t_part *parts;
 	int	fd;
+	int	pid;
+	int status;
 	int	count_pipe;
 	int	i;
 
@@ -146,7 +149,14 @@ void	exec_minishell(char *input)
 		print_info(&parts[i]);
 		i++;
 	}
-	//HIER EXECUTER AANROEPEN: bijv. executer(0, i, fd, parts);
+	pid = executer(0, count_pipe + 1, fd, parts);
+	waitpid(pid, &status, 0);
+	i = 1;
+	while (i < count_pipe + 1)
+	{
+		wait(NULL);
+		i++;
+	}
 }
 
 void	run_minishell()
@@ -167,7 +177,12 @@ void	run_minishell()
 	free (str);
 }
 
-int	main()
+int	main(int argc, char **argv, char **env)
 {
+	//weghalen
+	argc++;
+	(void)argv;
+	// hierboven weghalen
+	init_global(env);
 	run_minishell();
 }
