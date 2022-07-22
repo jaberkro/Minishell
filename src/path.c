@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 13:04:24 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/21 13:14:53 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/22 13:15:20 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*command_in_paths(char	*argument, char **paths)
 			error_exit("Malloc failed", 1);
 		if (access(command, X_OK) != -1)
 			return (command);
-		free(command);
+		free(command); // is this necessary?
 		i++;
 	}
 	write_exit_argument(argument, ": command not found\n", 127);
