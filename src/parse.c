@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/07/22 17:34:12 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/07/28 18:30:27 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,41 @@ int	count_pipes(char *str)
 {
 	int	i;
 	int	j;
+	int	q;
+	int	quotes;
 
 	i = 0;
 	j = 0;
+	q = 0;
+	quotes = 0;
 	while (str[i] != '\0')
 	{
-		if (str[i] == '|')
+        if ((str[i] == 34 || str[i] == 39) && q == 0)
+        {
+			q = 1;
+			quotes++;
+		}
+		else if ((str[i] == 34 || str[i] == 39) && q == 1)
+		{
+			quotes++;
+			q = 0;
+		}
+		if (str[i] == '|' && q == 0)
 		{
 			j++;
 			i++;
 		}
 		else
 			i++;
+	}
+	// printf("i: %d, quotes: %d, j: %d", i, quotes, j);
+	if ((i - quotes) == j + (quotes / 2)) //means there are only pipes on the cmd line.
+	{
+		if (i == 1) //only 1 pipe on cmd line
+			printf("mickeyshell: syntax error near unexpected token `|'\n");
+		else
+			printf("mickeyshell: syntax error near unexpected token `||'\n");
+		return(-1); //hier wel letten op leaks!
 	}
 	return (j);
 }
@@ -61,6 +84,8 @@ void	assign_parts(t_part *part, char *str)
 	len = 0;
 	while (i < ((int)ft_strlen(str)))
 	{
+		if (str[i] == 34 || str[i] == 39)
+			str[i] = ' ';
 		//printf("Str to be checked: %s\n", str);
 		if (str[i] == '>' && str[i + 1] != '>' && (i > 0 && str[i - 1] != '>'))//dus woord hierna is outfile
 		{
@@ -137,8 +162,11 @@ void	exec_minishell(char *input)
 
 	i = 0;
 	fd = dup(0);
-	input_split = ft_split(input, '|'); //REKENING HOUDEN MET PIPE TUSSEN QUOTES
+	input_split = ft_split_pipes(input, '|');
 	count_pipe = count_pipes(input);
+	if (count_pipe < 0)
+		return ;
+	printf("Number of actual pipes: %d\n", count_pipe);
 	parts = malloc((count_pipe + 1) * sizeof(t_part));
 	if (parts == NULL)
 		return ;
@@ -159,6 +187,56 @@ void	exec_minishell(char *input)
 	}
 }
 
+int	check_double_red(char *str)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (str[i] != '\0')
+	{
+		if (ft_isred(str[i]) != 0)
+		{
+			while (ft_isred(str[i]) != 0)
+			{
+				i++;
+				j++;
+			}
+			if (j == 2 && str[0] == '<' && str[1] == '>')
+			{
+				printf("mickeyshell: syntax error near unexpected token 'newline' [strchar: %c]\n", str[i-j+1]);
+				return (-1);
+			}
+			if (j == 3 && (str[i-j+1] == '<'))
+			{
+				printf("mickeyshell: syntax error near unexpected token '<' [strchar: %c]\n", str[i-j+1]);
+				return (-1);
+			}
+			else if (j == 3 && (str[i-j+1] == '>'))
+			{
+				printf("mickeyshell: syntax error near unexpected token '>' [strchar: %c]\n", str[i-j+1]);
+				return (-1);
+			}
+			else if (j > 3 && (str[i-j+1] == '>'))
+			{
+				printf("mickeyshell: syntax error near unexpected token '>>' [strchar: %c]\n", str[i-j+1]);
+				return (-1);
+			}
+			else if (j > 3 && (str[i-j+1] == '<'))
+			{
+				printf("mickeyshell: syntax error near unexpected token '<<' [strchar: %c]\n", str[i-j+1]);
+				return (-1);
+			}
+			else
+				j = 0;
+		}
+		i++;
+	}
+
+	return (0);
+}
+
 void	run_minishell()
 {
 	char *str;
@@ -168,21 +246,25 @@ void	run_minishell()
 	while (cmp != 0)
 	{
 		str = readline("mickeyshell> ");
+		if (ft_isemptyline(str) == 0)
+			run_minishell();
 		cmp = ft_strncmp(str, "exit\0", 5);
 		if (cmp == 0)
 			break ;
+		if (check_double_red(str) < 0)
+		{
+			free(str);
+			run_minishell();
+		}
 		exec_minishell(str);
 		free (str);
 	}
 	free (str);
 }
 
-int	main(int argc, char **argv, char **env)
+int	main()
 {
-	//weghalen
-	argc++;
-	(void)argv;
-	// hierboven weghalen
-	init_global(env);
+	extern char **environ;
+	init_global(environ);
 	run_minishell();
 }
