@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/07/29 11:53:34 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/07/29 17:03:06 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,48 +240,56 @@ int	check_double_red(char *str)
 
 void	sig_handler(int sig)
 {
-	signal(sig, SIG_IGN);
-	write(1, "\n", 1);
-	run_minishell();
+	if (sig == SIGINT)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 }
 
-void	run_minishell()
+void	run_minishell(char *str)
 {
-	char *str;
-	int	cmp;
-
-	cmp = -1;
-	while (cmp != 0)
-	{
-		str = readline("mickeyshell> ");
-		cmp = ft_strncmp(str, "exit\0", 5);
-		if (cmp == 0)
-		{
-			printf("exit\n");
-			return ;
-		}
-		else
-		{
-			signal(SIGINT, sig_handler); //Werkt opeens niet meer? Wat gaat hier mis?
-			signal(SIGQUIT, SIG_IGN);
-		}
-		if (ft_isemptyline(str) == 0)
-			run_minishell();
-		if (check_double_red(str) < 0)
-		{
-			free(str);
-			run_minishell();
-		}
-		exec_minishell(str);
-		free (str);
-	}
-	free (str);
+	signal(SIGQUIT, SIG_IGN);
+	if (ft_isemptyline(str) == 0)
+		return ;
+	if (check_double_red(str) < 0)
+		return ;
+	exec_minishell(str);
 }
 
 int	main()
 {
 	extern char **environ;
+	char *str;
+	int	cmp;
+	struct sigaction	sa;
+
+	rl_catch_signals = 0; //readline now doesn't install default signal handlers :)
+	sa.sa_handler = &sig_handler;
+	cmp = -1;
 	init_global(environ);
-	run_minishell();
+	while (1)
+	{
+		signal(SIGINT, SIG_IGN);
+		sigaction(SIGINT, &sa, NULL);
+		str = readline("minishell> ");
+		if (str == NULL) //which means EOF is encountered (that happens when ctrl-D is pressed)
+		{
+			printf("exit\n");
+			sigaction(SIGQUIT, &sa, NULL);
+			return (0);
+		}
+		cmp = ft_strncmp(str, "exit\0", 5);
+		if (cmp == 0)
+		{
+			printf("exit\n");
+			return (0);
+		}
+		if (str != NULL)
+			run_minishell(str);
+		free (str);
+	}
 	return (0); //Hier exitcode invullen?
 }
