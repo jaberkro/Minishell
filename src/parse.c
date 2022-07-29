@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/07/28 18:30:27 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/07/29 11:53:34 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <sys/wait.h>
+#include <signal.h>
 
 void	print_info(t_part *parts)
 {
@@ -237,6 +238,13 @@ int	check_double_red(char *str)
 	return (0);
 }
 
+void	sig_handler(int sig)
+{
+	signal(sig, SIG_IGN);
+	write(1, "\n", 1);
+	run_minishell();
+}
+
 void	run_minishell()
 {
 	char *str;
@@ -246,11 +254,19 @@ void	run_minishell()
 	while (cmp != 0)
 	{
 		str = readline("mickeyshell> ");
-		if (ft_isemptyline(str) == 0)
-			run_minishell();
 		cmp = ft_strncmp(str, "exit\0", 5);
 		if (cmp == 0)
-			break ;
+		{
+			printf("exit\n");
+			return ;
+		}
+		else
+		{
+			signal(SIGINT, sig_handler); //Werkt opeens niet meer? Wat gaat hier mis?
+			signal(SIGQUIT, SIG_IGN);
+		}
+		if (ft_isemptyline(str) == 0)
+			run_minishell();
 		if (check_double_red(str) < 0)
 		{
 			free(str);
@@ -267,4 +283,5 @@ int	main()
 	extern char **environ;
 	init_global(environ);
 	run_minishell();
+	return (0); //Hier exitcode invullen?
 }
