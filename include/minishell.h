@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/29 10:31:07 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/07/29 17:12:22 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,5 @@ char	ft_isred(char c);
 char	**ft_split_pipes(char const *s, char c);
 char	*readline(const char *prompt);
 char	*set_space(char *str, int start, int len);
-
-void	run_minishell();
-
 
 #endif
