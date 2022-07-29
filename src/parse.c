@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/07/29 17:03:06 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/07/29 17:45:33 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ void	assign_parts(t_part *part, char *str)
 			str[i + 1] = ' ';
 			while (ft_isspace(str[i]) != 0)
 				i++;
+			handle_here_doc(str, i);
 			len = calc_len_word_after(str, i);
 			str = set_space(str, i, len);
 			i = i + len;

@@ -6,7 +6,7 @@
 #    By: jaberkro <jaberkro@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/07/28 17:05:19 by bsomers       ########   odam.nl          #
+#    Updated: 2022/07/29 17:40:28 by bsomers       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ SRC = 	$(SRC_DIR)/global.c \
 		$(SRC_DIR)/path.c \
 		$(SRC_DIR)/parse.c \
 		$(SRC_DIR)/parse_split_pipes.c \
+		$(SRC_DIR)/parse_heredoc.c \
 		$(SRC_DIR)/parse_utils.c \
 		$(SRC_DIR)/builtin.c
 OBJ = $(subst $(SRC_DIR), $(BUILD_DIR), $(SRC:.c=.o))
