@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/03 17:28:28 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/03 18:12:56 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int	executer(int i, int max, int readfd, t_part *parts)
 	int		fd[2];
 	int		pid;
 	char	*path;
+	char	**commands;
 
 	protected_pipe(fd);
 	pid = protected_fork();
@@ -105,11 +106,12 @@ int	executer(int i, int max, int readfd, t_part *parts)
 		close(readfd);
 		close(fd[0]);
 		close(fd[1]);
-		if (!parts[i].cmd)
+		commands = ft_split(parts[i].cmd, ' ');
+		if (commands == NULL || commands[0] == NULL)
 			exit(0);
-		find_builtin_function(parts[i].cmd, max);
-		path = command_in_paths(protected_split(parts[i].cmd, ' ')[0], g_info.paths);
-		if (execve(path, ft_split(parts[i].cmd, ' '), g_info.env) < 0)
+		find_builtin_function(commands[0], max);
+		path = command_in_paths(commands[0], g_info.paths);
+		if (execve(path, commands, g_info.env) < 0)
 			error_exit("Execve failed", 1);
 	}
 	close(readfd);
