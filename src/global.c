@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 12:54:31 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/22 18:23:20 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/07/22 19:16:53 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,6 @@ int	init_env_variables(char **env)
 void	init_global(char **env)
 {
 	if (!init_env_variables(env))
-		printf("MALLOC FAILED\n"); // uitwerken
+		printf("MALLOC FAILED\n"); // uitwerken wat we doen als malloc faalt
 	g_info.paths = get_paths();
 }
