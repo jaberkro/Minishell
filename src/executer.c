@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/03 16:33:54 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/03 17:28:28 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	executer(int i, int max, int readfd, t_part *parts)
 	{
 		readfd = update_readfd(i, readfd, parts);
 		fd[1] = update_writefd(i, max, fd[1], parts);
-		protected_dup2s(fd[1], readfd);
+		protected_dup2s(readfd, fd[1]);
 		close(readfd);
 		close(fd[0]);
 		close(fd[1]);

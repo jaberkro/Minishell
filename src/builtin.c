@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/03 13:40:32 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/03 17:26:12 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,11 @@ void	find_builtin_function(char *command, int max)
 {
 	char	*first_command;
 
-	first_command = protected_split(command, ' ')[0];
+	if (!command)
+		return ;
+	first_command = ft_split(command, ' ')[0];
+	if (first_command == NULL || !first_command[0])
+		return ;
 	if (ft_strncmp(first_command, "cd", 3) == 0)
 		execute_cd(protected_split(command, ' ')[1]);
 	if (ft_strncmp(first_command, "export", 7) == 0)
