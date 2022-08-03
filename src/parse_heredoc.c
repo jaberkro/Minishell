@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/07/29 17:46:39 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/07/29 17:51:43 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	handle_here_doc(char *str, int i)
 	{
 		input = get_next_line(STDIN_FILENO);
 		//if (input == NULL)
-			//if_error();
+			//if_error(); //Hier zelf error handlen voor minishell???
 		cmp = ft_strncmp(input, stop, len);
 		if (cmp == 0)
 			break ;

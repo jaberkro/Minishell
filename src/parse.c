@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/07/29 17:45:33 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/03 13:36:29 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	print_info(t_part *parts)
 {
 	printf("START\n");
 	printf("infile: %s\n", parts->in);
-	printf("cmd: %s\n", parts->cmd);
+	printf("cmd: -%s-\n", parts->cmd);
 	printf("outfile: %s\n", parts->out);
 	printf("in_r: %c\n", parts->in_r);
 	printf("out_r: %c\n", parts->out_r);
@@ -88,7 +88,7 @@ void	assign_parts(t_part *part, char *str)
 		if (str[i] == 34 || str[i] == 39)
 			str[i] = ' ';
 		//printf("Str to be checked: %s\n", str);
-		if (str[i] == '>' && str[i + 1] != '>' && (i > 0 && str[i - 1] != '>'))//dus woord hierna is outfile
+		if (str[i] == '>' && ((i == 0 && str[i + 1] != '>') || (i > 0 && str[i - 1] != '>')))//dus woord hierna is outfile
 		{
 			part->out_r = '>';
 			str[i] = ' ';
@@ -112,7 +112,7 @@ void	assign_parts(t_part *part, char *str)
 			str = set_space(str, i, len);
 			i = i + len;
 		}
-		else if (str[i] == '<' && str[i + 1] != '<' && (i > 0 && str[i - 1] != '<'))//dus woord hierna is infile
+		else if (str[i] == '<' && ((i == 0 && str[i + 1] != '<') || (i > 0 && str[i - 1] != '<')))//dus woord hierna is infile
 		{
 			part->in_r = '<';
 			str[i] = ' ';
@@ -288,8 +288,11 @@ int	main()
 			printf("exit\n");
 			return (0);
 		}
-		if (str != NULL)
+		if (str != NULL && str[0])
+		{
+			add_history(str);
 			run_minishell(str);
+		}
 		free (str);
 	}
 	return (0); //Hier exitcode invullen?
