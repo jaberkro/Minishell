@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/07/29 17:03:06 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/03 14:23:18 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,8 +287,11 @@ int	main()
 			printf("exit\n");
 			return (0);
 		}
-		if (str != NULL)
+		if (str != NULL && str[0])
+		{
+			add_history(str);
 			run_minishell(str);
+		}
 		free (str);
 	}
 	return (0); //Hier exitcode invullen?
