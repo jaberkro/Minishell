@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/03 10:38:29 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/03 14:57:26 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,6 @@ char	ft_isred(char c);
 char	**ft_split_pipes(char const *s, char c);
 char	*readline(const char *prompt);
 char	*set_space(char *str, int start, int len);
+void	handle_here_doc(char *str, int i);
 
 #endif
