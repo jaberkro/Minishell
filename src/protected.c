@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 17:25:30 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/22 17:19:28 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/03 16:36:00 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ int	protected_fork(void)
 	return (pid);
 }
 
-void	protected_dup2s(int writefd, int readfd)
+void	protected_dup2s(int readfd, int writefd)
 {
-	if (dup2(writefd, STDOUT_FILENO) < 0)
-		error_exit("Dup2 failed", 1);
 	if (dup2(readfd, STDIN_FILENO) < 0)
+		error_exit("Dup2 failed", 1);
+	if (dup2(writefd, STDOUT_FILENO) < 0)
 		error_exit("Dup2 failed", 1);
 }
 

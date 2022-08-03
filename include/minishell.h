@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/03 14:57:26 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/03 16:36:16 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ typedef struct s_part
 	char	*in;
 	char	*cmd;
 	char	*out;
-	char	in_r;
-	char	out_r;
+	// char	*in_r;
+	char	*out_r;
 }	t_part;
 
 //global functions
@@ -58,7 +58,7 @@ void	write_exit_argument(char *argument, char *message, int exit_code);
 //protected functions
 void	protected_pipe(int fd[2]);
 int		protected_fork(void);
-void	protected_dup2s(int writefd, int readfd);
+void	protected_dup2s(int readfd, int writefd);
 char	**protected_split(char *to_split, char delimiter);
 
 //parser functions
