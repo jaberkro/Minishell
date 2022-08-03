@@ -6,12 +6,13 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/03 16:50:16 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/03 17:13:08 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
+#include <stdio.h> //weeeggggg
 
 char	*handle_here_doc(char *str, int i, int heredocs)
 {
@@ -21,7 +22,7 @@ char	*handle_here_doc(char *str, int i, int heredocs)
     char	*stop;
     int     j;
 	int		len;
-	char	hd_num;
+	char	*hd_num;
 	char	*hd_filename;
 
 	len = 0;
@@ -30,6 +31,7 @@ char	*handle_here_doc(char *str, int i, int heredocs)
 	input = NULL;
 	hd_num = ft_itoa(heredocs);
 	hd_filename = ft_strjoin(".heredoc", hd_num);
+	printf("hd_filename: -%s-\n", hd_filename);
 	fd = open(hd_filename, O_CREAT | O_RDWR | O_APPEND, 0707);
 	//if (fd < 0)
 		//if_error(); //Hier zelf error handlen voor minishell!

@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/03 16:56:45 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/03 17:18:12 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void	print_info(t_part *parts)
 	printf("infile: %s\n", parts->in);
 	printf("cmd: -%s-\n", parts->cmd);
 	printf("outfile: %s\n", parts->out);
-	printf("in_r: %c\n", parts->in_r);
-	printf("out_r: %c\n", parts->out_r);
+	//printf("in_r: %c\n", parts->in_r);
+	printf("out_r: %s\n", parts->out_r);
 	printf("END\n");
 }
 
@@ -107,7 +107,7 @@ void	assign_parts(t_part *part, char *str)
 				part->out = ft_strdup(tmp);
 			else
 			{
-				part->out = ft_strjoin(part->out_r, " ");
+				part->out = ft_strjoin(part->out, " ");
 				part->out = ft_strjoin(part->out, tmp);
 			}
 			free(tmp);
@@ -140,7 +140,7 @@ void	assign_parts(t_part *part, char *str)
 			str = set_space(str, i, len);
 			i = i + len;
 		}
-		else if (str[i] == '<' && ((i == 0 && str[i + 1] != '<') || (i > 0 && str[i - 1] != '<')))//dus woord hierna is infile
+		else if (str[i] == '<' && str[i + 1] != '<')//((i == 0 && str[i + 1] != '<') || (i > 0 && str[i + 1] != '<')))//dus woord hierna is infile
 		{
 			// part->in_r = '<';
 			str[i] = ' ';
