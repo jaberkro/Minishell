@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/03 14:57:27 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/03 16:56:45 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,58 +79,105 @@ void	assign_parts(t_part *part, char *str)
 	int	i;
 	int	start;
 	int	len;
+	char	*tmp;
+	int	heredocs;
 
 	i = 0;
 	start = 0;
 	len = 0;
+	tmp = NULL;
+	heredocs = 0;
 	while (i < ((int)ft_strlen(str)))
 	{
 		if (str[i] == 34 || str[i] == 39)
 			str[i] = ' ';
-		//printf("Str to be checked: %s\n", str);
-		if (str[i] == '>' && ((i == 0 && str[i + 1] != '>') || (i > 0 && str[i - 1] != '>')))//dus woord hierna is outfile
+		if (str[i] == '>' && ((i == 0 && str[i + 1] != '>') || (i > 0 && str[i - 1] != '>')))//>, dus woord hierna is outfile
 		{
-			part->out_r = '>';
+			if (part->out_r == NULL)
+				part->out_r = ft_strdup(">");
+			else
+				part->out_r = ft_strjoin(part->out_r, ">");
 			str[i] = ' ';
 			while (ft_isspace(str[i]) != 0)
 				i++;
 			len = calc_len_word_after(str, i);
-			part->out = ft_substr(str, i, len);
-			part->out = ft_strtrim(part->out, " "); //Voor het geval meerdere spaties tussen de woorden zaten
+			tmp = ft_substr(str, i, len);
+			tmp = ft_strtrim(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
+			if (part->out == NULL)
+				part->out = ft_strdup(tmp);
+			else
+			{
+				part->out = ft_strjoin(part->out_r, " ");
+				part->out = ft_strjoin(part->out, tmp);
+			}
+			free(tmp);
 			str = set_space(str, i, len);
 			i = i + len;
 		}
-		else if (str[i] == '>' && str[i + 1] == '>') //dus woord hierna is outfile
+		else if (str[i] == '>' && str[i + 1] == '>') //>>, dus woord hierna is outfile
 		{
-			part->out_r = ']';
+			// part->out_r = ']';
+			if (part->out_r == NULL)
+				part->out_r = ft_strdup("]");
+			else
+				part->out_r = ft_strjoin(part->out_r, "]");
 			str[i] = ' ';
 			str[i + 1] = ' ';
 			while (ft_isspace(str[i]) != 0)
 				i++;
 			len = calc_len_word_after(str, i);
-			part->out = ft_substr(str, i, len);
+			// part->out = ft_substr(str, i, len);
+			tmp = ft_substr(str, i, len);
+			tmp = ft_strtrim(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
+			if (part->out == NULL)
+				part->out = ft_strdup(tmp);
+			else
+			{
+				part->out = ft_strjoin(part->out, " ");
+				part->out = ft_strjoin(part->out, tmp);
+			}
+			free(tmp);
 			str = set_space(str, i, len);
 			i = i + len;
 		}
 		else if (str[i] == '<' && ((i == 0 && str[i + 1] != '<') || (i > 0 && str[i - 1] != '<')))//dus woord hierna is infile
 		{
-			part->in_r = '<';
+			// part->in_r = '<';
 			str[i] = ' ';
 			while (ft_isspace(str[i]) != 0)
 				i++;
 			len = calc_len_word_after(str, i);
-			part->in = ft_substr(str, i, len);
+			// part->in = ft_substr(str, i, len);
+			tmp = ft_substr(str, i, len);
+			tmp = ft_strtrim(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
+			if (part->in == NULL)
+				part->in = ft_strdup(tmp);
+			else
+			{
+				part->in = ft_strjoin(part->in, " ");
+				part->in = ft_strjoin(part->in, tmp);
+			}
+			free(tmp);
 			str = set_space(str, i, len);
 			i = i + len;
 		}
 		else if (str[i] == '<' && str[i + 1] == '<') //Bij heredoc <<, dus woord hierna is stopwoord
 		{
-			part->in_r = '[';
+			heredocs++;
+			//part->in_r = '[';
 			str[i] = ' ';
 			str[i + 1] = ' ';
 			while (ft_isspace(str[i]) != 0)
 				i++;
-			handle_here_doc(str, i);
+			tmp = handle_here_doc(str, i, heredocs);
+			if (part->in == NULL)
+				part->in = ft_strdup(tmp);
+			else
+			{
+				part->in = ft_strjoin(part->in, " ");
+				part->in = ft_strjoin(part->in, tmp);
+			}
+			free (tmp);
 			len = calc_len_word_after(str, i);
 			str = set_space(str, i, len);
 			i = i + len;
@@ -148,8 +195,7 @@ void	set_zero_parts(t_part *part)
 	part->in = NULL;
 	part->out = NULL;
 	part->cmd = NULL;
-	part->in_r = 0;
-	part->out_r = 0;
+	part->out_r = NULL;
 }
 
 void	exec_minishell(char *input)
