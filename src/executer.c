@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/22 19:11:05 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/03 12:19:53 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,12 @@ int	executer(int i, int max, int readfd, t_part *parts)
 	{
 		readfd = update_readfd(i, readfd, parts);
 		fd[1] = update_writefd(i, max, fd[1], parts);
-		find_builtin_function(parts[i].cmd, max);
 		protected_dup2s(fd[1], readfd);
-		path = command_in_paths(protected_split(parts[i].cmd, ' ')[0], g_info.paths);
 		close(readfd);
 		close(fd[0]);
 		close(fd[1]);
+		find_builtin_function(parts[i].cmd, max);
+		path = command_in_paths(protected_split(parts[i].cmd, ' ')[0], g_info.paths);
 		if (execve(path, ft_split(parts[i].cmd, ' '), g_info.env) < 0)
 			error_exit("Execve failed", 1);
 	}
