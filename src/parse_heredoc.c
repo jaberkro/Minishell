@@ -6,14 +6,14 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/07/29 17:51:43 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/03 16:50:16 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
 
-void	handle_here_doc(char *str, int i)
+char	*handle_here_doc(char *str, int i, int heredocs)
 {
 	int		fd;
 	char	*input;
@@ -21,12 +21,16 @@ void	handle_here_doc(char *str, int i)
     char	*stop;
     int     j;
 	int		len;
+	char	hd_num;
+	char	*hd_filename;
 
 	len = 0;
 	cmp = 1;
 	j = 0;
 	input = NULL;
-	fd = open(".heredoc", O_CREAT | O_RDWR | O_APPEND, 0707);
+	hd_num = ft_itoa(heredocs);
+	hd_filename = ft_strjoin(".heredoc", hd_num);
+	fd = open(hd_filename, O_CREAT | O_RDWR | O_APPEND, 0707);
 	//if (fd < 0)
 		//if_error(); //Hier zelf error handlen voor minishell!
 
@@ -50,5 +54,7 @@ void	handle_here_doc(char *str, int i)
 		free (input);
 	}
 	free (input);
+	free (stop);
 	close(fd); //Moet ik deze wel closen? Wat wilt de executer ontvangen?
+	return (hd_filename);
 }

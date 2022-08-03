@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/03 16:36:16 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/03 16:59:59 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ typedef struct s_part
 	char	*in;
 	char	*cmd;
 	char	*out;
-	// char	*in_r;
 	char	*out_r;
 }	t_part;
 
@@ -69,6 +68,6 @@ char	ft_isred(char c);
 char	**ft_split_pipes(char const *s, char c);
 char	*readline(const char *prompt);
 char	*set_space(char *str, int start, int len);
-void	handle_here_doc(char *str, int i);
+char	*handle_here_doc(char *str, int i, int heredocs);
 
 #endif
