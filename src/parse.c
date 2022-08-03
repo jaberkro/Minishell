@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/03 17:18:12 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/03 17:50:43 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	count_pipes(char *str)
 	return (j);
 }
 
-void	assign_parts(t_part *part, char *str)
+int	assign_parts(t_part *part, char *str)
 {
 	int	i;
 	int	start;
@@ -91,7 +91,7 @@ void	assign_parts(t_part *part, char *str)
 	{
 		if (str[i] == 34 || str[i] == 39)
 			str[i] = ' ';
-		if (str[i] == '>' && ((i == 0 && str[i + 1] != '>') || (i > 0 && str[i - 1] != '>')))//>, dus woord hierna is outfile
+		if (str[i] == '>' && str[i + 1] != '>')//>, dus woord hierna is outfile
 		{
 			if (part->out_r == NULL)
 				part->out_r = ft_strdup(">");
@@ -188,6 +188,7 @@ void	assign_parts(t_part *part, char *str)
 		//printf("Main string after setting spaces: -%s-\n", str);
 	}
 	part->cmd = ft_strdup(str);
+	return (heredocs);
 }
 
 void	set_zero_parts(t_part *part)
@@ -207,21 +208,25 @@ void	exec_minishell(char *input)
 	int status;
 	int	count_pipe;
 	int	i;
+	int	heredocs;
+	char	*tmp;
 
 	i = 0;
+	heredocs = 0;
 	fd = dup(0);
+	tmp = NULL;
 	input_split = ft_split_pipes(input, '|');
 	count_pipe = count_pipes(input);
 	if (count_pipe < 0)
 		return ;
-	printf("Number of actual pipes: %d\n", count_pipe);
+	//printf("Number of actual pipes: %d\n", count_pipe);
 	parts = malloc((count_pipe + 1) * sizeof(t_part));
 	if (parts == NULL)
 		return ;
 	while (i < (count_pipe + 1))
 	{
 		set_zero_parts(&parts[i]);
-		assign_parts(&parts[i], input_split[i]);
+		heredocs = assign_parts(&parts[i], input_split[i]);
 		print_info(&parts[i]);
 		i++;
 	}
@@ -232,6 +237,13 @@ void	exec_minishell(char *input)
 	{
 		wait(NULL);
 		i++;
+	}
+	while (heredocs > 0)
+	{
+		tmp = ft_strjoin(".heredoc", ft_itoa(heredocs));
+		unlink(tmp);
+		free(tmp);
+		heredocs--;
 	}
 }
 
