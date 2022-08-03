@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/22 19:11:18 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/03 10:38:29 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,9 @@ char	**protected_split(char *to_split, char delimiter);
 //parser functions
 int		calc_len_word_before(char *str, int i);
 int		calc_len_word_after(char *str, int i);
+int		ft_isemptyline(char *str);
+char	ft_isred(char c);
+char	**ft_split_pipes(char const *s, char c);
 char	*readline(const char *prompt);
 char	*set_space(char *str, int start, int len);
 
