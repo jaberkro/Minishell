@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/04 16:22:14 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/04 16:25:23 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,8 +299,8 @@ void	exec_minishell(char *input)
 	t_part *parts;
 	t_part_split	*part_split;
 	int	fd;
-	//int	pid;
-	//int status;
+	int	pid;
+	int status;
 	int	count_pipe;
 	int	i;
 	int	heredocs;
@@ -327,14 +327,14 @@ void	exec_minishell(char *input)
 		print_info(&parts[i]);
 		i++;
 	}
-	// pid = executer(0, count_pipe + 1, fd, part_split);
-	// waitpid(pid, &status, 0);
-	// i = 1;
-	// while (i < count_pipe + 1)
-	// {
-	// 	wait(NULL);
-	// 	i++;
-	// }
+	pid = executer(0, count_pipe + 1, fd, part_split);
+	waitpid(pid, &status, 0);
+	i = 1;
+	while (i < count_pipe + 1)
+	{
+		wait(NULL);
+		i++;
+	}
 	while (heredocs > 0)
 	{
 		tmp = ft_strjoin(".heredoc", ft_itoa(heredocs));
