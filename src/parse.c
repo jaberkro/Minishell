@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/04 16:06:47 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/04 16:22:14 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,15 +79,19 @@ void	split_parts(t_part *part, t_part_split *part_split)
 	int	i;
 
 	i = 0;
-	part_split->out_r = ft_strdup(part->out_r);
-	part_split->out = ft_split_pipes(part->out, ' ');
-	printf("XXXX %s XXXX\n", part->cmd);
-	part_split->cmd = ft_split_pipes(part->cmd, ' ');
-	printf("XXXX %s XXXX\n", part_split->cmd[0]);
-	printf("XXXX %s XXXX\n", part_split->cmd[1]);
-	part_split->in = ft_split_pipes(part->in, ' ');
+	if (part->out_r != NULL)
+		part_split->out_r = ft_strdup(part->out_r);
+	if (part->out != NULL)
+		part_split->out = ft_split_pipes(part->out, ' ');
+	// printf("XXXX %s XXXX\n", part->cmd);
+	if (part->cmd != NULL)
+		part_split->cmd = ft_split_pipes(part->cmd, ' ');
+	// printf("XXXX %s XXXX\n", part_split->cmd[0]);
+	// printf("XXXX %s XXXX\n", part_split->cmd[1]);
+	if (part->in != NULL)
+		part_split->in = ft_split_pipes(part->in, ' ');
 	//Hiertussen checken op dollar!
-	while (part_split->out[i] != NULL)
+	while (part_split->out && part_split->out[i] != NULL)
 	{
 		part_split->out[i] = extend_dollars(part_split->out[i]);
 		part_split->out[i] = remove_quotes(part_split->out[i]);
@@ -95,7 +99,7 @@ void	split_parts(t_part *part, t_part_split *part_split)
 		i++;
 	}
 	i = 0;
-	while (part_split->cmd[i] != NULL)
+	while (part_split->cmd && part_split->cmd[i] != NULL)
 	{
 		part_split->cmd[i] = extend_dollars(part_split->cmd[i]);
 		part_split->cmd[i] = remove_quotes(part_split->cmd[i]);
@@ -103,7 +107,7 @@ void	split_parts(t_part *part, t_part_split *part_split)
 		i++;
 	}
 	i = 0;
-	while (part_split->in[i] != NULL)
+	while (part_split->in && part_split->in[i] != NULL)
 	{
 		part_split->in[i] = extend_dollars(part_split->in[i]);
 		part_split->in[i] = remove_quotes(part_split->in[i]);
@@ -277,12 +281,16 @@ int	assign_parts(t_part *part, char *str)
 	return (heredocs);
 }
 
-void	set_zero_parts(t_part *part)
+void	set_zero_parts(t_part *part, t_part_split *part_split)
 {
 	part->in = NULL;
 	part->out = NULL;
 	part->cmd = NULL;
 	part->out_r = NULL;
+	part_split->in = NULL;
+	part_split->out = NULL;
+	part_split->cmd = NULL;
+	part_split->out_r = NULL;
 }
 
 void	exec_minishell(char *input)
@@ -313,7 +321,7 @@ void	exec_minishell(char *input)
 		return ;
 	while (i < (count_pipe + 1))
 	{
-		set_zero_parts(&parts[i]);
+		set_zero_parts(&parts[i], &part_split[i]);
 		heredocs = assign_parts(&parts[i], input_split[i]);
 		split_parts(&parts[i], &part_split[i]);
 		print_info(&parts[i]);
