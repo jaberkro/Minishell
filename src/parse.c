@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/04 16:22:14 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/04 17:34:59 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@
 
 void	print_info(t_part *parts)
 {
-	printf("START\n");
+	// printf("START\n");
 	// printf("infile: %s\n", parts->in);
 	// printf("cmd: -%s-\n", parts->cmd);
 	// printf("outfile: %s\n", parts->out);
 	//printf("in_r: %c\n", parts->in_r);
 	printf("out_r: %s\n", parts->out_r);
-	printf("END\n");
+	// printf("END\n");
 }
 
 int	count_pipes(char *str)
@@ -95,7 +95,7 @@ void	split_parts(t_part *part, t_part_split *part_split)
 	{
 		part_split->out[i] = extend_dollars(part_split->out[i]);
 		part_split->out[i] = remove_quotes(part_split->out[i]);
-		printf("part_split->out[%d]: -%s-\n", i, part_split->out[i]);
+		// printf("part_split->out[%d]: -%s-\n", i, part_split->out[i]);
 		i++;
 	}
 	i = 0;
@@ -103,7 +103,7 @@ void	split_parts(t_part *part, t_part_split *part_split)
 	{
 		part_split->cmd[i] = extend_dollars(part_split->cmd[i]);
 		part_split->cmd[i] = remove_quotes(part_split->cmd[i]);
-		printf("part_split->cmd[%d]: -%s-\n", i, part_split->cmd[i]);
+		// printf("part_split->cmd[%d]: -%s-\n", i, part_split->cmd[i]);
 		i++;
 	}
 	i = 0;
@@ -111,7 +111,7 @@ void	split_parts(t_part *part, t_part_split *part_split)
 	{
 		part_split->in[i] = extend_dollars(part_split->in[i]);
 		part_split->in[i] = remove_quotes(part_split->in[i]);
-		printf("part_split->in[%d]: -%s-\n", i, part_split->in[i]);
+		// printf("part_split->in[%d]: -%s-\n", i, part_split->in[i]);
 		i++;
 	}
 }
@@ -299,8 +299,8 @@ void	exec_minishell(char *input)
 	t_part *parts;
 	t_part_split	*part_split;
 	int	fd;
-	//int	pid;
-	//int status;
+	int	pid;
+	int status;
 	int	count_pipe;
 	int	i;
 	int	heredocs;
@@ -324,17 +324,17 @@ void	exec_minishell(char *input)
 		set_zero_parts(&parts[i], &part_split[i]);
 		heredocs = assign_parts(&parts[i], input_split[i]);
 		split_parts(&parts[i], &part_split[i]);
-		print_info(&parts[i]);
+		// print_info(&parts[i]);
 		i++;
 	}
-	// pid = executer(0, count_pipe + 1, fd, part_split);
-	// waitpid(pid, &status, 0);
-	// i = 1;
-	// while (i < count_pipe + 1)
-	// {
-	// 	wait(NULL);
-	// 	i++;
-	// }
+	pid = executer(0, count_pipe + 1, fd, part_split);
+	waitpid(pid, &status, 0);
+	i = 1;
+	while (i < count_pipe + 1)
+	{
+		wait(NULL);
+		i++;
+	}
 	while (heredocs > 0)
 	{
 		tmp = ft_strjoin(".heredoc", ft_itoa(heredocs));
