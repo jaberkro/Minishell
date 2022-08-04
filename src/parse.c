@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/03 17:50:43 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/04 13:01:39 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,8 @@ int	assign_parts(t_part *part, char *str)
 	heredocs = 0;
 	while (i < ((int)ft_strlen(str)))
 	{
-		if (str[i] == 34 || str[i] == 39)
-			str[i] = ' ';
+		// if (str[i] == 34 || str[i] == 39)
+		// 	str[i] = ' ';
 		if (str[i] == '>' && str[i + 1] != '>')//>, dus woord hierna is outfile
 		{
 			if (part->out_r == NULL)
@@ -227,7 +227,7 @@ void	exec_minishell(char *input)
 	{
 		set_zero_parts(&parts[i]);
 		heredocs = assign_parts(&parts[i], input_split[i]);
-		print_info(&parts[i]);
+		// print_info(&parts[i]); //JMA
 		i++;
 	}
 	pid = executer(0, count_pipe + 1, fd, parts);
@@ -324,6 +324,7 @@ int	main()
 	char *str;
 	int	cmp;
 	struct sigaction	sa;
+	char	*extended_str; //JMA
 
 	rl_catch_signals = 0; //readline now doesn't install default signal handlers :)
 	sa.sa_handler = &sig_handler;
@@ -349,7 +350,8 @@ int	main()
 		if (str != NULL && str[0])
 		{
 			add_history(str);
-			run_minishell(str);
+			extended_str = extend_dollars(str); //JMA
+			run_minishell(extended_str); //JMA
 		}
 		free (str);
 	}
