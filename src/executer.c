@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/03 18:12:56 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/04 16:01:35 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	update_readfd(int i, int readfd, t_part *parts)
 	j = 0;
 	if (parts[i].in && parts[i].in[0])
 	{
-		infiles = ft_split(parts[i].in, ' ');
+		infiles = ft_split_pipes(parts[i].in, ' ');
 		if (infiles == NULL)
 			error_exit("Malloc failed", 1);
 		while (infiles[j])
@@ -70,7 +70,7 @@ int	update_writefd(int i, int max, int writefd, t_part *parts)
 	j = 0;
 	if (parts[i].out_r && parts[i].out_r[0])
 	{
-		outfiles = ft_split(parts[i].out, ' ');
+		outfiles = ft_split_pipes(parts[i].out, ' ');
 		while (outfiles[j])
 		{
 			if (parts[i].out_r[j] == '>')
@@ -106,7 +106,7 @@ int	executer(int i, int max, int readfd, t_part *parts)
 		close(readfd);
 		close(fd[0]);
 		close(fd[1]);
-		commands = ft_split(parts[i].cmd, ' ');
+		commands = ft_split_pipes(parts[i].cmd, ' ');
 		if (commands == NULL || commands[0] == NULL)
 			exit(0);
 		find_builtin_function(commands[0], max);
