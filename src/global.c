@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 12:54:31 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/03 13:45:18 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/04 15:01:36 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*get_env_variable(char *to_find)
 		i++;
 	if (!g_info.env[i])
 		return (NULL);
-	return (g_info.env[i] + ft_strlen(to_find));
+	return (g_info.env[i] + ft_strlen(to_find) + 1);
 }
 
 int	set_env_variable(char *variable)
@@ -90,4 +90,5 @@ void	init_global(char **env)
 	if (!init_env_variables(env))
 		error_exit("Malloc failed", 1);
 	g_info.paths = get_paths();
+	set_env_variable("?=0");
 }

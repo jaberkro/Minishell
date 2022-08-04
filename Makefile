@@ -6,7 +6,7 @@
 #    By: jaberkro <jaberkro@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/07/29 17:40:28 by bsomers       ########   odam.nl          #
+#    Updated: 2022/08/04 16:03:16 by jaberkro      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,8 @@ SRC = 	$(SRC_DIR)/global.c \
 		$(SRC_DIR)/parse_split_pipes.c \
 		$(SRC_DIR)/parse_heredoc.c \
 		$(SRC_DIR)/parse_utils.c \
-		$(SRC_DIR)/builtin.c
+		$(SRC_DIR)/builtin.c \
+		$(SRC_DIR)/dollar.c
 OBJ = $(subst $(SRC_DIR), $(BUILD_DIR), $(SRC:.c=.o))
 
 # COLORS

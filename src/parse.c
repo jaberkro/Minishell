@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/04 15:46:43 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/04 16:06:47 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -439,7 +439,7 @@ int	main()
 		if (str != NULL && str[0])
 		{
 			add_history(str);
-			run_minishell(str);
+			run_minishell(str); 
 		}
 		free (str);
 	}
