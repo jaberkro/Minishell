@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/03 16:59:59 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/04 12:58:05 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ typedef struct s_env_info
 {
 	char	**env;
 	char	**paths;
+	int		return_value;
 }	t_env_info;
 
 t_env_info	g_info;
@@ -69,5 +70,8 @@ char	**ft_split_pipes(char const *s, char c);
 char	*readline(const char *prompt);
 char	*set_space(char *str, int start, int len);
 char	*handle_here_doc(char *str, int i, int heredocs);
+
+//dollar functions
+char	*extend_dollars(char *input);
 
 #endif
