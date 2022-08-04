@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/03 16:59:59 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/04 12:48:04 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,14 @@ typedef struct s_part
 	char	*out;
 	char	*out_r;
 }	t_part;
+
+typedef struct s_part_split
+{
+	char	**in;
+	char	**cmd;
+	char	**out;
+	char	*out_r;
+}	t_part_split;
 
 //global functions
 void	init_global(char **env);
@@ -69,5 +77,6 @@ char	**ft_split_pipes(char const *s, char c);
 char	*readline(const char *prompt);
 char	*set_space(char *str, int start, int len);
 char	*handle_here_doc(char *str, int i, int heredocs);
+char	*remove_quotes(char *str);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/03 17:50:43 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/04 15:46:43 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@
 void	print_info(t_part *parts)
 {
 	printf("START\n");
-	printf("infile: %s\n", parts->in);
-	printf("cmd: -%s-\n", parts->cmd);
-	printf("outfile: %s\n", parts->out);
+	// printf("infile: %s\n", parts->in);
+	// printf("cmd: -%s-\n", parts->cmd);
+	// printf("outfile: %s\n", parts->out);
 	//printf("in_r: %c\n", parts->in_r);
 	printf("out_r: %s\n", parts->out_r);
 	printf("END\n");
@@ -74,6 +74,44 @@ int	count_pipes(char *str)
 	return (j);
 }
 
+void	split_parts(t_part *part, t_part_split *part_split)
+{
+	int	i;
+
+	i = 0;
+	part_split->out_r = ft_strdup(part->out_r);
+	part_split->out = ft_split_pipes(part->out, ' ');
+	printf("XXXX %s XXXX\n", part->cmd);
+	part_split->cmd = ft_split_pipes(part->cmd, ' ');
+	printf("XXXX %s XXXX\n", part_split->cmd[0]);
+	printf("XXXX %s XXXX\n", part_split->cmd[1]);
+	part_split->in = ft_split_pipes(part->in, ' ');
+	//Hiertussen checken op dollar!
+	while (part_split->out[i] != NULL)
+	{
+		part_split->out[i] = extend_dollars(part_split->out[i]);
+		part_split->out[i] = remove_quotes(part_split->out[i]);
+		printf("part_split->out[%d]: -%s-\n", i, part_split->out[i]);
+		i++;
+	}
+	i = 0;
+	while (part_split->cmd[i] != NULL)
+	{
+		part_split->cmd[i] = extend_dollars(part_split->cmd[i]);
+		part_split->cmd[i] = remove_quotes(part_split->cmd[i]);
+		printf("part_split->cmd[%d]: -%s-\n", i, part_split->cmd[i]);
+		i++;
+	}
+	i = 0;
+	while (part_split->in[i] != NULL)
+	{
+		part_split->in[i] = extend_dollars(part_split->in[i]);
+		part_split->in[i] = remove_quotes(part_split->in[i]);
+		printf("part_split->in[%d]: -%s-\n", i, part_split->in[i]);
+		i++;
+	}
+}
+
 int	assign_parts(t_part *part, char *str)
 {
 	int	i;
@@ -81,16 +119,21 @@ int	assign_parts(t_part *part, char *str)
 	int	len;
 	char	*tmp;
 	int	heredocs;
+	int	q;
 
 	i = 0;
 	start = 0;
 	len = 0;
 	tmp = NULL;
 	heredocs = 0;
+	q = 0;
 	while (i < ((int)ft_strlen(str)))
 	{
-		if (str[i] == 34 || str[i] == 39)
-			str[i] = ' ';
+		if ((str[i] == 34 || str[i] == 39) && q == 0)
+			q = 1;
+		else if ((str[i] == 34 || str[i] == 39) && q == 1)
+			q = 0;
+			//str[i] = ' ';
 		if (str[i] == '>' && str[i + 1] != '>')//>, dus woord hierna is outfile
 		{
 			if (part->out_r == NULL)
@@ -98,10 +141,22 @@ int	assign_parts(t_part *part, char *str)
 			else
 				part->out_r = ft_strjoin(part->out_r, ">");
 			str[i] = ' ';
+			//printf("Set to space:: i = %d, str[i] = %c\n", i, str[i]);
 			while (ft_isspace(str[i]) != 0)
 				i++;
-			len = calc_len_word_after(str, i);
-			tmp = ft_substr(str, i, len);
+			start = i;
+			while (((q == 0 && ft_isspace(str[i]) == 0 && ft_isred(str[i]) == 0) || (q == 1)) && str[i] != '\0')
+			{
+			//	printf("IN LOOP: i = %d, str[i] = %c, q = %d\n", i, str[i], q);
+				if ((str[i] == 34 || str[i] == 39) && q == 0)
+					q = 1;
+				else if ((str[i] == 34 || str[i] == 39) && q == 1)
+					q = 0;
+				i++;
+			}
+			//len = calc_len_word_after(str, i);
+			len = i - start;
+			tmp = ft_substr(str, start, len);
 			tmp = ft_strtrim(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
 			if (part->out == NULL)
 				part->out = ft_strdup(tmp);
@@ -111,8 +166,8 @@ int	assign_parts(t_part *part, char *str)
 				part->out = ft_strjoin(part->out, tmp);
 			}
 			free(tmp);
-			str = set_space(str, i, len);
-			i = i + len;
+			str = set_space(str, start, len);
+			//i = i + len;
 		}
 		else if (str[i] == '>' && str[i + 1] == '>') //>>, dus woord hierna is outfile
 		{
@@ -125,10 +180,23 @@ int	assign_parts(t_part *part, char *str)
 			str[i + 1] = ' ';
 			while (ft_isspace(str[i]) != 0)
 				i++;
-			len = calc_len_word_after(str, i);
+			start = i;
+			while (((q == 0 && ft_isspace(str[i]) == 0 && ft_isred(str[i]) == 0) || (q == 1)) && str[i] != '\0')
+			{
+				// printf("IN LOOP: i = %d, str[i] = %c, q = %d\n", i, str[i], q);
+				if ((str[i] == 34 || str[i] == 39) && q == 0)
+					q = 1;
+				else if ((str[i] == 34 || str[i] == 39) && q == 1)
+					q = 0;
+				i++;
+			}
+			//len = calc_len_word_after(str, i);
 			// part->out = ft_substr(str, i, len);
-			tmp = ft_substr(str, i, len);
+			len = i - start;
+			tmp = ft_substr(str, start, len);
 			tmp = ft_strtrim(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
+			// tmp = ft_substr(str, i, len);
+			// tmp = ft_strtrim(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
 			if (part->out == NULL)
 				part->out = ft_strdup(tmp);
 			else
@@ -138,18 +206,30 @@ int	assign_parts(t_part *part, char *str)
 			}
 			free(tmp);
 			str = set_space(str, i, len);
-			i = i + len;
+			//i = i + len;
 		}
-		else if (str[i] == '<' && str[i + 1] != '<')//((i == 0 && str[i + 1] != '<') || (i > 0 && str[i + 1] != '<')))//dus woord hierna is infile
+		else if (str[i] == '<' && str[i + 1] != '<')//dus woord hierna is infile
 		{
-			// part->in_r = '<';
 			str[i] = ' ';
 			while (ft_isspace(str[i]) != 0)
 				i++;
-			len = calc_len_word_after(str, i);
-			// part->in = ft_substr(str, i, len);
-			tmp = ft_substr(str, i, len);
+			start = i;
+			while (((q == 0 && ft_isspace(str[i]) == 0 && ft_isred(str[i]) == 0) || (q == 1)) && str[i] != '\0')
+			{
+				// printf("IN LOOP: i = %d, str[i] = %c, q = %d\n", i, str[i], q);
+				if ((str[i] == 34 || str[i] == 39) && q == 0)
+					q = 1;
+				else if ((str[i] == 34 || str[i] == 39) && q == 1)
+					q = 0;
+				i++;
+			}
+			//len = calc_len_word_after(str, i);
+			len = i - start;
+			tmp = ft_substr(str, start, len);
+			// printf("Len = %d, start = %d, i = %d\n", len, start, i);
 			tmp = ft_strtrim(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
+			// tmp = ft_substr(str, i, len);
+			// tmp = ft_strtrim(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
 			if (part->in == NULL)
 				part->in = ft_strdup(tmp);
 			else
@@ -158,12 +238,15 @@ int	assign_parts(t_part *part, char *str)
 				part->in = ft_strjoin(part->in, tmp);
 			}
 			free(tmp);
-			str = set_space(str, i, len);
-			i = i + len;
+			// printf("HIERO: i = %d, str[i] = %c, str = %s\n", i, str[i], part->in);
+
+			str = set_space(str, start, len);
+			//i = i + len;
 		}
 		else if (str[i] == '<' && str[i + 1] == '<') //Bij heredoc <<, dus woord hierna is stopwoord
 		{
 			heredocs++;
+			// printf("Value of heredocs: %d\n", heredocs);
 			//part->in_r = '[';
 			str[i] = ' ';
 			str[i + 1] = ' ';
@@ -184,6 +267,9 @@ int	assign_parts(t_part *part, char *str)
 		}
 		else
 			i++;
+		// printf("Set to space: str = -%s-\n", str);
+
+		start = 0;
 		len = 0;
 		//printf("Main string after setting spaces: -%s-\n", str);
 	}
@@ -203,9 +289,10 @@ void	exec_minishell(char *input)
 {
 	char **input_split;
 	t_part *parts;
+	t_part_split	*part_split;
 	int	fd;
-	int	pid;
-	int status;
+	//int	pid;
+	//int status;
 	int	count_pipe;
 	int	i;
 	int	heredocs;
@@ -221,26 +308,29 @@ void	exec_minishell(char *input)
 		return ;
 	//printf("Number of actual pipes: %d\n", count_pipe);
 	parts = malloc((count_pipe + 1) * sizeof(t_part));
+	part_split = malloc((count_pipe + 1) * sizeof(t_part_split));
 	if (parts == NULL)
 		return ;
 	while (i < (count_pipe + 1))
 	{
 		set_zero_parts(&parts[i]);
 		heredocs = assign_parts(&parts[i], input_split[i]);
+		split_parts(&parts[i], &part_split[i]);
 		print_info(&parts[i]);
 		i++;
 	}
-	pid = executer(0, count_pipe + 1, fd, parts);
-	waitpid(pid, &status, 0);
-	i = 1;
-	while (i < count_pipe + 1)
-	{
-		wait(NULL);
-		i++;
-	}
+	// pid = executer(0, count_pipe + 1, fd, part_split);
+	// waitpid(pid, &status, 0);
+	// i = 1;
+	// while (i < count_pipe + 1)
+	// {
+	// 	wait(NULL);
+	// 	i++;
+	// }
 	while (heredocs > 0)
 	{
 		tmp = ft_strjoin(".heredoc", ft_itoa(heredocs));
+		printf("Tmp name: %s\n", tmp);
 		unlink(tmp);
 		free(tmp);
 		heredocs--;

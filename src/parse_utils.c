@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/20 10:17:48 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/07/28 18:14:18 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/04 15:01:38 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,42 @@ char	ft_isred(char c)
 	if (c == '>' || c == '<')
 		return (c);
 	return (0);
+}
+
+char	*remove_quotes(char *str)
+{
+	int	len;
+	char	*str_new;
+	int	count_quotes;
+	int	i;
+	int j;
+
+	i = 0;
+	j = 0;
+	count_quotes = 0;
+	len = ft_strlen(str);
+	while (i < len)
+	{
+		if (str[i] == 34 || str[i] == 39)
+			count_quotes++;
+		i++;
+	}
+	i = 0;
+	str_new = malloc((len - count_quotes + 1) * sizeof(char));
+	while (i < len)
+	{
+		if (str[i] != 34 && str[i] != 39)
+		{
+			str_new[j] = str[i];
+			i++;
+			j++;
+		}
+		else
+			i++;
+	}
+	str_new[j] = '\0';
+	free(str);
+	return (str_new);
 }
 
 int	ft_isemptyline(char *str)

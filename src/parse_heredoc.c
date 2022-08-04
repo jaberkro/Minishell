@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/03 17:13:08 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/04 11:15:28 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ char	*handle_here_doc(char *str, int i, int heredocs)
 		i++;
 		j++;
     }
+	stop = remove_quotes(stop);
 	while (cmp != 0)
 	{
 		input = get_next_line(STDIN_FILENO);
