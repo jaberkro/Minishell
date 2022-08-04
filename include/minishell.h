@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/04 16:06:57 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/04 16:26:44 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	find_builtin_function(char *command, int parts);
 
 //executer functions
 void	error_exit(char *message, int exit_code);
-int		executer(int i, int max, int readfd, t_part *parts);
+int		executer(int i, int max, int readfd, t_part_split *parts);
 char	*command_in_paths(char	*argument, char **paths);
 void	write_exit(char *message, int exit_code);
 void	write_exit_argument(char *argument, char *message, int exit_code);

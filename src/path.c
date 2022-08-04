@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 13:04:24 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/03 18:04:34 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/04 17:37:47 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "libft.h"
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 static char	*make_path(char *path)
 {
@@ -38,6 +39,7 @@ char	*command_in_paths(char	*argument, char **paths)
 	char	*tmp;
 
 	i = 0;
+	// printf("argument: [%s]\n", argument);
 	if (access(argument, X_OK) != -1)
 		return (argument);
 	if (!paths)
@@ -66,7 +68,7 @@ char	**get_paths(void)
 	char	*paths;
 
 	i = 0;
-	paths = get_env_variable("PATH=");
+	paths = get_env_variable("PATH");
 	if (!paths)
 		return (NULL);
 	splitted_paths = protected_split(paths, ':');
