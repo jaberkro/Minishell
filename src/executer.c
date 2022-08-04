@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/04 16:01:35 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/04 17:32:22 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,48 +37,42 @@ void	error_exit(char *message, int exit_code)
 	exit(exit_code);
 }
 
-int	update_readfd(int i, int readfd, t_part *parts)
+int	update_readfd(int i, int readfd, t_part_split *parts)
 {
-	char	**infiles;
 	int		j;
 
 	j = 0;
 	if (parts[i].in && parts[i].in[0])
 	{
-		infiles = ft_split_pipes(parts[i].in, ' ');
-		if (infiles == NULL)
-			error_exit("Malloc failed", 1);
-		while (infiles[j])
+		while (parts[i].in[j])
 		{
 			close(readfd);
-			if (access(infiles[j], F_OK) == -1 || access(infiles[j], R_OK) == -1)
-				error_exit(infiles[j], 1);
-			readfd = open(infiles[j], O_RDONLY);
+			if (access(parts[i].in[j], F_OK) == -1 || access(parts[i].in[j], R_OK) == -1)
+				error_exit(parts[i].in[j], 1);
+			readfd = open(parts[i].in[j], O_RDONLY);
 			if (readfd < 0)
-				error_exit(infiles[j], 1);
+				error_exit(parts[i].in[j], 1);
 			j++;
 		}
 	}
 	return (readfd);
 }
 
-int	update_writefd(int i, int max, int writefd, t_part *parts)
+int	update_writefd(int i, int max, int writefd, t_part_split *parts)
 {
-	char	**outfiles;
 	int		j;
 
 	j = 0;
 	if (parts[i].out_r && parts[i].out_r[0])
 	{
-		outfiles = ft_split_pipes(parts[i].out, ' ');
-		while (outfiles[j])
+		while (parts[i].out[j])
 		{
 			if (parts[i].out_r[j] == '>')
-				writefd = open(outfiles[j], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+				writefd = open(parts[i].out[j], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 			else
-				writefd = open(outfiles[j], O_WRONLY | O_APPEND | O_CREAT, 0644);
+				writefd = open(parts[i].out[j], O_WRONLY | O_APPEND | O_CREAT, 0644);
 			if (writefd < 0)
-				error_exit(outfiles[j], 1);
+				error_exit(parts[i].out[j], 1);
 			j++;
 		}
 	}
@@ -89,12 +83,11 @@ int	update_writefd(int i, int max, int writefd, t_part *parts)
 	return (writefd);
 }
 
-int	executer(int i, int max, int readfd, t_part *parts)
+int	executer(int i, int max, int readfd, t_part_split *parts)
 {
 	int		fd[2];
 	int		pid;
 	char	*path;
-	char	**commands;
 
 	protected_pipe(fd);
 	pid = protected_fork();
@@ -106,12 +99,11 @@ int	executer(int i, int max, int readfd, t_part *parts)
 		close(readfd);
 		close(fd[0]);
 		close(fd[1]);
-		commands = ft_split_pipes(parts[i].cmd, ' ');
-		if (commands == NULL || commands[0] == NULL)
-			exit(0);
-		find_builtin_function(commands[0], max);
-		path = command_in_paths(commands[0], g_info.paths);
-		if (execve(path, commands, g_info.env) < 0)
+		// printf("first command: %s\n", parts[i].cmd[0]);
+		find_builtin_function(parts[i].cmd[0], max);
+		path = command_in_paths(parts[i].cmd[0], g_info.paths);
+		// printf("path: %s\n", path);
+		if (execve(path, parts[i].cmd, g_info.env) < 0)
 			error_exit("Execve failed", 1);
 	}
 	close(readfd);
