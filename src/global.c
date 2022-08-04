@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 12:54:31 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/04 15:01:36 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/04 17:28:40 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,10 @@ char	*get_env_variable(char *to_find)
 		i++;
 	if (!g_info.env[i])
 		return (NULL);
-	return (g_info.env[i] + ft_strlen(to_find) + 1);
+	if (g_info.env[i][ft_strlen(to_find)] == '=')
+		return (g_info.env[i] + ft_strlen(to_find) + 1);
+	else
+		return (NULL);
 }
 
 int	set_env_variable(char *variable)
