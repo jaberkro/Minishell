@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 12:54:31 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/04 17:28:40 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/05 11:13:56 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	set_env_variable(char *variable)
 	if (to_find == NULL)
 		return (0);
 	while (g_info.env[i] && \
-	ft_strncmp(g_info.env[i], to_find, ft_strlen(to_find)) != 0)
+	ft_strncmp(g_info.env[i], to_find, ft_strlen(to_find)) != 0) // and check for enter in correct space
 		i++;
 	if (!g_info.env[i])
 	{
@@ -64,6 +64,20 @@ int	set_env_variable(char *variable)
 	{
 		g_info.env[i] = variable;
 	}
+	return (1);
+}
+
+int	increase_shlvl(void)
+{
+	int		old_shlvl;
+	char	*new_shlvl;
+
+	old_shlvl = ft_atoi(get_env_variable("SHLVL"));
+	new_shlvl = ft_strjoin("SHLVL=", ft_itoa(old_shlvl + 1));
+	if (new_shlvl == NULL)
+		return (0);
+	if (!set_env_variable(new_shlvl))
+		return (0);
 	return (1);
 }
 
@@ -93,5 +107,8 @@ void	init_global(char **env)
 	if (!init_env_variables(env))
 		error_exit("Malloc failed", 1);
 	g_info.paths = get_paths();
-	set_env_variable("?=0");
+	if (!set_env_variable("?=0"))
+		error_exit("Malloc failed", 1);
+	if (!increase_shlvl())
+		error_exit("Malloc failed", 1);
 }
