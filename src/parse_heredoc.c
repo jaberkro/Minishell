@@ -6,14 +6,30 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/05 15:41:44 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/05 17:40:11 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
+#include <stdio.h> //wegggg
 
-void	read_from_stdin(char *stop, char *hd_filename)
+void	delete_temp_heredoc_files(int heredocs)
+{
+	char *tmp;
+
+	tmp = NULL;
+	while (heredocs > 0)
+	{
+		tmp = ft_strjoin(".heredoc", ft_itoa(heredocs));
+		printf("Tmp name: %s\n", tmp);
+		unlink(tmp);
+		free(tmp);
+		heredocs--;
+	}
+}
+
+void	read_from_stdin(char *stop, char *hd_filename, int len)
 {
 	int		cmp;
 	char	*input;
@@ -21,13 +37,15 @@ void	read_from_stdin(char *stop, char *hd_filename)
 
 	cmp = 1;
 	input = NULL;
-	fd = open(hd_filename, O_CREAT | O_RDWR | O_APPEND, 0707);
+	fd = open(hd_filename, O_CREAT | O_RDWR | O_APPEND, 0644);
 	while (cmp != 0)
 	{
 		input = get_next_line(STDIN_FILENO);
+		printf("input = [%s]\n", input);
+
 		//if (input == NULL)
 			//if_error(); //Hier zelf error handlen voor minishell???
-		cmp = ft_strncmp(input, stop, ft_strlen(stop));
+		cmp = ft_strncmp(input, stop, len);//ft_strlen(stop));
 		if (cmp == 0)
 			break ;
 		ft_putstr_fd(input, fd);
@@ -60,7 +78,8 @@ char	*handle_here_doc(char *str, int i, int heredocs)
 		j++;
 	}
 	stop = remove_quotes(stop);
-	read_from_stdin(stop, hd_filename);
+	printf("Stop = [%s]\n", stop);
+	read_from_stdin(stop, hd_filename, len);
 	free (stop);
 	return (hd_filename);
 }

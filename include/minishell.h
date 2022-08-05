@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/05 16:10:41 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/05 17:40:33 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,11 @@ char	**ft_split_pipes(char const *s, char c);
 char	*readline(const char *prompt);
 char	*set_space(char *str, int start, int len);
 char	*handle_here_doc(char *str, int i, int heredocs);
+void	delete_temp_heredoc_files(int heredocs);
 char	*remove_quotes(char *str);
 int	set_quote_flag(int q, char c);
+int	check_double_red(char *str);
+void	exec_minishell(char *input);
 
 //dollar functions
 char	*extend_dollars(char *input);
