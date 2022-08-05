@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/04 17:44:31 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/05 16:05:33 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ int	count_pipes(char *str)
 		else
 			i++;
 	}
-	// printf("i: %d, quotes: %d, j: %d", i, quotes, j);
 	if ((i - quotes) == j + (quotes / 2)) //means there are only pipes on the cmd line.
 	{
 		if (i == 1) //only 1 pipe on cmd line
@@ -74,6 +73,20 @@ int	count_pipes(char *str)
 	return (j);
 }
 
+char	**extend_dollars_remove_quotes(char **array)
+{
+	int	i;
+
+	i = 0;
+	while (array && array[i] != NULL)
+	{
+		array[i] = extend_dollars(array[i]);
+		array[i] = remove_quotes(array[i]);
+		i++;
+	}
+	return (array);
+}
+
 void	split_parts(t_part *part, t_part_split *part_split)
 {
 	int	i;
@@ -83,37 +96,34 @@ void	split_parts(t_part *part, t_part_split *part_split)
 		part_split->out_r = ft_strdup(part->out_r);
 	if (part->out != NULL)
 		part_split->out = ft_split_pipes(part->out, ' ');
-	// printf("XXXX %s XXXX\n", part->cmd);
 	if (part->cmd != NULL)
 		part_split->cmd = ft_split_pipes(part->cmd, ' ');
-	// printf("XXXX %s XXXX\n", part_split->cmd[0]);
-	// printf("XXXX %s XXXX\n", part_split->cmd[1]);
 	if (part->in != NULL)
 		part_split->in = ft_split_pipes(part->in, ' ');
 	//Hiertussen checken op dollar!
-	while (part_split->out && part_split->out[i] != NULL)
-	{
-		part_split->out[i] = extend_dollars(part_split->out[i]);
-		part_split->out[i] = remove_quotes(part_split->out[i]);
-		// printf("part_split->out[%d]: -%s-\n", i, part_split->out[i]);
-		i++;
-	}
-	i = 0;
-	while (part_split->cmd && part_split->cmd[i] != NULL)
-	{
-		part_split->cmd[i] = extend_dollars(part_split->cmd[i]);
-		part_split->cmd[i] = remove_quotes(part_split->cmd[i]);
-		// printf("part_split->cmd[%d]: -%s-\n", i, part_split->cmd[i]);
-		i++;
-	}
-	i = 0;
-	while (part_split->in && part_split->in[i] != NULL)
-	{
-		part_split->in[i] = extend_dollars(part_split->in[i]);
-		part_split->in[i] = remove_quotes(part_split->in[i]);
-		// printf("part_split->in[%d]: -%s-\n", i, part_split->in[i]);
-		i++;
-	}
+	part_split->out = extend_dollars_remove_quotes(part_split->out);
+	part_split->cmd = extend_dollars_remove_quotes(part_split->cmd);
+	part_split->in = extend_dollars_remove_quotes(part_split->in);
+	// while (part_split->out && part_split->out[i] != NULL)
+	// {
+	// 	part_split->out[i] = extend_dollars(part_split->out[i]);
+	// 	part_split->out[i] = remove_quotes(part_split->out[i]);
+	// 	i++;
+	// }
+	// i = 0;
+	// while (part_split->cmd && part_split->cmd[i] != NULL)
+	// {
+	// 	part_split->cmd[i] = extend_dollars(part_split->cmd[i]);
+	// 	part_split->cmd[i] = remove_quotes(part_split->cmd[i]);
+	// 	i++;
+	// }
+	// i = 0;
+	// while (part_split->in && part_split->in[i] != NULL)
+	// {
+	// 	part_split->in[i] = extend_dollars(part_split->in[i]);
+	// 	part_split->in[i] = remove_quotes(part_split->in[i]);
+	// 	i++;
+	// }
 }
 
 int	assign_parts(t_part *part, char *str)

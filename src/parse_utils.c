@@ -6,40 +6,18 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/20 10:17:48 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/04 15:01:38 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/05 15:46:37 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
 
-char	ft_isred(char c)
+static char	*strdup_no_quotes(char *str, char *str_new, int i, int len)
 {
-	if (c == '>' || c == '<')
-		return (c);
-	return (0);
-}
+	int	j;
 
-char	*remove_quotes(char *str)
-{
-	int	len;
-	char	*str_new;
-	int	count_quotes;
-	int	i;
-	int j;
-
-	i = 0;
 	j = 0;
-	count_quotes = 0;
-	len = ft_strlen(str);
-	while (i < len)
-	{
-		if (str[i] == 34 || str[i] == 39)
-			count_quotes++;
-		i++;
-	}
-	i = 0;
-	str_new = malloc((len - count_quotes + 1) * sizeof(char));
 	while (i < len)
 	{
 		if (str[i] != 34 && str[i] != 39)
@@ -54,6 +32,37 @@ char	*remove_quotes(char *str)
 	str_new[j] = '\0';
 	free(str);
 	return (str_new);
+}
+
+char	*remove_quotes(char *str)
+{
+	int		len;
+	char	*str_new;
+	int		count_quotes;
+	int		i;
+
+	i = 0;
+	count_quotes = 0;
+	len = ft_strlen(str);
+	while (i < len)
+	{
+		if (str[i] == 34 || str[i] == 39)
+			count_quotes++;
+		i++;
+	}
+	i = 0;
+	str_new = malloc((len - count_quotes + 1) * sizeof(char));
+	strdup_no_quotes(str, str_new, i, len);
+	return (str_new);
+}
+
+int	set_quote_flag(int q, char c)
+{
+	if ((c == 34 || c == 39) && q == 0)
+		q = 1;
+	else if ((c == 34 || c == 39) && q == 1)
+		q = 0;
+	return (q);
 }
 
 int	ft_isemptyline(char *str)

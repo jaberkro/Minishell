@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/04 16:26:44 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/05 15:44:32 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ char	*readline(const char *prompt);
 char	*set_space(char *str, int start, int len);
 char	*handle_here_doc(char *str, int i, int heredocs);
 char	*remove_quotes(char *str);
+int	set_quote_flag(int q, char c);
 
 //dollar functions
 char	*extend_dollars(char *input);
