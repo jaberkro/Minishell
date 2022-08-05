@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/03 17:26:12 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/05 11:21:08 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,11 @@ void	execute_unset(char *command)
 void	execute_export(char *command, int max)
 {
 	if (ft_strchr(command, '=') && max == 1)
+	{
 		printf("exporting %s...\n", command);
+		if (!set_env_variable(command)) // werkt niet
+			printf("exporting %s failed\n", command);
+	}
 	exit(0);
 }
 
@@ -33,21 +37,17 @@ void	execute_cd(char *command)
 	exit(0);
 }
 
-void	find_builtin_function(char *command, int max)
+void	find_builtin_function(char **commands, int max)
 {
-	char	*first_command;
 
-	if (!command)
+	if (!commands || !commands[0])
 		return ;
-	first_command = ft_split(command, ' ')[0];
-	if (first_command == NULL || !first_command[0])
-		return ;
-	if (ft_strncmp(first_command, "cd", 3) == 0)
-		execute_cd(protected_split(command, ' ')[1]);
-	if (ft_strncmp(first_command, "export", 7) == 0)
-		execute_export(protected_split(command, ' ')[1], max);
-	if (ft_strncmp(first_command, "unset", 6) == 0)
-		execute_unset(protected_split(command, ' ')[1]);
-	if (ft_strncmp(first_command, "exit", 5) == 0)
+	if (ft_strncmp(commands[0], "cd", 3) == 0)
+		execute_cd(commands[1]);
+	if (ft_strncmp(commands[0], "export", 7) == 0)
+		execute_export(commands[1], max);
+	if (ft_strncmp(commands[0], "unset", 6) == 0)
+		execute_unset(commands[1]);
+	if (ft_strncmp(commands[0], "exit", 5) == 0)
 		exit(0);
 }
