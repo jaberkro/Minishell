@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/08 14:21:05 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/08 14:34:18 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,19 +104,17 @@ int	execute_cd(char *command)
 	if (access(command, 0) == 0)// || ft_strncmp(command, "src", 4))
 	{
 		printf("Hiero\n");
+		command = ft_strtrim(command, "/");
 		str = ft_strjoin("/", command);
 		str = ft_strjoin(get_env_variable("PWD"), str);
 		ret = chdir(command);
-
 	}
 	else
 	{
 		printf("Daaaaaro\n");
 		ret = chdir(str);
-		if (ret >= -1)
-		//str = ft_strjoin("/", command);
+		if (ret >= 0)
 			str = ft_strjoin(get_env_variable("PWD"), command);
-		// ret = chdir(str);
 	}
 	if (ret < 0) //betekent dat map niet bestaat
 	{
@@ -124,7 +122,6 @@ int	execute_cd(char *command)
 		return (1);
 	}
 	printf("str = %s\n", str);
-	// str = ft_strjoin("/", str);
 	set_env_variable(ft_strjoin("PWD=", str));
 	// exit(0);
 	return (0); //deze 0 wordt later de exit code
@@ -135,7 +132,7 @@ int	execute_pwd()//char **commands)
 	// if (execve("/bin/pwd", commands, g_info.env) < 0)
 	// 	error_exit("Execve failed", 1);
 	printf("DEZE: %s\n", get_env_variable("PWD"));
-	// ook hier goede exit code returnen!
+	// ook hier goede exit code returnen!!!!!!
 	// exit(0);
 	return (0);
 }
