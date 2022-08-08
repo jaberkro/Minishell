@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 12:54:31 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/08 11:44:06 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/08 13:22:06 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	set_env_variable(char *variable)
 	while (g_info.env[i] && \
 	ft_strncmp(g_info.env[i], to_find, ft_strlen(to_find)) != 0) // and check for enter in correct space
 		i++;
-	printf("finding [%s]. length of env = [%d]\n", to_find, i);
+	// printf("finding [%s]. length of env = [%d]\n", to_find, i);
 	free(to_find);
 	if (!g_info.env[i])
 	{
@@ -96,7 +96,7 @@ int	set_env_variable(char *variable)
 		g_info.env[i] = ft_strdup(variable);
 		free(tmp2);
 	}
-	printf("done setting variable. index of new env = [%d] & [%d]\n", i, j);
+	// printf("done setting variable. index of new env = [%d] & [%d]\n", i, j);
 	return (1);
 }
 
