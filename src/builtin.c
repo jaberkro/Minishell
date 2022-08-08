@@ -6,11 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-<<<<<<< HEAD
-/*   Updated: 2022/08/08 13:32:06 by jaberkro      ########   odam.nl         */
-=======
-/*   Updated: 2022/08/08 13:55:14 by bsomers       ########   odam.nl         */
->>>>>>> 71dcea1459d0ff1c624c4286ab96b9575ca95e48
+/*   Updated: 2022/08/08 14:33:53 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +37,9 @@ int	execute_env(void)
 int	execute_unset(char *command)
 {
 	printf("unsetting %s...\n", command);
-<<<<<<< HEAD
-	return (0);
-=======
 	// exit(0);
 
-	//return (0);
+	return (0);
 }
 
 int	execute_exit(char **commands)
@@ -77,7 +70,6 @@ int	execute_exit(char **commands)
 	// if ( > 256)
 	// 	num = num - //Hier goede berekening nvoeren bij te hoog exit nummer!
 	return (num % 256);
->>>>>>> 71dcea1459d0ff1c624c4286ab96b9575ca95e48
 }
 
 int	execute_export(char **commands)
@@ -156,10 +148,6 @@ int	find_builtin_function(char **commands)
 	if (ft_strncmp(commands[0], "env", 4) == 0)
 		return (execute_env());
 	if (ft_strncmp(commands[0], "exit", 5) == 0)
-<<<<<<< HEAD
 		return (execute_exit(commands));
 	return (-1);
-=======
-		execute_exit(commands);
->>>>>>> 71dcea1459d0ff1c624c4286ab96b9575ca95e48
 }
