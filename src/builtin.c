@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/08 13:55:14 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/08 14:21:05 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,31 @@
 #include <stdio.h>
 #include <unistd.h>
 
-void	execute_unset(char *command)
+// int	execute_exit(char **commands)
+// {
+// 	printf("exiting... with code [%s]\n", commands[1]);
+// 	return (0);
+// }
+
+int	execute_env(void)
+{
+	int	i;
+
+	i = 0;
+	while (g_info.env[i])
+	{
+		printf("%s\n", g_info.env[i]);
+		i++;
+	}
+	return(0);
+}
+
+int	execute_unset(char *command)
 {
 	printf("unsetting %s...\n", command);
 	// exit(0);
 
-	//return (0);
+	return (0);
 }
 
 int	execute_exit(char **commands)
@@ -53,39 +72,60 @@ int	execute_exit(char **commands)
 	return (num % 256);
 }
 
-void	execute_export(char **commands)
+int	execute_export(char **commands)
 {
 	int	i;
 
 	i = 1;
+	if (!commands[i])
+		execute_env(); // dit moet eigenlijk niet, meot de gesorteerde versie zijn
 	//zonder argumenten de gesorteerde versie printen
 	while (commands[i])
 	{
 		if (ft_strchr(commands[i], '='))
 		{
 			printf("exporting %s...\n", commands[i]);
-			if (!set_env_variable(commands[i])) // werkt niet
+			if (!set_env_variable(commands[i]))
 				printf("exporting %s failed\n", commands[i]);
 		}
 		i++;
 	}
-	exit(0);
+	return (0);
 }
 
 int	execute_cd(char *command)
 {
 	int	ret;
+	char *str;
+
+	str = NULL;
+	ret = 0;
 	printf("changing to directory %s...\n", command);
-	if (access(command, F_OK) == 0)
+	if (access(command, 0) == 0)// || ft_strncmp(command, "src", 4))
+	{
+		printf("Hiero\n");
+		str = ft_strjoin("/", command);
+		str = ft_strjoin(get_env_variable("PWD"), str);
 		ret = chdir(command);
+
+	}
 	else
-		ret = chdir(ft_strjoin(get_env_variable("PWD"), command));
+	{
+		printf("Daaaaaro\n");
+		ret = chdir(str);
+		if (ret >= -1)
+		//str = ft_strjoin("/", command);
+			str = ft_strjoin(get_env_variable("PWD"), command);
+		// ret = chdir(str);
+	}
 	if (ret < 0) //betekent dat map niet bestaat
 	{
 		printf("%s: no such file or directorrrry\n", command);
-		//goed returnen!
+		return (1);
 	}
-	//en ook de env variables in global updaten!
+	printf("str = %s\n", str);
+	// str = ft_strjoin("/", str);
+	set_env_variable(ft_strjoin("PWD=", str));
 	// exit(0);
 	return (0); //deze 0 wordt later de exit code
 }
@@ -100,41 +140,33 @@ int	execute_pwd()//char **commands)
 	return (0);
 }
 
-void	execute_env(void)
-{
-	int	i;
 
-	i = 0;
-	while (g_info.env[i])
-	{
-		printf("%s\n", g_info.env[i]);
-		i++;
-	}
-	exit(0);
-}
-
-void	execute_echo(char **commands)
+int	execute_echo(char **commands)
 {
+	//zonder execve schrijven!
 	if (execve("/bin/echo", commands, g_info.env) < 0)
 		error_exit("Execve failed", 1);
+	// printf("executing echo %s...\n", commands[0]);
+	return (0);
 }
 
-void	find_builtin_function(char **commands)
+int	find_builtin_function(char **commands)
 {
 	if (!commands || !commands[0])
-		return ;
-	if (ft_strncmp(commands[0], "echo", 5) == 0)
-		execute_echo(commands);
+		return (-2); // geen commando aanwezig
+	// if (ft_strncmp(commands[0], "echo", 5) == 0)
+	// 	return (execute_echo(commands));
 	if (ft_strncmp(commands[0], "pwd", 4) == 0)
-		execute_pwd(/*commands*/);
+		return (execute_pwd(/*commands*/));
 	if (ft_strncmp(commands[0], "cd", 3) == 0)
-		execute_cd(commands[1]);
+		return (execute_cd(commands[1]));
 	if (ft_strncmp(commands[0], "export", 7) == 0)
-		execute_export(commands);
+		return (execute_export(commands));
 	if (ft_strncmp(commands[0], "unset", 6) == 0)
-		execute_unset(commands[1]);
+		return (execute_unset(commands[1]));
 	if (ft_strncmp(commands[0], "env", 4) == 0)
-		execute_env();
+		return (execute_env());
 	if (ft_strncmp(commands[0], "exit", 5) == 0)
-		execute_exit(commands);
+		return (execute_exit(commands));
+	return (-1);
 }
