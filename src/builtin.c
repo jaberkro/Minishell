@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/08 17:28:09 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/08 17:38:47 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,6 @@
 #include "libft.h"
 #include <stdio.h>
 #include <unistd.h>
-
-// int	execute_exit(char **commands)
-// {
-// 	printf("exiting... with code [%s]\n", commands[1]);
-// 	return (0);
-// }
 
 int	execute_env(void)
 {
@@ -31,45 +25,48 @@ int	execute_env(void)
 		printf("%s\n", g_info.env[i]);
 		i++;
 	}
-	return(0);
+	return (0);
 }
 
 int	execute_unset(char *command)
 {
 	printf("unsetting %s...\n", command);
-	// exit(0);
-
 	return (0);
 }
 
-int	execute_exit(char **commands)
+int	execute_exit(char **commands, int max)
 {
 	int	num;
 	int	i;
 
 	i = 0;
 	num = 0;
-	//printf("commands[2] = %s\n", commands[2]);
 	while (commands[i] != NULL)
 		i++;
+	if (max == 1)
+		printf("exit\n");
+	if (i == 2)
+	{
+		num = ft_atoi(commands[1]);
+		if (ft_isnumber(commands[1]) == 0)
+		{
+			printf("exit: %s: numeric argument required\n", commands[1]);
+			if (max == 1)
+				exit(255);
+			return (255);
+		}
+		if (max == 1)
+			exit(num % 256);
+		return (num % 256);
+	}
 	if (i > 2)
 	{
 		printf("exit: too many arguments\n");
-		return (1);//Hiet foutmelding invoegen, exitcode 1, want too many args!
+		return (1);
 	}
-	if (i > 1)
-	{
-		num = ft_atoi(commands[1]);
-		printf("commands[1] = %s\n", commands[1]);
-		if (ft_isnumber(commands[1]) == 0)
-		{
-			ft_printf("exit: %s: numeric argument required\n", commands[1]);
-			return (255);//Hier foutmelding (exitcode 255) invoegen, want het is geen nummer! maar hij exit wel!
-		}
-	}
-	// if ( > 256)
-	// 	num = num - //Hier goede berekening nvoeren bij te hoog exit nummer!
-	return (num % 256);
+	if (max == 1)
+		exit(0);
+	return (0);
 }
 
 int	execute_export(char **commands)
@@ -78,15 +75,13 @@ int	execute_export(char **commands)
 
 	i = 1;
 	if (!commands[i])
-		execute_env(); // dit moet eigenlijk niet, meot de gesorteerde versie zijn
-	//zonder argumenten de gesorteerde versie printen
+		execute_env(); // dit moet eigenlijk niet, moet de gesorteerde versie zijn
 	while (commands[i])
 	{
 		if (ft_strchr(commands[i], '='))
 		{
-			printf("exporting %s...\n", commands[i]);
 			if (!set_env_variable(commands[i]))
-				printf("exporting %s failed\n", commands[i]);
+				error_exit("Malloc failed", 1);
 		}
 		i++;
 	}
@@ -95,9 +90,8 @@ int	execute_export(char **commands)
 
 int	execute_cd(char *command)
 {
-	int	ret;
-	char *str;
-	// char *pwd;
+	int		ret;
+	char	*str;
 
 	str = NULL; //IK MOET MANIER VINDEN OM TE CHECKEN OF HET EEN RELATIVE OF ABSOLUTE PATH IS!!!
 	ret = 0;
@@ -137,12 +131,10 @@ int	execute_echo(char **commands)
 	return (0);
 }
 
-int	find_builtin_function(char **commands)
+int	find_builtin_function(char **commands, int max)
 {
 	if (!commands || !commands[0])
-		return (-2); // geen commando aanwezig
-	// if (ft_strncmp(commands[0], "echo", 5) == 0)
-	// 	return (execute_echo(commands));
+		return (-2);
 	if (ft_strncmp(commands[0], "pwd", 4) == 0)
 		return (execute_pwd());
 	if (ft_strncmp(commands[0], "cd", 3) == 0)
@@ -154,6 +146,6 @@ int	find_builtin_function(char **commands)
 	if (ft_strncmp(commands[0], "env", 4) == 0)
 		return (execute_env());
 	if (ft_strncmp(commands[0], "exit", 5) == 0)
-		return (execute_exit(commands));
+		return (execute_exit(commands, max));
 	return (-1);
 }

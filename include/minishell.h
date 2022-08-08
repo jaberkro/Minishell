@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/08 13:59:49 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/08 16:47:18 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	**get_paths(void);
 
 // builtin functions
 // void	execute_pwd(void);
-int		find_builtin_function(char **commands);
+int		find_builtin_function(char **commands, int max);
 int		execute_echo(char **commands);
 
 //executer functions

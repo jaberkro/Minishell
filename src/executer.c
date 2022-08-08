@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/08 14:00:33 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/08 17:31:48 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void	write_exit(char *message, int exit_code)
 	char	*return_value;
 
 	return_value = ft_strjoin(ft_strdup("?="), ft_itoa(exit_code));
-	// printf("write_exit[%s]\n", return_value);
 	set_env_variable(return_value);
 	write(2, message, ft_strlen(message));
 	exit(exit_code);
@@ -33,7 +32,6 @@ void	write_exit_argument(char *argument, char *message, int exit_code)
 	char	*return_value;
 
 	return_value = ft_strjoin(ft_strdup("?="), ft_itoa(exit_code));
-	// printf("write_exit_argument[%s]\n", return_value);
 	set_env_variable(return_value);
 	if (argument)
 		write(2, argument, ft_strlen(argument));
@@ -46,7 +44,6 @@ void	error_exit(char *message, int exit_code)
 	char	*return_value;
 
 	return_value = ft_strjoin(ft_strdup("?="), ft_itoa(exit_code));
-	// printf("error_exit[%s]\n", return_value);
 	set_env_variable(return_value);
 	perror(message);
 	exit(exit_code);
@@ -106,7 +103,7 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 	int		builtin;
 
 	protected_pipe(fd);
-	builtin = find_builtin_function(parts[i].cmd); // echo heeft meer argumenten nodig
+	builtin = find_builtin_function(parts[i].cmd, max);
 	pid = protected_fork();
 	if (pid == 0)
 	{
@@ -124,8 +121,10 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 			if (execve(path, parts[i].cmd, g_info.env) < 0)
 				error_exit("Execve failed", 1);
 		}
-		else
-			exit(builtin);
+		close(readfd); // moeten deze hier?
+		close(fd[0]);
+		close(fd[1]);
+		exit(builtin);
 	}
 	close(readfd);
 	close(fd[1]);
