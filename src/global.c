@@ -6,7 +6,11 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 12:54:31 by jaberkro      #+#    #+#                 */
+<<<<<<< HEAD
 /*   Updated: 2022/08/08 13:22:06 by jaberkro      ########   odam.nl         */
+=======
+/*   Updated: 2022/08/08 13:01:32 by bsomers       ########   odam.nl         */
+>>>>>>> 71dcea1459d0ff1c624c4286ab96b9575ca95e48
 /*                                                                            */
 /* ************************************************************************** */
 

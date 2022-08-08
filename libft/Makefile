@@ -6,7 +6,7 @@
 #    By: bsomers <bsomers@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/11/13 16:21:29 by bsomers       #+#    #+#                  #
-#    Updated: 2022/06/10 13:16:12 by bsomers       ########   odam.nl          #
+#    Updated: 2022/08/05 15:24:37 by bsomers       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ O_FILES = ft_isprint.o \
 		ft_isalnum.o \
 		ft_isascii.o \
 		ft_isnumber.o \
+		ft_isred.o \
 		ft_isspace.o \
 		ft_memcpy.o \
 		ft_memmove.o \

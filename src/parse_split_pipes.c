@@ -6,44 +6,39 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/28 17:05:37 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/07/28 17:24:55 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/05 15:57:07 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
-#include <stdio.h> //weeeeegggg!!!
 
 static int	wcount(char const *s, char c)
 {
 	int	i;
 	int	d;
 	int	w;
-    int q;
+	int	q;
 
 	d = 0;
 	w = 0;
-    q = 0;
+	q = 0;
 	i = ft_strlen(s);
 	while (d < i)
 	{
-        if ((s[d] == 34 || s[d] == 39) && q == 0)
-            q = 1;
-		else if ((s[d] == 34 || s[d] == 39) && q == 1)
-			q = 0;
+		q = set_quote_flag(q, s[d]);
 		if (q == 0)
 		{
 			if (d > 0)
-				if (s[d] != c && ((s[d - 1] == c && (s[d] != 34 && s[d] != 39)) || (d - 1) == -1))
+				if (s[d] != c && ((s[d - 1] == c && (s[d] != 34 && s[d] != 39)) \
+				|| (d - 1) == -1))
 					w++;
 			if (d < 1)
 				if (s[d] != c)
 					w++;
 		}
-		// printf("S[d]: %c, d: %d, q: %d, w: %d\n", s[d], d, q, w);
 		d++;
 	}
-	// printf("Chunks to split to: %d\n", w);
 	return (w + 1);
 }
 
@@ -59,15 +54,11 @@ static char	*wsplit(const char **s, char c)
 	w = 0;
 	x = 0;
 	q = 0;
-	while (s1[w] != '\0')// && s1[w] != c)
+	while (s1[w] != '\0')
 	{
-		// printf("s1[w]: %c, w: %d, q: %d\n", s1[w], w, q);
-		if ((s1[w] == 34 || s1[w] == 39) && q == 0)
-			q = 1;
-		else if ((s1[w] == 34 || s1[w] == 39) && q == 1)
-			q = 0;
+		q = set_quote_flag(q, s1[w]);
 		if (s1[w] == c && q == 0)
-			break;
+			break ;
 		w++;
 	}
 	word = ft_calloc(w + 1, sizeof(char));
@@ -115,7 +106,6 @@ char	**ft_split_pipes(char const *s, char c)
 	while (w > x && *s != '\0')
 	{
 		array[x] = wsplit(&s, c);
-		// printf("Chunk made: -%s-\n", array[x]);
 		if (array[x] == NULL)
 		{
 			clearspace(array, x);

@@ -6,25 +6,79 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 15:10:44 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/07/22 19:03:31 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/08 13:53:17 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdio.h>
+// #include <stdio.h>
+#include "libft.h"
+#include "minishell.h"
+#include <stdio.h> //welke van deze includes hebben we nog nodig?? Even checken
+#include <unistd.h>
+#include <stdlib.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <sys/wait.h>
+#include <signal.h>
 
-int	main(int argc, char **argv, char **env)
+void	sig_handler(int sig)
 {
-	// remove below
-	argc++;
-	(void)argv;
-	//remove above
-	init_global(env);
-	printf("%s\n", g_info.paths[0]);
-	execute_pwd();
-	set_env_variable("PWD=/hoi/dit/is/een/test");
-	execute_pwd();
-	set_env_variable("PWT=/hoi/dit/is/ook/een/test");
-	printf("%s\n", get_env_variable("PWT="));
-	return (0);
+	if (sig == SIGINT)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+}
+
+int	check_str(char *str)
+{
+	// int	cmp;
+
+	// cmp = ft_strncmp(str, "exit\0", 5);
+	// if (cmp == 0)
+	// {
+	// 	printf("exit\n");
+	// 	return (0);
+	// }
+	if (str != NULL && str[0])
+	{
+		add_history(str);
+		if (ft_isemptyline(str) == 0)
+			return 0;
+		if (check_double_red(str) < 0)
+			return 0;
+		exec_minishell(str);
+	}
+	return (1);
+}
+
+int	main()
+{
+	extern char **environ;
+	char *str;
+	struct sigaction	sa;
+
+	rl_catch_signals = 0; //readline now doesn't install default signal handlers :)
+	sa.sa_handler = &sig_handler;
+	init_global(environ);
+	while (1)
+	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
+		sigaction(SIGINT, &sa, NULL);
+		str = readline("mickeyshell> ");
+		if (str == NULL) //which means EOF is encountered (that happens when ctrl-D is pressed)
+		{
+			printf("exit\n");
+			sigaction(SIGQUIT, &sa, NULL);
+			return (0);
+		}
+		if (check_str(str) == 0)
+			return (0);
+		free (str);
+	}
+	return (0); //Hier exitcode invullen?
 }

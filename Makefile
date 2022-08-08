@@ -6,7 +6,7 @@
 #    By: jaberkro <jaberkro@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/08/04 16:03:16 by jaberkro      ########   odam.nl          #
+#    Updated: 2022/08/08 11:29:19 by bsomers       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ BUILD_DIR = obj
 SRC = 	$(SRC_DIR)/global.c \
 		$(SRC_DIR)/executer.c \
 		$(SRC_DIR)/protected.c \
+		$(SRC_DIR)/main.c \
 		$(SRC_DIR)/path.c \
 		$(SRC_DIR)/parse.c \
 		$(SRC_DIR)/parse_split_pipes.c \
@@ -51,7 +52,7 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 
 $(NAME): $(LIBFT) $(OBJ) 
 	cp $(LIBFT) ./$(NAME)
-	CC $(LDFLAGS) $(OBJ) $(LIBFT) $(INC) -o $(NAME)
+	CC $(OBJ) $(LDFLAGS) $(LIBFT) $(INC) -o $(NAME)
 	@echo "$(RED)Done $(GREEN)COM$(YELLOW)PI$(BLUE)LING $(PINK)MINISHELL$(RESET):)"
 
 $(LIBFT):
