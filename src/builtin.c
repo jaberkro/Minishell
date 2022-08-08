@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/08 14:34:18 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/08 17:28:09 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,32 +97,22 @@ int	execute_cd(char *command)
 {
 	int	ret;
 	char *str;
+	// char *pwd;
 
-	str = NULL;
+	str = NULL; //IK MOET MANIER VINDEN OM TE CHECKEN OF HET EEN RELATIVE OF ABSOLUTE PATH IS!!!
 	ret = 0;
 	printf("changing to directory %s...\n", command);
-	if (access(command, 0) == 0)// || ft_strncmp(command, "src", 4))
-	{
-		printf("Hiero\n");
-		command = ft_strtrim(command, "/");
-		str = ft_strjoin("/", command);
-		str = ft_strjoin(get_env_variable("PWD"), str);
-		ret = chdir(command);
-	}
-	else
-	{
-		printf("Daaaaaro\n");
-		ret = chdir(str);
-		if (ret >= 0)
-			str = ft_strjoin(get_env_variable("PWD"), command);
-	}
+	ret = chdir(command);
+	if (ret >= 0)
+		str = ft_strjoin(get_env_variable("PWD"), command);
 	if (ret < 0) //betekent dat map niet bestaat
 	{
 		printf("%s: no such file or directorrrry\n", command);
 		return (1);
 	}
-	printf("str = %s\n", str);
-	set_env_variable(ft_strjoin("PWD=", str));
+	//pwd = getcwd()
+	//printf("str = %s\n", str);
+	set_env_variable(ft_strjoin("PWD=", command));//str));
 	// exit(0);
 	return (0); //deze 0 wordt later de exit code
 }
@@ -154,7 +144,7 @@ int	find_builtin_function(char **commands)
 	// if (ft_strncmp(commands[0], "echo", 5) == 0)
 	// 	return (execute_echo(commands));
 	if (ft_strncmp(commands[0], "pwd", 4) == 0)
-		return (execute_pwd(/*commands*/));
+		return (execute_pwd());
 	if (ft_strncmp(commands[0], "cd", 3) == 0)
 		return (execute_cd(commands[1]));
 	if (ft_strncmp(commands[0], "export", 7) == 0)
