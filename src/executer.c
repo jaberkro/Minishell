@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/08 14:27:39 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/08 14:38:17 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,18 +110,22 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 	pid = protected_fork();
 	if (pid == 0)
 	{
-		readfd = update_readfd(i, readfd, parts);
-		fd[1] = update_writefd(i, max, fd[1], parts);
-		protected_dup2s(readfd, fd[1]);
-		close(readfd);
-		close(fd[0]);
-		close(fd[1]);
-		// printf("first command: %s\n", parts[i].cmd[0]);
-		find_builtin_function(parts[i].cmd);//, max);
-		path = command_in_paths(parts[i].cmd[0], g_info.paths);
-		// printf("path: %s\n", path);
-		if (execve(path, parts[i].cmd, g_info.env) < 0)
-			error_exit("Execve failed", 1);
+		if (builtin == -1)
+		{
+			readfd = update_readfd(i, readfd, parts);
+			fd[1] = update_writefd(i, max, fd[1], parts);
+			protected_dup2s(readfd, fd[1]);
+			close(readfd);
+			close(fd[0]);
+			close(fd[1]);
+			if (ft_strncmp(parts[i].cmd[0], "echo", 5) == 0)
+				execute_echo(parts[i].cmd);
+			path = command_in_paths(parts[i].cmd[0], g_info.paths);
+			if (execve(path, parts[i].cmd, g_info.env) < 0)
+				error_exit("Execve failed", 1);
+		}
+		else
+			exit(builtin);
 	}
 	close(readfd);
 	close(fd[1]);

@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/08 14:33:53 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/08 14:37:11 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int	execute_exit(char **commands)
-{
-	printf("exiting... with code [%s]\n", commands[1]);
-	return (0);
-}
+// int	execute_exit(char **commands)
+// {
+// 	printf("exiting... with code [%s]\n", commands[1]);
+// 	return (0);
+// }
 
 int	execute_env(void)
 {
@@ -96,17 +96,33 @@ int	execute_export(char **commands)
 int	execute_cd(char *command)
 {
 	int	ret;
+	char *str;
+
+	str = NULL;
+	ret = 0;
 	printf("changing to directory %s...\n", command);
-	if (access(command, F_OK) == 0)
+	if (access(command, 0) == 0)// || ft_strncmp(command, "src", 4))
+	{
+		printf("Hiero\n");
+		command = ft_strtrim(command, "/");
+		str = ft_strjoin("/", command);
+		str = ft_strjoin(get_env_variable("PWD"), str);
 		ret = chdir(command);
+	}
 	else
-		ret = chdir(ft_strjoin(get_env_variable("PWD"), command));
+	{
+		printf("Daaaaaro\n");
+		ret = chdir(str);
+		if (ret >= 0)
+			str = ft_strjoin(get_env_variable("PWD"), command);
+	}
 	if (ret < 0) //betekent dat map niet bestaat
 	{
 		printf("%s: no such file or directorrrry\n", command);
-		//goed returnen!
+		return (1);
 	}
-	//en ook de env variables in global updaten!
+	printf("str = %s\n", str);
+	set_env_variable(ft_strjoin("PWD=", str));
 	// exit(0);
 	return (0); //deze 0 wordt later de exit code
 }
@@ -116,7 +132,7 @@ int	execute_pwd()//char **commands)
 	// if (execve("/bin/pwd", commands, g_info.env) < 0)
 	// 	error_exit("Execve failed", 1);
 	printf("DEZE: %s\n", get_env_variable("PWD"));
-	// ook hier goede exit code returnen!
+	// ook hier goede exit code returnen!!!!!!
 	// exit(0);
 	return (0);
 }
