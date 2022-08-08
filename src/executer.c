@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/05 10:18:45 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/08 13:16:01 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 		close(fd[0]);
 		close(fd[1]);
 		// printf("first command: %s\n", parts[i].cmd[0]);
-		find_builtin_function(parts[i].cmd, max);
+		find_builtin_function(parts[i].cmd);//, max);
 		path = command_in_paths(parts[i].cmd[0], g_info.paths);
 		// printf("path: %s\n", path);
 		if (execve(path, parts[i].cmd, g_info.env) < 0)
