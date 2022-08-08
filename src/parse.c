@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/05 18:32:36 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/08 17:26:03 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,6 +311,7 @@ void	exec_minishell(char *input)
 	int	i;
 	int	heredocs;
 	char	*tmp;
+	char *return_value;
 
 	i = 0;
 	heredocs = 0;
@@ -335,6 +336,11 @@ void	exec_minishell(char *input)
 	}
 	pid = executer(0, count_pipe + 1, fd, part_split);
 	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+	{
+		return_value = ft_strjoin(ft_strdup("?="), ft_itoa(WEXITSTATUS(status)));
+		set_env_variable(return_value);
+	}
 	i = 1;
 	while (i < count_pipe + 1)
 	{

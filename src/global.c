@@ -5,16 +5,8 @@
 /*                                                     +:+                    */
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/07/22 12:54:31 by jaberkro      #+#    #+#                 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-/*   Updated: 2022/08/08 13:22:06 by jaberkro      ########   odam.nl         */
-=======
-/*   Updated: 2022/08/08 13:01:32 by bsomers       ########   odam.nl         */
->>>>>>> 71dcea1459d0ff1c624c4286ab96b9575ca95e48
-=======
-/*   Updated: 2022/08/08 14:00:39 by bsomers       ########   odam.nl         */
->>>>>>> e02a7ea653409112e1160ef0aa291c24c6725eb3
+/*   Created: 2022/08/08 14:46:35 by jaberkro      #+#    #+#                 */
+/*   Updated: 2022/08/08 17:32:17 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +68,6 @@ int	set_env_variable(char *variable)
 	while (g_info.env[i] && \
 	ft_strncmp(g_info.env[i], to_find, ft_strlen(to_find)) != 0) // and check for enter in correct space
 		i++;
-	// printf("finding [%s]. length of env = [%d]\n", to_find, i);
 	free(to_find);
 	if (!g_info.env[i])
 	{
@@ -87,12 +78,10 @@ int	set_env_variable(char *variable)
 			return (0);
 		while (j < i)
 		{
-			// printf("copying:%s\n", tmp[j]);
 			g_info.env[j] = ft_strdup(tmp[j]);
 			free(tmp[j]);
 			j++;
 		}
-		// printf("copying:%s\n", variable);
 		g_info.env[j] = ft_strdup(variable);
 		g_info.env[j + 1] = NULL;
 		free (tmp);
@@ -104,7 +93,6 @@ int	set_env_variable(char *variable)
 		g_info.env[i] = ft_strdup(variable);
 		free(tmp2);
 	}
-	// printf("done setting variable. index of new env = [%d] & [%d]\n", i, j);
 	return (1);
 }
 
