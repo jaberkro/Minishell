@@ -6,7 +6,7 @@
 #    By: jaberkro <jaberkro@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/08/05 16:24:22 by bsomers       ########   odam.nl          #
+#    Updated: 2022/08/08 11:29:19 by bsomers       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,7 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 
 $(NAME): $(LIBFT) $(OBJ) 
 	cp $(LIBFT) ./$(NAME)
-	CC $(LDFLAGS) $(OBJ) $(LIBFT) $(INC) -o $(NAME)
+	CC $(OBJ) $(LDFLAGS) $(LIBFT) $(INC) -o $(NAME)
 	@echo "$(RED)Done $(GREEN)COM$(YELLOW)PI$(BLUE)LING $(PINK)MINISHELL$(RESET):)"
 
 $(LIBFT):
