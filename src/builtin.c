@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/08 17:38:47 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/09 17:30:55 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ int	execute_env(void)
 	i = 0;
 	while (g_info.env[i])
 	{
-		printf("%s\n", g_info.env[i]);
+		if (ft_strncmp(g_info.env[i], "?=", 2) != 0)
+			printf("%s\n", g_info.env[i]);
 		i++;
 	}
 	return (0);
@@ -34,7 +35,7 @@ int	execute_unset(char *command)
 	return (0);
 }
 
-int	execute_exit(char **commands, int max)
+void	execute_exit(char **commands, int max)
 {
 	int	num;
 	int	i;
@@ -51,67 +52,53 @@ int	execute_exit(char **commands, int max)
 		if (ft_isnumber(commands[1]) == 0)
 		{
 			printf("exit: %s: numeric argument required\n", commands[1]);
-			if (max == 1)
-				exit(255);
-			return (255);
+			exit(255);
 		}
-		if (max == 1)
-			exit(num % 256);
-		return (num % 256);
+		exit(num % 256);
 	}
 	if (i > 2)
 	{
 		printf("exit: too many arguments\n");
-		return (1);
+		exit(1);
 	}
-	if (max == 1)
-		exit(0);
-	return (0);
-}
-
-int	execute_export(char **commands)
-{
-	int	i;
-
-	i = 1;
-	if (!commands[i])
-		execute_env(); // dit moet eigenlijk niet, moet de gesorteerde versie zijn
-	while (commands[i])
-	{
-		if (ft_strchr(commands[i], '='))
-		{
-			if (!set_env_variable(commands[i]))
-				error_exit("Malloc failed", 1);
-		}
-		i++;
-	}
-	return (0);
+	exit(0);
 }
 
 int	execute_cd(char *command)
 {
-	int		ret;
-	char	*str;
+	// int		ret;
+	// char	*str;
 
-	str = NULL; //IK MOET MANIER VINDEN OM TE CHECKEN OF HET EEN RELATIVE OF ABSOLUTE PATH IS!!!
-	ret = 0;
+	// str = NULL;
+	// ret = 0;
 	printf("changing to directory %s...\n", command);
-	ret = chdir(command);
-	if (ret >= 0)
-		str = ft_strjoin(get_env_variable("PWD"), command);
-	if (ret < 0) //betekent dat map niet bestaat
-	{
-		printf("%s: no such file or directorrrry\n", command);
-		return (1);
-	}
-	//pwd = getcwd()
-	//printf("str = %s\n", str);
-	set_env_variable(ft_strjoin("PWD=", command));//str));
-	// exit(0);
+	// if (access(command, 0) == 0)// || ft_strncmp(command, "src", 4))
+	// {
+	// 	printf("Hiero\n");
+	// 	command = ft_strtrim(command, "/");
+	// 	str = ft_strjoin("/", command);
+	// 	str = ft_strjoin(get_env_variable("PWD"), str);
+	// 	ret = chdir(command);
+	// }
+	// else
+	// {
+	// 	printf("Daaaaaro\n");
+	// 	ret = chdir(str);
+	// 	if (ret >= 0)
+	// 		str = ft_strjoin(get_env_variable("PWD"), command);
+	// }
+	// if (ret < 0) //betekent dat map niet bestaat
+	// {
+	// 	printf("%s: no such file or directorrrry\n", command);
+	// 	return (1);
+	// }
+	// printf("str = %s\n", str);
+	// set_env_variable(ft_strjoin("PWD=", str));
+	// // exit(0);
 	return (0); //deze 0 wordt later de exit code
 }
 
-int	execute_pwd()//char **commands)
+int	execute_pwd(void) //char **commands)
 {
 	// if (execve("/bin/pwd", commands, g_info.env) < 0)
 	// 	error_exit("Execve failed", 1);
@@ -121,31 +108,58 @@ int	execute_pwd()//char **commands)
 	return (0);
 }
 
-
 int	execute_echo(char **commands)
 {
-	//zonder execve schrijven!
-	if (execve("/bin/echo", commands, g_info.env) < 0)
-		error_exit("Execve failed", 1);
-	// printf("executing echo %s...\n", commands[0]);
+	int	i;
+
+	i = 1;
+	set_env_variable("?=0");
+	if (!commands[i])
+	{
+		printf("\n");
+		return (0);
+	}
+	while (commands[i])
+	{
+		if (i != 1 || (i == 1 && ft_strncmp(commands[1], "-n", 3) != 0))
+		{
+			if ((i != 1 && ft_strncmp(commands[1], "-n", 3) != 0))
+				printf(" ");
+			printf("%s", commands[i]);
+		}
+		i++;
+	}
+	if (ft_strncmp(commands[1], "-n", 3) != 0)
+		printf("\n");
 	return (0);
 }
 
 int	find_builtin_function(char **commands, int max)
 {
+	int	status;
+
+	status = -1;
 	if (!commands || !commands[0])
-		return (-2);
+		return (0);
 	if (ft_strncmp(commands[0], "pwd", 4) == 0)
-		return (execute_pwd());
+		status = execute_pwd();
 	if (ft_strncmp(commands[0], "cd", 3) == 0)
-		return (execute_cd(commands[1]));
+		status = execute_cd(commands[1]);
 	if (ft_strncmp(commands[0], "export", 7) == 0)
-		return (execute_export(commands));
+		status = execute_export(commands);
 	if (ft_strncmp(commands[0], "unset", 6) == 0)
-		return (execute_unset(commands[1]));
+		status = execute_unset(commands[1]);
 	if (ft_strncmp(commands[0], "env", 4) == 0)
-		return (execute_env());
+		status = execute_env();
+	if (ft_strncmp(commands[0], "echo", 5) == 0)
+		status = execute_echo(commands);
 	if (ft_strncmp(commands[0], "exit", 5) == 0)
-		return (execute_exit(commands, max));
-	return (-1);
+		execute_exit(commands, max);
+	if (max != 1 && status != -1)
+		exit(status);
+	if (status != -1 && !set_env_variable(ft_strjoin("?=", ft_itoa(status))))
+		error_exit("Malloc failed", 1);
+	if (status != -1)
+		return (1);
+	return (0);
 }

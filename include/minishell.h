@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/08 16:47:18 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/09 16:55:19 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,10 @@ int		set_env_variable(char *variable);
 char	**get_paths(void);
 
 // builtin functions
-// void	execute_pwd(void);
 int		find_builtin_function(char **commands, int max);
 int		execute_echo(char **commands);
+int		execute_export(char **commands);
+int		execute_env(void);
 
 //executer functions
 void	error_exit(char *message, int exit_code);
@@ -63,6 +64,7 @@ int		executer(int i, int max, int readfd, t_part_split *parts);
 char	*command_in_paths(char	*argument, char **paths);
 void	write_exit(char *message, int exit_code);
 void	write_exit_argument(char *argument, char *message, int exit_code);
+void	single_executer(int i, int max, int readfd, t_part_split *parts);
 
 //protected functions
 void	protected_pipe(int fd[2]);
@@ -81,8 +83,8 @@ char	*set_space(char *str, int start, int len);
 char	*handle_here_doc(char *str, int i, int heredocs);
 void	delete_temp_heredoc_files(int heredocs);
 char	*remove_quotes(char *str);
-int	set_quote_flag(int q, char c);
-int	check_double_red(char *str);
+int		set_quote_flag(int q, char c);
+int		check_double_red(char *str);
 void	exec_minishell(char *input);
 
 //dollar functions
