@@ -6,13 +6,13 @@
 #    By: bsomers <bsomers@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/08/10 13:20:22 by bsomers       ########   odam.nl          #
+#    Updated: 2022/08/10 14:54:19 by bsomers       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
-FLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
-LDFLAGS = -L /Users/$(USER)/.brew/opt/readline/lib -lreadline -g3 -fsanitize=address
+FLAGS = -Wall -Wextra -Werror
+LDFLAGS = -L /Users/$(USER)/.brew/opt/readline/lib -lreadline
 INC = -I ./libft -I ./include -I/Users/$(USER)/.brew/opt/readline/include
 
 LIBFT_DIR = libft/
@@ -21,7 +21,7 @@ LIBFT = libft/libft.a
 SRC_DIR = src
 BUILD_DIR = obj
 
-SRC = 	$(SRC_DIR)/global.c \
+SRC = 	$(SRC_DIR)/init_global.c \
 		$(SRC_DIR)/executer.c \
 		$(SRC_DIR)/protected.c \
 		$(SRC_DIR)/main.c \
@@ -31,7 +31,10 @@ SRC = 	$(SRC_DIR)/global.c \
 		$(SRC_DIR)/parse_heredoc.c \
 		$(SRC_DIR)/parse_utils.c \
 		$(SRC_DIR)/builtin.c \
-		$(SRC_DIR)/dollar.c
+		$(SRC_DIR)/dollar.c \
+		$(SRC_DIR)/builtin_export.c \
+		$(SRC_DIR)/env.c
+
 OBJ = $(subst $(SRC_DIR), $(BUILD_DIR), $(SRC:.c=.o))
 
 # COLORS

@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/10 13:35:29 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/10 14:54:08 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,20 @@ typedef struct s_part_split
 	char	*out_r;
 }	t_part_split;
 
-//global functions
+//global function
 void	init_global(char **env);
+
+//env functions
 char	*get_env_variable(char *to_find);
 int		set_env_variable(char *variable);
 char	**get_paths(void);
+char	**copy_array(char **to_copy);
 
 // builtin functions
-// void	execute_pwd(void);
 int		find_builtin_function(char **commands, int max);
 int		execute_echo(char **commands);
+int		execute_export(char **commands);
+int		execute_env(void);
 
 //executer functions
 void	error_exit(char *message, int exit_code);
@@ -63,6 +67,7 @@ int		executer(int i, int max, int readfd, t_part_split *parts);
 char	*command_in_paths(char	*argument, char **paths);
 void	write_exit(char *message, int exit_code);
 void	write_exit_argument(char *argument, char *message, int exit_code);
+void	single_executer(int i, int max, int readfd, t_part_split *parts);
 
 //protected functions
 void	protected_pipe(int fd[2]);
@@ -81,8 +86,8 @@ char	*set_space(char *str, int start, int len);
 char	*handle_here_doc(char *str, int i, int heredocs);
 void	delete_temp_heredoc_files(int heredocs);
 char	*remove_quotes(char *str);
-int	set_quote_flag(int q, char c);
-int	check_double_red(char *str);
+int		set_quote_flag(int q, char c);
+int		check_double_red(char *str);
 void	exec_minishell(char *input);
 void	free_struct(t_part *parts);
 void	free_struct_split(t_part_split *part_plit);
