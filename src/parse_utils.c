@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   parse_utils.c                                      :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
+/*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/20 10:17:48 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/05 15:46:37 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/10 13:46:44 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ char	*remove_quotes(char *str)
 	i = 0;
 	str_new = malloc((len - count_quotes + 1) * sizeof(char));
 	strdup_no_quotes(str, str_new, i, len);
+	//free (str); //deze toegevoegd tijdens leaks checks op 10-8 - NIET DOEN, wordt double free!
 	return (str_new);
 }
 
@@ -111,4 +112,26 @@ char	*set_space(char *str, int start, int len)
 		i++;
 	}
 	return (str);
+}
+
+void	free_struct(t_part *parts)
+{
+	free(parts->in);
+	free(parts->cmd);
+	free(parts->out);
+	free(parts->out_r);
+	free(parts);
+}
+
+void	free_struct_split(t_part_split *part_split)
+{
+	if (part_split->in)
+		free_array(part_split->in);
+	if (part_split->cmd)
+		free_array(part_split->cmd);
+	if (part_split->out)
+		free_array(part_split->out);
+	if (part_split->out_r)
+		free(part_split->out_r);
+	free(part_split);
 }

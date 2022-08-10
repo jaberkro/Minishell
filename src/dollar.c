@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   dollar.c                                           :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
+/*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/04 12:31:29 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/04 17:33:01 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/10 13:54:55 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*extend_dollars(char *input)
 			tmp = ft_substr(input, last_end, i - last_end);
 			// printf("tmp: [%s]\n", tmp);
 			if (tmp)
-				output = ft_strjoin(output, tmp);
+				output = ft_strjoin_fr(output, tmp);
 			// printf("output so far:[%s]\n", output);
 			env_len = 1;
 			while (input[i + env_len] != '\0' && !ft_isspace(input[i + env_len]) && input[i + env_len] != '$' && ft_isred(input[i + env_len]) == 0)
@@ -54,7 +54,10 @@ char	*extend_dollars(char *input)
 			tmp2 = get_env_variable(ft_substr(input, i + 1, env_len - 1));
 			// printf("tmp2: [%s] gives [%s]\n", ft_substr(input, i + 1, env_len - 1), tmp2);
 			if (tmp2)
-				output = ft_strjoin(output, tmp2);
+			{
+				output = ft_strjoin_fr(output, tmp2);
+				free (tmp2);
+			}
 			// printf("output so far:[%s]\n", output);
 			i += env_len;
 			last_end = i;
@@ -66,8 +69,14 @@ char	*extend_dollars(char *input)
 	tmp = ft_substr(input, last_end, i - last_end);
 	// printf("tmp: [%s]\n", tmp);
 	if (tmp)
-		output = ft_strjoin(output, tmp);
+	{
+		output = ft_strjoin_fr(output, tmp);
+		free (tmp);
+	}
+	free (input); //toegevoegd tijdens leaks check 10-8
 	// printf("output so far:[%s]\n", output);
 	return (output);
 }
 
+//Notitie van Britt: soms ft_strjoin vervangen door ft_strjoin_fr, want die free'd
+//de eerste variable die naar strjoin wordt gestuurd

@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   minishell.h                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
+/*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/08 16:47:18 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/10 13:35:29 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ char	*remove_quotes(char *str);
 int	set_quote_flag(int q, char c);
 int	check_double_red(char *str);
 void	exec_minishell(char *input);
+void	free_struct(t_part *parts);
+void	free_struct_split(t_part_split *part_plit);
 
 //dollar functions
 char	*extend_dollars(char *input);

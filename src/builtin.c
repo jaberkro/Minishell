@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   builtin.c                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
+/*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/08 17:38:47 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/10 13:19:25 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,23 +91,17 @@ int	execute_export(char **commands)
 int	execute_cd(char *command)
 {
 	int		ret;
-	char	*str;
+	char	cwd[256];
 
-	str = NULL; //IK MOET MANIER VINDEN OM TE CHECKEN OF HET EEN RELATIVE OF ABSOLUTE PATH IS!!!
 	ret = 0;
-	printf("changing to directory %s...\n", command);
 	ret = chdir(command);
-	if (ret >= 0)
-		str = ft_strjoin(get_env_variable("PWD"), command);
 	if (ret < 0) //betekent dat map niet bestaat
 	{
 		printf("%s: no such file or directorrrry\n", command);
-		return (1);
+		return (1); //exit code!?
 	}
-	//pwd = getcwd()
-	//printf("str = %s\n", str);
-	set_env_variable(ft_strjoin("PWD=", command));//str));
-	// exit(0);
+	getcwd(cwd, sizeof(cwd));
+	set_env_variable(ft_strjoin("PWD=", cwd));
 	return (0); //deze 0 wordt later de exit code
 }
 
@@ -115,7 +109,7 @@ int	execute_pwd()//char **commands)
 {
 	// if (execve("/bin/pwd", commands, g_info.env) < 0)
 	// 	error_exit("Execve failed", 1);
-	printf("DEZE: %s\n", get_env_variable("PWD"));
+	printf("%s\n", get_env_variable("PWD"));
 	// ook hier goede exit code returnen!!!!!!
 	// exit(0);
 	return (0);

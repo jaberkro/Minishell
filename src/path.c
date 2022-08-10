@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   path.c                                             :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
+/*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 13:04:24 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/05 17:32:43 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/09 10:11:44 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,11 @@ char	*command_in_paths(char	*argument, char **paths)
 
 char	**get_paths(void)
 {
-	int		i;
+	// int		i;
 	char	**splitted_paths;
 	char	*paths;
 
-	i = 0;
+	// i = 0;
 	paths = get_env_variable("PATH");
 	if (!paths)
 		return (NULL);

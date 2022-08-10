@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   parse.c                                            :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
+/*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/08 17:26:03 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/10 14:08:53 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ char	**extend_dollars_remove_quotes(char **array)
 
 void	split_parts(t_part *part, t_part_split *part_split)
 {
-	int	i;
+	// int	i;
 
-	i = 0;
+	// i = 0;
 	if (part->out_r != NULL)
 		part_split->out_r = ft_strdup(part->out_r);
 	if (part->out != NULL)
@@ -119,7 +119,7 @@ int	assign_parts(t_part *part, char *str)
 			if (part->out_r == NULL)
 				part->out_r = ft_strdup(">");
 			else
-				part->out_r = ft_strjoin(part->out_r, ">");
+				part->out_r = ft_strjoin_fr(part->out_r, ">");
 			str[i] = ' ';
 			while (ft_isspace(str[i]) != 0)
 				i++;
@@ -131,13 +131,13 @@ int	assign_parts(t_part *part, char *str)
 			}
 			len = i - start;
 			tmp = ft_substr(str, start, len);
-			tmp = ft_strtrim(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
+			tmp = ft_strtrim_fr(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
 			if (part->out == NULL)
 				part->out = ft_strdup(tmp);
 			else
 			{
-				part->out = ft_strjoin(part->out, " ");
-				part->out = ft_strjoin(part->out, tmp);
+				part->out = ft_strjoin_fr(part->out, " ");
+				part->out = ft_strjoin_fr(part->out, tmp);
 			}
 			free(tmp);
 			str = set_space(str, start, len);
@@ -147,7 +147,7 @@ int	assign_parts(t_part *part, char *str)
 			if (part->out_r == NULL)
 				part->out_r = ft_strdup("]");
 			else
-				part->out_r = ft_strjoin(part->out_r, "]");
+				part->out_r = ft_strjoin_fr(part->out_r, "]");
 			str[i] = ' ';
 			str[i + 1] = ' ';
 			while (ft_isspace(str[i]) != 0)
@@ -160,13 +160,13 @@ int	assign_parts(t_part *part, char *str)
 			}
 			len = i - start;
 			tmp = ft_substr(str, start, len);
-			tmp = ft_strtrim(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
+			tmp = ft_strtrim_fr(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
 			if (part->out == NULL)
 				part->out = ft_strdup(tmp);
 			else
 			{
-				part->out = ft_strjoin(part->out, " ");
-				part->out = ft_strjoin(part->out, tmp);
+				part->out = ft_strjoin_fr(part->out, " ");
+				part->out = ft_strjoin_fr(part->out, tmp);
 			}
 			free(tmp);
 			str = set_space(str, i, len);
@@ -184,13 +184,13 @@ int	assign_parts(t_part *part, char *str)
 			}
 			len = i - start;
 			tmp = ft_substr(str, start, len);
-			tmp = ft_strtrim(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
+			tmp = ft_strtrim_fr(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
 			if (part->in == NULL)
 				part->in = ft_strdup(tmp);
 			else
 			{
-				part->in = ft_strjoin(part->in, " ");
-				part->in = ft_strjoin(part->in, tmp);
+				part->in = ft_strjoin_fr(part->in, " ");
+				part->in = ft_strjoin_fr(part->in, tmp);
 			}
 			free(tmp);
 			str = set_space(str, start, len);
@@ -207,8 +207,8 @@ int	assign_parts(t_part *part, char *str)
 				part->in = ft_strdup(tmp);
 			else
 			{
-				part->in = ft_strjoin(part->in, " ");
-				part->in = ft_strjoin(part->in, tmp);
+				part->in = ft_strjoin_fr(part->in, " ");
+				part->in = ft_strjoin_fr(part->in, tmp);
 			}
 			free (tmp);
 			len = calc_len_word_after(str, i);
@@ -310,13 +310,13 @@ void	exec_minishell(char *input)
 	int	count_pipe;
 	int	i;
 	int	heredocs;
-	char	*tmp;
+	// char	*tmp;
 	char *return_value;
 
 	i = 0;
 	heredocs = 0;
 	fd = dup(0);
-	tmp = NULL;
+	// tmp = NULL;
 	input_split = ft_split_pipes(input, '|');
 	count_pipe = count_pipes(input);
 	if (count_pipe < 0)
@@ -338,7 +338,7 @@ void	exec_minishell(char *input)
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 	{
-		return_value = ft_strjoin(ft_strdup("?="), ft_itoa(WEXITSTATUS(status)));
+		return_value = ft_strjoin(ft_strdup("?="), ft_itoa(WEXITSTATUS(status))); //deze itoa en strdup leaken!
 		set_env_variable(return_value);
 	}
 	i = 1;
@@ -348,7 +348,10 @@ void	exec_minishell(char *input)
 		i++;
 	}
 	delete_temp_heredoc_files(heredocs);
-
+	free_array(input_split);
+	free_struct(parts);
+	free_struct_split(part_split);
+	free(return_value);
 	// while (heredocs > 0)
 	// {
 	// 	tmp = ft_strjoin(".heredoc", ft_itoa(heredocs));

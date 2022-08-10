@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   parse_heredoc.c                                    :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
+/*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/05 17:40:11 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/10 14:01:33 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,17 @@
 void	delete_temp_heredoc_files(int heredocs)
 {
 	char *tmp;
+	char *itoa_hd;
 
+	itoa_hd = NULL;
 	tmp = NULL;
 	while (heredocs > 0)
 	{
-		tmp = ft_strjoin(".heredoc", ft_itoa(heredocs));
+		itoa_hd = ft_itoa(heredocs);
+		tmp = ft_strjoin(".heredoc", itoa_hd);//ft_itoa(heredocs));
 		printf("Tmp name: %s\n", tmp);
 		unlink(tmp);
+		free(itoa_hd);
 		free(tmp);
 		heredocs--;
 	}
@@ -81,5 +85,6 @@ char	*handle_here_doc(char *str, int i, int heredocs)
 	printf("Stop = [%s]\n", stop);
 	read_from_stdin(stop, hd_filename, len);
 	free (stop);
+	free (hd_num);
 	return (hd_filename);
 }
