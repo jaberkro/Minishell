@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/09 17:30:55 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/10 11:17:59 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	execute_env(void)
 	i = 0;
 	while (g_info.env[i])
 	{
-		if (ft_strncmp(g_info.env[i], "?=", 2) != 0)
+		if (ft_strncmp(g_info.env[i], "?=", 2) != 0)// && ft_strchr(g_info.env[i], '=')) // dit moet ook aan staan
 			printf("%s\n", g_info.env[i]);
 		i++;
 	}

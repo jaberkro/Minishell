@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/08 14:46:35 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/08 17:57:16 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/10 12:03:06 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,19 @@ char	**copy_array(char **to_copy)
 	int		i;
 
 	i = 0;
+	if (to_copy == NULL)
+		return (NULL);
 	while (to_copy[i])
 		i++;
 	output = malloc((i + 1) * sizeof(char *));
+	if (output == NULL)
+		error_exit("Malloc failed", 1);
 	i = 0;
 	while (to_copy[i])
 	{
 		output[i] = ft_strdup(to_copy[i]);
+		if (output[i] == NULL)
+			error_exit("Malloc failed", 1);
 		i++;
 	}
 	output[i] = NULL;

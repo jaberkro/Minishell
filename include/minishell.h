@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/09 16:55:19 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/10 12:03:26 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	init_global(char **env);
 char	*get_env_variable(char *to_find);
 int		set_env_variable(char *variable);
 char	**get_paths(void);
+char	**copy_array(char **to_copy);
 
 // builtin functions
 int		find_builtin_function(char **commands, int max);
