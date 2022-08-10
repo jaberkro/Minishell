@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/10 11:17:59 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/10 14:41:02 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,8 @@ int	execute_echo(char **commands)
 
 int	find_builtin_function(char **commands, int max)
 {
-	int	status;
+	int		status;
+	char	*status_num;
 
 	status = -1;
 	if (!commands || !commands[0])
@@ -157,8 +158,10 @@ int	find_builtin_function(char **commands, int max)
 		execute_exit(commands, max);
 	if (max != 1 && status != -1)
 		exit(status);
-	if (status != -1 && !set_env_variable(ft_strjoin("?=", ft_itoa(status))))
-		error_exit("Malloc failed", 1);
+	status_num = ft_itoa(status);
+	if (status != -1)
+		set_env_variable(ft_strjoin("?=", status_num));
+	free(status_num);
 	if (status != -1)
 		return (1);
 	return (0);
