@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/10 12:03:26 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/10 14:31:07 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,10 @@ typedef struct s_part_split
 	char	*out_r;
 }	t_part_split;
 
-//global functions
+//global function
 void	init_global(char **env);
+
+//env functions
 char	*get_env_variable(char *to_find);
 int		set_env_variable(char *variable);
 char	**get_paths(void);
