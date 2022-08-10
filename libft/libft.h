@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/13 16:41:49 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/05 15:24:24 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/10 14:09:59 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ int		ft_tolower(int c);
 int		ft_toupper(int c);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 char	*ft_strtrim(char const *s1, char const *set);
+char	*ft_strtrim_fr(char const *s1, char const *set);
 char	**ft_split(char const *s, char c);
 char	*ft_itoa(int n);
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));

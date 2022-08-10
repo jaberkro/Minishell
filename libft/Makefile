@@ -6,7 +6,7 @@
 #    By: bsomers <bsomers@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/11/13 16:21:29 by bsomers       #+#    #+#                  #
-#    Updated: 2022/08/05 15:24:37 by bsomers       ########   odam.nl          #
+#    Updated: 2022/08/10 14:14:35 by bsomers       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ O_FILES = ft_isprint.o \
 		ft_memset.o \
 		ft_strlcpy.o \
 		ft_strlen.o \
+		ft_strrev.o \
 		ft_toupper.o \
 		ft_tolower.o \
 		ft_strlcat.o \
@@ -48,6 +49,7 @@ O_FILES = ft_isprint.o \
 		ft_putnbr_fd.o \
 		ft_strmapi.o \
 		ft_strtrim.o \
+		ft_strtrim_wfree.o \
 		ft_itoa.o \
 		ft_split.o \
 		ft_striteri.o \
