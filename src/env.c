@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   env.c                                              :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
+/*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/10 14:28:47 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/10 14:32:31 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/10 15:26:57 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ int	set_env_variable(char *variable)
 
 	i = 0;
 	j = 0;
-	to_find = ft_split(variable, '=')[0];
+	to_find = ft_split(variable, '=')[0]; //BS: We moeten dit anders inregelen, want 
+										//de resterende strings in deze array kunnen we zo niet freeen!
 	if (to_find == NULL)
 		error_exit("Malloc failed", 1);
 	while (g_info.env[i] && \
@@ -121,5 +122,6 @@ int	set_env_variable(char *variable)
 			error_exit("Malloc failed", 1);
 		free(tmp2);
 	}
+	//free (variable); //BS toegevoegd op 10/8 15:00, maar soms is voor variable niet altijd gemallocd dus weer weg
 	return (1);
 }

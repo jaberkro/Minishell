@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/10 14:54:16 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/10 15:33:33 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,6 +221,8 @@ int	assign_parts(t_part *part, char *str)
 		len = 0;
 	}
 	part->cmd = ft_strdup(str);
+	if (q == 1) //dan is er een oneven aantal quotes
+		exit(); //Ehhhh hoe moeten we nu hier precies exitten? (: (Even checken in bash)
 	return (heredocs);
 }
 
@@ -236,69 +238,6 @@ void	set_zero_parts(t_part *part, t_part_split *part_split)
 	part_split->out_r = NULL;
 }
 
-// int	make_parts(int count_pipe, int heredocs, t_part_split **part_split, char *input)
-// {
-// 	t_part *parts;
-// 	int		i;
-// 	char **input_split;
-
-// 	i = 0;
-// 	input_split = ft_split_pipes(input, '|');
-// 	parts = malloc((count_pipe + 1) * sizeof(t_part));
-// 	part_split = malloc((count_pipe + 1) * sizeof(t_part_split));
-
-// 	// if (parts == NULL)
-// 	// 	return ; // Hier malloc errors handlen!
-// 	while (i < (count_pipe + 1))
-// 	{
-// 		set_zero_parts(&parts[i], part_split[i]);
-// 		heredocs = assign_parts(&parts[i], input_split[i]);
-// 		split_parts(&parts[i], (part_split)[i]);
-// 		i++;
-// 	}
-// 	return (heredocs);
-// }
-
-// void	exec_minishell(char *input)
-// {
-// 	// char **input_split;
-// 	t_part_split	*part_split;
-// 	int	fd;
-// 	int	pid;
-// 	int status;
-// 	int	count_pipe;
-// 	int	i;
-// 	int	heredocs;
-// 	char 	*return_value;
-
-// 	i = 0;
-// 	heredocs = 0;
-// 	part_split = NULL;
-// 	fd = dup(0);
-// 	// input_split = ft_split_pipes(input, '|');
-// 	count_pipe = count_pipes(input);
-// 	printf("Count_pipe: %d\n", count_pipe);
-
-// 	// if (count_pipe < 0)
-// 	// 	return ; // Hier error handling inbouwen!!
-// 	heredocs = make_parts(count_pipe, heredocs, &part_split, input);
-// 	printf("Count_pipe: %d\n", count_pipe);
-// 	pid = executer(0, count_pipe + 1, fd, part_split);
-// 	waitpid(pid, &status, 0);
-// 	if (WIFEXITED(status))
-// 	{
-// 		return_value = ft_strjoin(ft_strdup("?="), ft_itoa(WEXITSTATUS(status)));
-// 		set_env_variable(return_value);
-// 	}
-// 	i = 1;
-// 	while (i < count_pipe + 1)
-// 	{
-// 		wait(NULL);
-// 		i++;
-// 	}
-// 	delete_temp_heredoc_files(heredocs);
-// }
-
 void	exec_minishell(char *input)
 {
 	char **input_split;
@@ -312,8 +251,10 @@ void	exec_minishell(char *input)
 	int	heredocs;
 	// char	*tmp;
 	char *return_value;
+	char *itoa_exit;
 
 	i = 0;
+	itoa_exit = NULL;
 	heredocs = 0;
 	fd = dup(0);
 	// tmp = NULL;
@@ -346,7 +287,10 @@ void	exec_minishell(char *input)
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 	{
-		return_value = ft_strjoin(ft_strdup("?="), ft_itoa(WEXITSTATUS(status))); //deze itoa en strdup leaken!
+		//return_value = ft_strjoin(ft_strdup("?="), ft_itoa(WEXITSTATUS(status))); //BS 8/10: deze itoa en strdup leaken!
+		itoa_exit = ft_itoa(WEXITSTATUS(status)); //BS 8/10 toegevoegd, zie vorige regel ^
+		return_value = ft_strjoin("?=", itoa_exit); //BS 8/10 toegevoegd ^
+		free(itoa_exit); //BS 8/10 toegevoegd ^
 		set_env_variable(return_value);
 	}
 	i = 1;
