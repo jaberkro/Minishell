@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/10 14:28:47 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/10 18:31:50 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/11 16:55:00 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int	set_env_variable(char *variable)
 	else
 	{
 		tmp2 = ft_strdup(g_info.env[i]);
-		if (g_info.env[j] == NULL)
+		if (tmp2 == NULL)
 			error_exit("Malloc failed", 1);
 		free (g_info.env[i]);
 		g_info.env[i] = ft_strdup(variable);
