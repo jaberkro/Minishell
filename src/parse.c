@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/11 11:20:22 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/11 13:48:59 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,12 @@ int	count_pipes(char *str)
 			printf("mickeyshell: syntax error near unexpected token `|'\n");
 		else
 			printf("mickeyshell: syntax error near unexpected token `||'\n");
-		return(-1); //hier wel letten op leaks!
+		return(-1);
+	}
+	if (q == 1) //dan is er een oneven aantal quotes
+	{
+		printf("mickeyshell: invalid number of quotes\n");
+		return (-1);
 	}
 	return (j);
 }
@@ -221,8 +226,6 @@ int	assign_parts(t_part *part, char *str)
 		len = 0;
 	}
 	part->cmd = ft_strdup(str);
-	if (q == 1) //dan is er een oneven aantal quotes
-		write_exit_argument(str, ": invalid number of quotes", 1); //Ehhhh hoe moeten we nu hier precies exitten? (: (Even checken in bash)
 	return (heredocs);
 }
 
@@ -243,7 +246,6 @@ void	if_exited(int status)
 	char *itoa_exit;
 	char *return_value;
 
-	//return_value = ft_strjoin(ft_strdup("?="), ft_itoa(WEXITSTATUS(status))); //BS 8/10: deze itoa en strdup leaken!
 	itoa_exit = ft_itoa(WEXITSTATUS(status)); //BS 8/10 toegevoegd, zie vorige regel ^
 	return_value = ft_strjoin("?=", itoa_exit); //BS 8/10 toegevoegd ^
 	free(itoa_exit); //BS 8/10 toegevoegd ^
@@ -251,10 +253,10 @@ void	if_exited(int status)
 	free(return_value);
 }
 
-void	clean_up(int heredocs, char **input_split, t_part *parts, t_part_split *part_split)
+void	clean_up(int heredocs, char **input_split, t_part_split *part_split)
 {
 	free_array(input_split);
-	free_struct(parts);
+	// free_struct(parts);
 	free_struct_split(part_split);
 	delete_temp_heredoc_files(heredocs);
 }
@@ -279,43 +281,15 @@ void	call_executer(int count_pipe, t_part_split *part_split)
 	}
 }
 
-// t_part_split	*set_fill_split_parts(int count_pipe, t_part *parts, t_part_split *part_split, int heredocs)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < (count_pipe + 1))
-// 	{
-// 		set_zero_parts(&parts[i], &part_split[i]);
-// 		heredocs = assign_parts(&parts[i], input_split[i]);
-// 		split_parts(&parts[i], &part_split[i]);
-// 		i++;
-// 	}
-// 	return (heredocs);
-// }
-
-
-
-void	exec_minishell(char *input)
+int	set_fill_split_parts(char **input_split, int count_pipe, t_part_split *part_split, int heredocs)
 {
-	char **input_split;
-	t_part *parts;
-	t_part_split	*part_split;
-	int	count_pipe;
 	int	i;
-	int	heredocs;
+	t_part *parts;
 
 	i = 0;
-	heredocs = 0;
-	input_split = ft_split_pipes(input, '|');
-	count_pipe = count_pipes(input);
-	if (count_pipe < 0 || input_split == NULL)
-		return ;
 	parts = malloc((count_pipe + 1) * sizeof(t_part));
-	part_split = malloc((count_pipe + 1) * sizeof(t_part_split));
 	if (parts == NULL)
-		return ;
-	// heredocs = set_fill_split_parts(count_pipe, parts, part_split, heredocs);
+		return (-1);
 	while (i < (count_pipe + 1))
 	{
 		set_zero_parts(&parts[i], &part_split[i]);
@@ -323,8 +297,30 @@ void	exec_minishell(char *input)
 		split_parts(&parts[i], &part_split[i]);
 		i++;
 	}
+	free_struct(parts);
+	return (heredocs);
+}
+
+void	exec_minishell(char *input)
+{
+	char **input_split;
+	t_part_split	*part_split;
+	int	count_pipe;
+	int	heredocs;
+
+	heredocs = 0;
+	input_split = ft_split_pipes(input, '|');
+	count_pipe = count_pipes(input);
+	if (count_pipe < 0 || input_split == NULL)
+		error_exit("mickeyshell: malloc failed", 1);
+	part_split = malloc((count_pipe + 1) * sizeof(t_part_split));
+	if (part_split == NULL)
+		error_exit("mickeyshell: malloc failed", 1);
+	heredocs = set_fill_split_parts(input_split, count_pipe, part_split, heredocs);
+	if (heredocs < 0)
+		error_exit("mickeyshell: malloc failed", 1);
 	call_executer(count_pipe, part_split);
-	clean_up(heredocs, input_split, parts, part_split);
+	clean_up(heredocs, input_split, part_split);
 }
 
 int	check_double_red(char *str)
