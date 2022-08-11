@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/09 10:28:52 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/10 12:01:32 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/11 10:36:20 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	print_export(char **sorted)
 	{
 		if (ft_strchr(sorted[i], '='))
 		{
-			key = ft_split(sorted[i], '=')[0];
+			key = protected_split_grep_one(sorted[i], '=', 0);
 			if (key == NULL)
 				error_exit("Malloc failed", 1);
 			value = sorted[i] + ft_strlen(key) + 1;
@@ -112,6 +112,7 @@ int	execute_export(char **commands)
 		else if ((commands[i][0] != '_'))
 		{
 			printf("export: `%s': not a valid identifier\n", commands[i]);
+			return (1);
 		}
 		i++;
 	}

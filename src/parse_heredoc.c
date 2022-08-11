@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/11 09:51:42 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/11 11:18:08 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 void	delete_temp_heredoc_files(int heredocs)
 {
-	char *tmp;
-	char *itoa_hd;
+	char	*tmp;
+	char	*itoa_hd;
 
 	itoa_hd = NULL;
 	tmp = NULL;

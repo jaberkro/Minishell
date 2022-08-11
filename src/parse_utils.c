@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/20 10:17:48 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/10 13:46:44 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/10 18:21:20 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*remove_quotes(char *str)
 	i = 0;
 	str_new = malloc((len - count_quotes + 1) * sizeof(char));
 	strdup_no_quotes(str, str_new, i, len);
-	//free (str); //deze toegevoegd tijdens leaks checks op 10-8 - NIET DOEN, wordt double free!
+	// free (str); //deze toegevoegd tijdens leaks checks op 10-8 - NIET DOEN, wordt double free!
 	return (str_new);
 }
 

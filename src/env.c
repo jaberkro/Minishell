@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/10 14:28:47 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/10 15:26:57 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/11 11:17:56 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ char	**copy_array(char **to_copy)
  */
 char	*get_env_variable(char *to_find)
 {
-	int	i;
+	int		i;
+	char	*output;
 
 	i = 0;
 	while (g_info.env[i] && \
@@ -62,7 +63,12 @@ char	*get_env_variable(char *to_find)
 	if (!g_info.env[i])
 		return (NULL);
 	if (g_info.env[i][ft_strlen(to_find)] == '=')
-		return (g_info.env[i] + ft_strlen(to_find) + 1);
+	{
+		output = ft_strdup(g_info.env[i] + ft_strlen(to_find) + 1);
+		if (output == NULL)
+			error_exit("Malloc failed", 1);
+		return (output);
+	}
 	return (NULL);
 }
 
@@ -82,12 +88,12 @@ int	set_env_variable(char *variable)
 
 	i = 0;
 	j = 0;
-	to_find = ft_split(variable, '=')[0]; //BS: We moeten dit anders inregelen, want 
-										//de resterende strings in deze array kunnen we zo niet freeen!
+	to_find = protected_split_grep_one(variable, '=', 0);
 	if (to_find == NULL)
 		error_exit("Malloc failed", 1);
 	while (g_info.env[i] && \
-	ft_strncmp(g_info.env[i], to_find, ft_strlen(to_find)) != 0) // and check for enter in correct space
+	ft_strncmp(g_info.env[i], to_find, ft_strlen(to_find)) != 0 &&\
+	g_info.env[i][ft_strlen(to_find)] != '=') // and check for enter in correct space
 		i++;
 	free(to_find);
 	if (!g_info.env[i])
