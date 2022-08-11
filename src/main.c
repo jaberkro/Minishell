@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   main.c                                             :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
+/*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 15:10:44 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/08 13:53:17 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/11 09:59:27 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,6 @@ void	sig_handler(int sig)
 
 int	check_str(char *str)
 {
-	// int	cmp;
-
-	// cmp = ft_strncmp(str, "exit\0", 5);
-	// if (cmp == 0)
-	// {
-	// 	printf("exit\n");
-	// 	return (0);
-	// }
 	if (str != NULL && str[0])
 	{
 		add_history(str);
