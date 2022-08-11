@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/08 14:46:35 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/10 18:18:26 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/11 11:27:53 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,14 @@
  */
 void	increase_shlvl(void)
 {
-	int		old_level;
+	int		old_level_int;
+	char	*old_level_str;
 	char	*new_shlvl;
 	char	*new_level;
 
-	old_level = ft_atoi(get_env_variable("SHLVL"));
-	new_level = ft_itoa(old_level + 1);
+	old_level_str = get_env_variable("SHLVL");
+	old_level_int = ft_atoi(old_level_str);
+	new_level = ft_itoa(old_level_int + 1);
 	new_shlvl = ft_strjoin("SHLVL=", new_level);
 	free(new_level);
 	if (new_shlvl == NULL)
