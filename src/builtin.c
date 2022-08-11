@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/11 10:35:38 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/11 11:22:09 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,14 @@ void	execute_exit(char **commands, int max)
 		num = ft_atoi(commands[1]);
 		if (ft_isnumber(commands[1]) == 0)
 		{
-			printf("exit: %s: numeric argument required\n", commands[1]);
+			printf("mickeyshell: exit: %s: numeric argument required\n", \
+				commands[1]);
 			exit(255);
 		}
 		exit(num % 256);
 	}
 	if (i > 2)
-	{
-		printf("exit: too many arguments\n");
-		exit(1);
-	}
+		write_exit("mickeyshell: exit: too many arguments", 1);
 	exit(0);
 }
 
