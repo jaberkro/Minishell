@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/04 12:31:29 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/10 13:54:55 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/11 10:33:00 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	*extend_dollars(char *input)
 			if (tmp2)
 			{
 				output = ft_strjoin_fr(output, tmp2);
-				free (tmp2);
+				// free (tmp2); //Hier krijg je bad free als je alleen $? typt!
 			}
 			// printf("output so far:[%s]\n", output);
 			i += env_len;
