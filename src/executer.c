@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/11 10:53:27 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/11 13:30:08 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,11 +121,11 @@ int	update_readfd(int i, int readfd, t_part_split *parts)
  * 
  * @param i 		index of which part between pipes we look at
  * @param max 		amount of parts in total
- * @param writefd	write fd from last pipe. Initialized as 1 
+ * @param fd	write fd from last pipe. Initialized as 1 
  * @param parts 	array of t_part_split
  * @return int 
  */
-int	update_writefd(int i, int max, int writefd, t_part_split *parts)
+int	update_writefd(int i, int max, int fd, t_part_split *parts)
 {
 	int		j;
 
@@ -135,21 +135,21 @@ int	update_writefd(int i, int max, int writefd, t_part_split *parts)
 		while (parts[i].out[j])
 		{
 			if (parts[i].out_r[j] == '>')
-				writefd = open(parts[i].out[j], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+				fd = open(parts[i].out[j], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 			else
-				writefd = open(parts[i].out[j], O_WRONLY | O_APPEND | O_CREAT, 0644);
-			if (writefd < 0)
+				fd = open(parts[i].out[j], O_WRONLY | O_APPEND | O_CREAT, 0644);
+			if (fd < 0)
 				error_exit(parts[i].out[j], 1);
 			j++;
 		}
 	}
 	else if (i == max - 1)
 	{
-		writefd = dup(STDOUT_FILENO);
-		if (writefd == -1)
+		fd = dup(STDOUT_FILENO);
+		if (fd == -1)
 			error_exit("Dup failed", 1);
 	}
-	return (writefd);
+	return (fd);
 }
 
 /**
@@ -176,6 +176,10 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 		readfd = update_readfd(i, readfd, parts);
 		fd[1] = update_writefd(i, max, fd[1], parts);
 		exit_code += find_builtin_function(parts[i].cmd, max);
+		// protected_dup2s(readfd, fd[1]);
+		// close(fd[0]);
+		// close(fd[1]);
+		// close(readfd);
 	}
 	pid = protected_fork();
 	if (pid == 0)
@@ -184,11 +188,11 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 		{
 			readfd = update_readfd(i, readfd, parts);
 			fd[1] = update_writefd(i, max, fd[1], parts);
+			protected_dup2s(readfd, fd[1]);
+			close(fd[0]);
+			close(fd[1]);
+			close(readfd);
 		}
-		protected_dup2s(readfd, fd[1]);
-		close(readfd);
-		close(fd[0]);
-		close(fd[1]);
 		if (max != 1 && exit_code == -1)
 			exit_code = find_builtin_function(parts[i].cmd, max);
 		if (exit_code != -1)
