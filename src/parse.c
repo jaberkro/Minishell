@@ -222,7 +222,7 @@ int	assign_parts(t_part *part, char *str)
 	}
 	part->cmd = ft_strdup(str);
 	if (q == 1) //dan is er een oneven aantal quotes
-		exit(); //Ehhhh hoe moeten we nu hier precies exitten? (: (Even checken in bash)
+		exit(1); //Ehhhh hoe moeten we nu hier precies exitten? (: (Even checken in bash)
 	return (heredocs);
 }
 
