@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/11 10:57:54 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/11 17:02:56 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,15 @@ int	count_pipes(char *str)
 
 char	**extend_dollars_remove_quotes(char **array)
 {
-	int	i;
+	int		i;
+	char	*tmp;
 
 	i = 0;
 	while (array && array[i] != NULL)
 	{
-		array[i] = extend_dollars(array[i]);
+		tmp = array[i];
+		array[i] = extend_dollars(tmp);
+		free(tmp);
 		array[i] = remove_quotes(array[i]);
 		i++;
 	}
@@ -361,6 +364,7 @@ void	exec_minishell(char *input)
 		wait(NULL);
 		i++;
 	}
+	close(fd);
 	delete_temp_heredoc_files(heredocs);
 	free_array(input_split);
 	free_struct(parts);
