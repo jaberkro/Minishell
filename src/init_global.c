@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/08 14:46:35 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/11 11:27:53 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/11 13:11:42 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	increase_shlvl(void)
 
 	old_level_str = get_env_variable("SHLVL");
 	old_level_int = ft_atoi(old_level_str);
+	free(old_level_str);
 	new_level = ft_itoa(old_level_int + 1);
 	new_shlvl = ft_strjoin("SHLVL=", new_level);
 	free(new_level);
@@ -37,7 +38,7 @@ void	increase_shlvl(void)
 /**
  * @brief initializes the g_info.env variables
  * 
- * @param env 
+ * @param env the environment variables given at the start of the program
  */
 void	init_env_variables(char **env)
 {
