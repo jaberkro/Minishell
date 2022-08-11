@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/11 13:30:08 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/11 17:36:39 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ void	write_exit(char *message, int exit_code)
 	free(exit_num);
 	set_env_variable(return_value);
 	free(return_value);
-	write(2, message, ft_strlen(message));
+	write(STDERR_FILENO, "mickeyshell: ", 13);
+	write(STDERR_FILENO, message, ft_strlen(message));
 	exit(exit_code);
 }
 
@@ -58,9 +59,10 @@ void	write_exit_argument(char *argument, char *message, int exit_code)
 	free(exit_num);
 	set_env_variable(return_value);
 	free(return_value);
+	write(STDERR_FILENO, "mickeyshell: ", 13);
 	if (argument)
-		write(2, argument, ft_strlen(argument));
-	write(2, message, ft_strlen(message));
+		write(STDERR_FILENO, argument, ft_strlen(argument));
+	write(STDERR_FILENO, message, ft_strlen(message));
 	exit(exit_code);
 }
 
@@ -134,6 +136,7 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 	{
 		while (parts[i].out[j])
 		{
+			close(fd);
 			if (parts[i].out_r[j] == '>')
 				fd = open(parts[i].out[j], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 			else
@@ -145,6 +148,7 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 	}
 	else if (i == max - 1)
 	{
+		close (fd);
 		fd = dup(STDOUT_FILENO);
 		if (fd == -1)
 			error_exit("Dup failed", 1);
@@ -173,13 +177,19 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 	protected_pipe(fd);
 	if (max == 1)
 	{
+		int tmpreadfd = dup(0);
+		int tmpwritefd = dup(1);
 		readfd = update_readfd(i, readfd, parts);
 		fd[1] = update_writefd(i, max, fd[1], parts);
-		exit_code += find_builtin_function(parts[i].cmd, max);
-		// protected_dup2s(readfd, fd[1]);
-		// close(fd[0]);
-		// close(fd[1]);
-		// close(readfd);
+		protected_dup2s(readfd, fd[1]);
+		close(fd[0]);
+		close(fd[1]);
+		close(readfd);
+		exit_code = find_builtin_function(parts[i].cmd, max);
+		dup2(tmpreadfd, STDIN_FILENO);
+		dup2(tmpwritefd, STDOUT_FILENO);
+		close(tmpreadfd);
+		close(tmpwritefd);
 	}
 	pid = protected_fork();
 	if (pid == 0)
@@ -192,9 +202,8 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 			close(fd[0]);
 			close(fd[1]);
 			close(readfd);
-		}
-		if (max != 1 && exit_code == -1)
 			exit_code = find_builtin_function(parts[i].cmd, max);
+		}
 		if (exit_code != -1)
 			exit(exit_code);
 		path = command_in_paths(parts[i].cmd[0], g_info.paths);
