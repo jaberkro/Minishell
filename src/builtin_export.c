@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/09 10:28:52 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/11 10:36:20 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/11 17:34:16 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,15 +81,28 @@ void	print_export(char **sorted)
 				error_exit("Malloc failed", 1);
 			value = sorted[i] + ft_strlen(key) + 1;
 			if (key[0] != '?' && (key[0] != '_' || sorted[i][1] != '='))
-				printf("declare -x %s=\"%s\"\n", key, value);
+			{
+				write(STDOUT_FILENO, "declare -x ", 11);
+				write(STDOUT_FILENO, key, ft_strlen(key));
+				write(STDOUT_FILENO, "=\"", 2);
+				write(STDOUT_FILENO, value, ft_strlen(value));
+				write(STDOUT_FILENO, "\"\n", 2);
+			}
+			free(key);
+			free(sorted[i]);
 		}
 		else
 		{
 			key = sorted[i];
-			printf("declare -x %s\n", key);
+			write(STDOUT_FILENO, "declare -x ", 11);
+			write(STDOUT_FILENO, key, ft_strlen(key));
+			write(STDOUT_FILENO, "\n", 1);
+			free(key);
+			free(sorted[i]);
 		}
 		i++;
 	}
+	free(sorted);
 }
 
 int	execute_export(char **commands)
@@ -106,12 +119,13 @@ int	execute_export(char **commands)
 		if (ft_isalpha(commands[i][0]) || \
 		(commands[i][0] == '_' && commands[i][1] != '='))
 		{
-			if (!set_env_variable(commands[i]))
-				error_exit("Malloc failed", 1);
+			set_env_variable(commands[i]);
 		}
 		else if ((commands[i][0] != '_'))
 		{
-			printf("export: `%s': not a valid identifier\n", commands[i]);
+			write(STDERR_FILENO, "mickeyshell: export: `", 22);
+			write(STDERR_FILENO, commands[i], ft_strlen(commands[i]));
+			write(STDERR_FILENO, "': not a valid identifier\n", 26);
 			return (1);
 		}
 		i++;
