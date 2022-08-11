@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/10 14:54:16 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/11 10:57:54 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,10 +312,11 @@ void	exec_minishell(char *input)
 	int	heredocs;
 	// char	*tmp;
 	char *return_value;
+	char			*exit_num;
 
 	i = 0;
 	heredocs = 0;
-	fd = dup(0);
+	fd = dup(0); //dup protecten
 	// tmp = NULL;
 	input_split = ft_split_pipes(input, '|');
 	count_pipe = count_pipes(input);
@@ -346,8 +347,13 @@ void	exec_minishell(char *input)
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 	{
-		return_value = ft_strjoin(ft_strdup("?="), ft_itoa(WEXITSTATUS(status))); //deze itoa en strdup leaken!
+		exit_num = ft_itoa(WEXITSTATUS(status));
+		if (exit_num == NULL)
+			error_exit("Malloc failed", 1);
+		return_value = ft_strjoin("?=", exit_num); //deze itoa en strdup leakten!
+		free(exit_num);
 		set_env_variable(return_value);
+		free(return_value);
 	}
 	i = 1;
 	while (i < count_pipe + 1)
@@ -359,7 +365,6 @@ void	exec_minishell(char *input)
 	free_array(input_split);
 	free_struct(parts);
 	free_struct_split(part_split);
-	free(return_value);
 	// while (heredocs > 0)
 	// {
 	// 	tmp = ft_strjoin(".heredoc", ft_itoa(heredocs));

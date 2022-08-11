@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/10 14:42:55 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/11 10:53:27 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <fcntl.h>
 
 /**
- * @brief writes a message to stderr and exits. 
+ * @brief writes a message to stderr and exits
  * 
  * @param message 	the message to print
  * @param exit_code the code to exit with
@@ -166,16 +166,16 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 	int		fd[2];
 	int		pid;
 	char	*path;
-	int		executed;
+	int		exit_code;
 
 	pid = 0;
-	executed = 0;
+	exit_code = 0;
 	protected_pipe(fd);
 	if (max == 1)
 	{
 		readfd = update_readfd(i, readfd, parts);
 		fd[1] = update_writefd(i, max, fd[1], parts);
-		executed += find_builtin_function(parts[i].cmd, max);
+		exit_code += find_builtin_function(parts[i].cmd, max);
 	}
 	pid = protected_fork();
 	if (pid == 0)
@@ -189,10 +189,10 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 		close(readfd);
 		close(fd[0]);
 		close(fd[1]);
-		if (max != 1)
-			executed += find_builtin_function(parts[i].cmd, max);
-		if (executed != 0)
-			exit(0); //moet dit altijd 0 zijn? Denk het wel
+		if (max != 1 && exit_code == -1)
+			exit_code = find_builtin_function(parts[i].cmd, max);
+		if (exit_code != -1)
+			exit(exit_code);
 		path = command_in_paths(parts[i].cmd[0], g_info.paths);
 		if (execve(path, parts[i].cmd, g_info.env) < 0)
 			error_exit("Execve failed", 1);

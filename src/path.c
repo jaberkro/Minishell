@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 13:04:24 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/09 10:11:44 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/10 18:25:39 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ char	*command_in_paths(char	*argument, char **paths)
 	char	*tmp;
 
 	i = 0;
-	// printf("argument: [%s]\n", argument);
 	if (access(argument, X_OK) != -1)
 		return (argument);
 	if (!paths)
@@ -65,14 +64,13 @@ char	*command_in_paths(char	*argument, char **paths)
 
 char	**get_paths(void)
 {
-	// int		i;
 	char	**splitted_paths;
 	char	*paths;
 
-	// i = 0;
 	paths = get_env_variable("PATH");
 	if (!paths)
 		return (NULL);
 	splitted_paths = protected_split(paths, ':');
+	free(paths);
 	return (splitted_paths);
 }
