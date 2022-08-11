@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/10 15:33:33 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/11 10:59:18 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ int	assign_parts(t_part *part, char *str)
 	}
 	part->cmd = ft_strdup(str);
 	if (q == 1) //dan is er een oneven aantal quotes
-		exit(); //Ehhhh hoe moeten we nu hier precies exitten? (: (Even checken in bash)
+		write_exit_argument(str, ": invalid number of quotes", 1); //Ehhhh hoe moeten we nu hier precies exitten? (: (Even checken in bash)
 	return (heredocs);
 }
 
@@ -238,80 +238,93 @@ void	set_zero_parts(t_part *part, t_part_split *part_split)
 	part_split->out_r = NULL;
 }
 
-void	exec_minishell(char *input)
+void	if_exited(int status)
 {
-	char **input_split;
-	t_part *parts;
-	t_part_split	*part_split;
-	int	fd;
-	int	pid;
-	int status;
-	int	count_pipe;
-	int	i;
-	int	heredocs;
-	// char	*tmp;
-	char *return_value;
 	char *itoa_exit;
+	char *return_value;
 
-	i = 0;
-	itoa_exit = NULL;
-	heredocs = 0;
+	//return_value = ft_strjoin(ft_strdup("?="), ft_itoa(WEXITSTATUS(status))); //BS 8/10: deze itoa en strdup leaken!
+	itoa_exit = ft_itoa(WEXITSTATUS(status)); //BS 8/10 toegevoegd, zie vorige regel ^
+	return_value = ft_strjoin("?=", itoa_exit); //BS 8/10 toegevoegd ^
+	free(itoa_exit); //BS 8/10 toegevoegd ^
+	set_env_variable(return_value);
+	free(return_value);
+}
+
+void	clean_up(int heredocs, char **input_split, t_part *parts, t_part_split *part_split)
+{
+	free_array(input_split);
+	free_struct(parts);
+	free_struct_split(part_split);
+	delete_temp_heredoc_files(heredocs);
+}
+
+void	call_executer(int count_pipe, t_part_split *part_split)
+{
+	int pid;
+	int fd;
+	int	i;
+	int	status;
+	
 	fd = dup(0);
-	// tmp = NULL;
-	input_split = ft_split_pipes(input, '|');
-	count_pipe = count_pipes(input);
-	if (count_pipe < 0)
-		return ;
-	//printf("Number of actual pipes: %d\n", count_pipe);
-	parts = malloc((count_pipe + 1) * sizeof(t_part));
-	part_split = malloc((count_pipe + 1) * sizeof(t_part_split));
-	if (parts == NULL)
-		return ;
-	while (i < (count_pipe + 1))
-	{
-		set_zero_parts(&parts[i], &part_split[i]);
-		heredocs = assign_parts(&parts[i], input_split[i]);
-		split_parts(&parts[i], &part_split[i]);
-		//print_info(&parts[i]);
-		i++;
-	}
-	// if (count_pipe + 1 == 1)
-	// {
-	// 	single_executer(0, count_pipe + 1, fd, part_split);
-	// 	delete_temp_heredoc_files(heredocs);
-	// 	return ;
-	// }
-	// else
-	// {
+	i = 1;
 	pid = executer(0, count_pipe + 1, fd, part_split);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
-	{
-		//return_value = ft_strjoin(ft_strdup("?="), ft_itoa(WEXITSTATUS(status))); //BS 8/10: deze itoa en strdup leaken!
-		itoa_exit = ft_itoa(WEXITSTATUS(status)); //BS 8/10 toegevoegd, zie vorige regel ^
-		return_value = ft_strjoin("?=", itoa_exit); //BS 8/10 toegevoegd ^
-		free(itoa_exit); //BS 8/10 toegevoegd ^
-		set_env_variable(return_value);
-	}
-	i = 1;
+		if_exited(status);
 	while (i < count_pipe + 1)
 	{
 		wait(NULL);
 		i++;
 	}
-	delete_temp_heredoc_files(heredocs);
-	free_array(input_split);
-	free_struct(parts);
-	free_struct_split(part_split);
-	free(return_value);
-	// while (heredocs > 0)
-	// {
-	// 	tmp = ft_strjoin(".heredoc", ft_itoa(heredocs));
-	// 	printf("Tmp name: %s\n", tmp);
-	// 	unlink(tmp);
-	// 	free(tmp);
-	// 	heredocs--;
-	// }
+}
+
+// t_part_split	*set_fill_split_parts(int count_pipe, t_part *parts, t_part_split *part_split, int heredocs)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (i < (count_pipe + 1))
+// 	{
+// 		set_zero_parts(&parts[i], &part_split[i]);
+// 		heredocs = assign_parts(&parts[i], input_split[i]);
+// 		split_parts(&parts[i], &part_split[i]);
+// 		i++;
+// 	}
+// 	return (heredocs);
+// }
+
+
+
+void	exec_minishell(char *input)
+{
+	char **input_split;
+	t_part *parts;
+	t_part_split	*part_split;
+	int	count_pipe;
+	int	i;
+	int	heredocs;
+
+	i = 0;
+	heredocs = 0;
+	input_split = ft_split_pipes(input, '|');
+	count_pipe = count_pipes(input);
+	if (count_pipe < 0 || input_split == NULL)
+		return ;
+	parts = malloc((count_pipe + 1) * sizeof(t_part));
+	part_split = malloc((count_pipe + 1) * sizeof(t_part_split));
+	if (parts == NULL)
+		return ;
+	// heredocs = set_fill_split_parts(count_pipe, parts, part_split, heredocs);
+	while (i < (count_pipe + 1))
+	{
+		set_zero_parts(&parts[i], &part_split[i]);
+		heredocs = assign_parts(&parts[i], input_split[i]);
+		split_parts(&parts[i], &part_split[i]);
+		i++;
+	}
+	call_executer(count_pipe, part_split);
+	clean_up(heredocs, input_split, parts, part_split);
 }
 
 int	check_double_red(char *str)
