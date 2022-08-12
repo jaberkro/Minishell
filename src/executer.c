@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 11:04:46 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 11:26:54 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,15 +186,18 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 		close(fd[1]);
 		close(readfd);
 		exit_code = find_builtin_function(parts[i].cmd, max);
-		dup2(tmpreadfd, STDIN_FILENO);
-		dup2(tmpwritefd, STDOUT_FILENO);
-		close(tmpreadfd);
-		close(tmpwritefd);
+		if (exit_code != -1)
+		{
+			dup2(tmpreadfd, STDIN_FILENO);
+			dup2(tmpwritefd, STDOUT_FILENO);
+			close(tmpreadfd);
+			close(tmpwritefd);
+		}
 	}
 	pid = protected_fork();
 	if (pid == 0)
 	{
-		if (exit_code == -1)
+		if (max != 1)
 		{
 			readfd = update_readfd(i, readfd, parts);
 			fd[1] = update_writefd(i, max, fd[1], parts);
@@ -202,8 +205,7 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 			close(fd[0]);
 			close(fd[1]);
 			close(readfd);
-			if (max != 1)
-				exit_code = find_builtin_function(parts[i].cmd, max);
+			exit_code = find_builtin_function(parts[i].cmd, max);
 		}
 		if (exit_code != -1)
 			exit(exit_code);
