@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/10 14:28:47 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 15:46:50 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 16:56:50 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	set_env_variable(char *variable)
 	j = 0;
 	to_find = protected_split_grep_one(variable, '=', 0);
 	if (to_find == NULL)
-		error_exit("Malloc failed", 1);
+		error_exit("mickeyshell: malloc failed", 1);
 	while (g_info.env[i] && \
 	ft_strncmp(g_info.env[i], to_find, ft_strlen(to_find)) != 0 &&\
 	g_info.env[i][ft_strlen(to_find)] != '=') // and check for enter in correct space
@@ -102,18 +102,18 @@ int	set_env_variable(char *variable)
 		free_array(g_info.env);
 		g_info.env = malloc((i + 2) * sizeof(char *));
 		if (g_info.env == NULL)
-			error_exit("Malloc failed", 1);
+			error_exit("mickeyshell: malloc failed", 1);
 		while (j < i)
 		{
 			g_info.env[j] = ft_strdup(tmp[j]);
 			if (g_info.env[j] == NULL)
-				error_exit("Malloc failed", 1);
+				error_exit("mickeyshell: malloc failed", 1);
 			free(tmp[j]);
 			j++;
 		}
 		g_info.env[j] = ft_strdup(variable);
 		if (g_info.env[j] == NULL)
-			error_exit("Malloc failed", 1);
+			error_exit("mickeyshell: malloc failed", 1);
 		g_info.env[j + 1] = NULL;
 		free (tmp);
 	}
@@ -121,14 +121,13 @@ int	set_env_variable(char *variable)
 	{
 		tmp2 = ft_strdup(g_info.env[i]);
 		if (tmp2 == NULL)
-			error_exit("Malloc failed", 1);
+			error_exit("mickeyshell: malloc failed", 1);
 		free(g_info.env[i]);
 		g_info.env[i] = ft_strdup(variable);
 		if (g_info.env[i] == NULL)
-			error_exit("Malloc failed", 1);
+			error_exit("mickeyshell: malloc failed", 1);
 		free(tmp2);
 	}
-	//free (variable); //BS toegevoegd op 10/8 15:00, maar soms is voor variable niet altijd gemallocd dus weer weg
 	return (1);
 }
 

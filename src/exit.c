@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/12 15:10:32 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 15:46:17 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 16:57:51 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	write_exit_argument(char *argument, char *message, int exit_code)
 
 	exit_num = ft_itoa(exit_code);
 	if (exit_num == NULL)
-		error_exit("Malloc failed", 1);
+		error_exit("mickeyshell: malloc failed", 1);
 	return_value = ft_strjoin("?=", exit_num);
 	free(exit_num);
 	set_env_variable(return_value);
@@ -78,7 +78,7 @@ void	error_exit(char *message, int exit_code)
 
 	exit_num = ft_itoa(exit_code);
 	if (exit_num == NULL)
-		error_exit("Malloc failed", 1);
+		error_exit("mickeyshell: malloc failed", 1);
 	return_value = ft_strjoin("?=", exit_num);
 	free(exit_num);
 	set_env_variable(return_value);

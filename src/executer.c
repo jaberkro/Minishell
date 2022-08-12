@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 16:46:04 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 16:57:40 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 		close (fd);
 		fd = dup(1);
 		if (fd == -1)
-			error_exit("Dup failed", 1);
+			error_exit("mickeyshell: dup failed", 1);
 	}
 	return (fd);
 }
@@ -134,7 +134,7 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 			exit(exit_code);
 		path = command_in_paths(parts[i].cmd[0], g_info.paths);
 		if (execve(path, parts[i].cmd, g_info.env) < 0)
-			error_exit("Execve failed", 1);
+			error_exit("mickeyshell: execve failed", 1);
 	}
 	close(readfd);
 	close(fd[1]);
