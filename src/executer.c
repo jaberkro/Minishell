@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 15:15:02 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 15:20:03 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
+
 /**
  * @brief updates the readfd 
  * 
@@ -51,7 +52,7 @@ int	update_readfd(int i, int readfd, t_part_split *parts)
  * 
  * @param i 		index of which part between pipes we look at
  * @param max 		amount of parts in total
- * @param fd	write fd from last pipe. Initialized as 1 
+ * @param fd		write fd from last pipe. Initialized as 1 
  * @param parts 	array of t_part_split
  * @return int 
  */
@@ -100,13 +101,15 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 	int		pid;
 	char	*path;
 	int		exit_code;
+	int		standard_readfd;
+	int		standard_writefd;
 
 	pid = 0;
 	protected_pipe(fd);
 	if (max == 1)
 	{
-		int tmpreadfd = dup(0);
-		int tmpwritefd = dup(1);
+		standard_readfd = dup(0);
+		standard_writefd = dup(1);
 		readfd = update_readfd(i, readfd, parts);
 		fd[1] = update_writefd(i, max, fd[1], parts);
 		protected_dup2s(readfd, fd[1]);
@@ -114,9 +117,9 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 		close(fd[1]);
 		close(readfd);
 		exit_code = find_builtin_function(parts[i].cmd, max);
-		protected_dup2s(tmpreadfd, tmpwritefd);
-		close(tmpreadfd);
-		close(tmpwritefd);
+		protected_dup2s(standard_readfd, standard_writefd);
+		close(standard_readfd);
+		close(standard_writefd);
 	}
 	pid = protected_fork();
 	if (pid == 0)
