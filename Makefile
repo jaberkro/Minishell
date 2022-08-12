@@ -11,8 +11,8 @@
 # **************************************************************************** #
 
 NAME = minishell
-FLAGS = -Wall -Wextra -Werror
-LDFLAGS = -L /Users/$(USER)/.brew/opt/readline/lib -lreadline
+FLAGS = -Wall -Wextra -Werror -fsanitize=address -g3
+LDFLAGS = -L /Users/$(USER)/.brew/opt/readline/lib -lreadline -fsanitize=address -g3
 INC = -I ./libft -I ./include -I/Users/$(USER)/.brew/opt/readline/include
 
 LIBFT_DIR = libft/

@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/11 17:02:56 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 12:01:37 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -346,7 +346,10 @@ void	exec_minishell(char *input)
 	// }
 	// else
 	// {
-	pid = executer(0, count_pipe + 1, fd, part_split);
+	if (count_pipe == 0)
+		pid = single_executer(0, count_pipe + 1, fd, part_split);
+	else
+		pid = executer(0, count_pipe + 1, fd, part_split);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 	{

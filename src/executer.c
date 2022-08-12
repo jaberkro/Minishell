@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 11:26:54 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 12:21:48 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ int	update_readfd(int i, int readfd, t_part_split *parts)
 	{
 		while (parts[i].in[j])
 		{
+			printf("infiles: %s\n", parts[i].in[j]);
 			close(readfd);
 			if (access(parts[i].in[j], F_OK) == -1 || \
 			access(parts[i].in[j], R_OK) == -1)
@@ -136,6 +137,7 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 	{
 		while (parts[i].out[j])
 		{
+			printf("outfiles: [%s]\n", parts[i].out[j]);
 			close(fd);
 			if (parts[i].out_r[j] == '>')
 				fd = open(parts[i].out[j], O_WRONLY | O_TRUNC | O_CREAT, 0644);
@@ -149,7 +151,7 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 	else if (i == max - 1)
 	{
 		close (fd);
-		fd = dup(STDOUT_FILENO);
+		fd = dup(1);
 		if (fd == -1)
 			error_exit("Dup failed", 1);
 	}
@@ -172,13 +174,13 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 	char	*path;
 	int		exit_code;
 
+	for (int j = 0; parts[i].cmd[j]; j++)
+		printf("commands: [%s]\n", parts[i].cmd[j]);
 	pid = 0;
-	exit_code = 0;
 	protected_pipe(fd);
-	if (max == 1)
+	pid = protected_fork();
+	if (pid == 0)
 	{
-		int tmpreadfd = dup(0);
-		int tmpwritefd = dup(1);
 		readfd = update_readfd(i, readfd, parts);
 		fd[1] = update_writefd(i, max, fd[1], parts);
 		protected_dup2s(readfd, fd[1]);
@@ -187,28 +189,62 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 		close(readfd);
 		exit_code = find_builtin_function(parts[i].cmd, max);
 		if (exit_code != -1)
-		{
-			dup2(tmpreadfd, STDIN_FILENO);
-			dup2(tmpwritefd, STDOUT_FILENO);
-			close(tmpreadfd);
-			close(tmpwritefd);
-		}
+			exit(exit_code);
+		path = command_in_paths(parts[i].cmd[0], g_info.paths);
+		if (execve(path, parts[i].cmd, g_info.env) < 0)
+			error_exit("Execve failed", 1);
 	}
+	close(readfd);
+	close(fd[1]);
+	if (i + 1 < max)
+		pid = executer(i + 1, max, fd[0], parts);
+	return (pid);
+}
+/**
+ * @brief executes the commands per part, returns pid of inner child
+ * 
+ * @param i 		the current part we execute
+ * @param max 		amount of parts
+ * @param readfd	the fd to start reading from
+ * @param parts		array of t_part_split
+ * @return int 		pid of inner child
+ */
+int	single_executer(int i, int max, int readfd, t_part_split *parts)
+{
+	int		fd[2];
+	int		pid;
+	char	*path;
+	int		exit_code;
+
+	for (int j = 0; parts[i].cmd[j]; j++)
+		printf("commands: [%s]\n", parts[i].cmd[j]);
+	pid = 0;
+	exit_code = 0;
+	protected_pipe(fd);
+	int tmpreadfd = dup(0);
+	int tmpwritefd = dup(1);
+	readfd = update_readfd(i, readfd, parts);
+	fd[1] = update_writefd(i, max, fd[1], parts);
+	protected_dup2s(readfd, fd[1]);
+	close(fd[0]);
+	close(fd[1]);
+	close(readfd);
+	exit_code = find_builtin_function(parts[i].cmd, max);
+	dup2(tmpreadfd, STDIN_FILENO);
+	dup2(tmpwritefd, STDOUT_FILENO);
+	close(tmpreadfd);
+	close(tmpwritefd);
 	pid = protected_fork();
 	if (pid == 0)
 	{
-		if (max != 1)
-		{
-			readfd = update_readfd(i, readfd, parts);
-			fd[1] = update_writefd(i, max, fd[1], parts);
-			protected_dup2s(readfd, fd[1]);
-			close(fd[0]);
-			close(fd[1]);
-			close(readfd);
-			exit_code = find_builtin_function(parts[i].cmd, max);
-		}
 		if (exit_code != -1)
 			exit(exit_code);
+		readfd = update_readfd(i, readfd, parts);
+		fd[1] = update_writefd(i, max, fd[1], parts);
+		protected_dup2s(readfd, fd[1]);
+		close(fd[0]);
+		close(fd[1]);
+		close(readfd);
 		path = command_in_paths(parts[i].cmd[0], g_info.paths);
 		if (execve(path, parts[i].cmd, g_info.env) < 0)
 			error_exit("Execve failed", 1);

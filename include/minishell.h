@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/10 17:49:02 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 12:01:54 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int		executer(int i, int max, int readfd, t_part_split *parts);
 char	*command_in_paths(char	*argument, char **paths);
 void	write_exit(char *message, int exit_code);
 void	write_exit_argument(char *argument, char *message, int exit_code);
-void	single_executer(int i, int max, int readfd, t_part_split *parts);
+int		single_executer(int i, int max, int readfd, t_part_split *parts);
 
 //protected functions
 void	protected_pipe(int fd[2]);
