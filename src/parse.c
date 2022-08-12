@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/12 14:12:31 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 14:34:13 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,10 +307,8 @@ void	call_executer(int count_pipe, t_part_split *part_split)
 	fd = dup(0);
 	i = 1;
 	// print_part_split(part_split);
-	if (count_pipe == 0)
-		pid = single_executer(0, count_pipe + 1, fd, part_split);
-	else
-		pid = executer(0, count_pipe + 1, fd, part_split);
+
+	pid = executer(0, count_pipe + 1, fd, part_split);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		if_exited(status);
@@ -348,8 +346,8 @@ int	set_fill_split_parts(char **input_split, int count_pipe, t_part_split *part_
 	// {
 	
 	
-	free_array(input_split);
-	free_struct(parts);
+	// free_array(input_split);
+	// free_struct(parts);
 	return (heredocs);
 }
 
