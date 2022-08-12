@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   main.c                                             :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
+/*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 15:10:44 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/10 18:18:54 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/11 14:40:52 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,21 +35,16 @@ void	sig_handler(int sig)
 
 int	check_str(char *str)
 {
-	// int	cmp;
-
-	// cmp = ft_strncmp(str, "exit\0", 5);
-	// if (cmp == 0)
-	// {
-	// 	printf("exit\n");
-	// 	return (0);
-	// }
 	if (str != NULL && str[0])
 	{
 		add_history(str);
 		if (ft_isemptyline(str) == 0)
 			return 0;
 		if (check_double_red(str) < 0)
-			return 0;
+		{
+			printf("mickeyshell: wrong use of redirectors\n");
+			return (-1);
+		}
 		exec_minishell(str);
 	}
 	return (1);
@@ -76,7 +71,7 @@ int	main()
 			sigaction(SIGQUIT, &sa, NULL);
 			return (0);
 		}
-		if (check_str(str) == 0)
+		if (check_str(str) < 0)
 			return (0);
 		free (str);
 	}

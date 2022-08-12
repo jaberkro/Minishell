@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/04 12:31:29 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 10:50:36 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 14:08:52 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,5 +117,6 @@ char	*extend_dollars(char *input)
 			i++;
 	}
 	output = add_normal_text(input, &start, i - start, output);
+	free (input);//BS toegevoegd op 12/8
 	return (output);
 }

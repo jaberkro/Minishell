@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   env.c                                              :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
+/*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/10 14:28:47 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/11 17:41:50 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 14:09:00 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,5 +128,6 @@ int	set_env_variable(char *variable)
 			error_exit("Malloc failed", 1);
 		free(tmp2);
 	}
+	//free (variable); //BS toegevoegd op 10/8 15:00, maar soms is voor variable niet altijd gemallocd dus weer weg
 	return (1);
 }
