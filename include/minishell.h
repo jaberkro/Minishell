@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 15:14:17 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 15:46:31 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int		find_builtin_function(char **commands, int max);
 int		execute_echo(char **commands);
 int		execute_export(char **commands);
 int		execute_env(void);
+void	execute_exit(char **commands, int max);
 
 //executer functions
 int		executer(int i, int max, int readfd, t_part_split *parts);
