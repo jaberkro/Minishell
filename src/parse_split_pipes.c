@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   parse_split_pipes.c                                :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
+/*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/28 17:05:37 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/10 18:20:13 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 14:00:38 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	wcount(char const *s, char c)
 		{
 			if (d > 0)
 				if (s[d] != c && ((s[d - 1] == c && (s[d] != 34 && s[d] != 39)) \
-				|| (d - 1) == -1))
+				|| (d - 1) == - 1))
 					w++;
 			if (d < 1)
 				if (s[d] != c)
@@ -40,6 +40,24 @@ static int	wcount(char const *s, char c)
 		d++;
 	}
 	return (w + 1);
+}
+
+static void	check_quotes(char *s1, int *w_ptr, int *q_ptr, char c)
+{
+	int	w;
+	int	q;
+
+	w = *w_ptr;
+	q = *q_ptr;
+	while (s1[w] != '\0')
+	{
+		q = set_quote_flag(q, s1[w]);
+		if (s1[w] == c && q == 0)
+			break ;
+		w++;
+	}
+	*q_ptr = q;
+	*w_ptr = w;
 }
 
 static char	*wsplit(const char **s, char c)
@@ -54,13 +72,7 @@ static char	*wsplit(const char **s, char c)
 	w = 0;
 	x = 0;
 	q = 0;
-	while (s1[w] != '\0')
-	{
-		q = set_quote_flag(q, s1[w]);
-		if (s1[w] == c && q == 0)
-			break ;
-		w++;
-	}
+	check_quotes(s1, &w, &q, c);
 	word = ft_calloc(w + 1, sizeof(char));
 	if (word == NULL)
 		return (NULL);

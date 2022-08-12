@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/20 10:17:48 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/12 13:14:26 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/12 14:04:51 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,12 +125,12 @@ void	free_struct(t_part *parts)
 
 void	free_struct_split(t_part_split *part_split)
 {
-	if (part_split->in)
+	if (part_split->in != NULL)
 		free_array(part_split->in);
-	if (part_split->cmd)
+	if (part_split->cmd != NULL)
 		free_array(part_split->cmd);
-	if (part_split->out)
+	if (part_split->out != NULL)
 		free_array(part_split->out);
-	if (part_split->out_r)
+	if (part_split->out_r != NULL)
 		free(part_split->out_r);
 }

@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/12 14:11:03 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 14:12:31 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -372,7 +372,7 @@ void	exec_minishell(char *input)
 	if (heredocs < 0)
 		error_exit("mickeyshell: malloc failed", 1);
 	call_executer(count_pipe, part_split);
-	clean_up(heredocs, input_split, part_split, count_pipe + 1);
+	clean_up(heredocs, input_split, part_split, count_pipe); //removed +1 12/8
 }
 
 int	check_double_red(char *str)
