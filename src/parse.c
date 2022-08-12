@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/12 17:53:36 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/12 18:03:27 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -352,8 +352,13 @@ void	exec_minishell(char *input)
 	heredocs = 0;
 	input_split = ft_split_pipes(input, '|');
 	count_pipe = count_pipes(input);
-	if (count_pipe < 0 || input_split == NULL)
+	if (input_split == NULL)
 		error_exit("mickeyshell: malloc failed", 1);
+	if (count_pipe < 0)
+	{
+		free_array(input_split);
+		return ;
+	}
 	part_split = malloc((count_pipe + 2) * sizeof(t_part_split));
 	if (part_split == NULL)
 		error_exit("mickeyshell: malloc failed", 1);
