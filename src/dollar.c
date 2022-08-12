@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/04 12:31:29 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 16:57:02 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 18:29:38 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,17 @@ char	*add_extended_variable(char *input, int *i, char *output)
 		end++;
 	to_find = ft_substr(input, (unsigned int)(*i) + 1, end - 1);
 	if (to_find == NULL)
-		error_exit("Malloc failed", 1);
+		error_exit("mickeyshell: malloc failed", 1);
 	to_join = get_env_variable(to_find);
+	if (to_join == NULL && output == NULL)
+		return (ft_strdup(""));
 	free(to_find);
-	// if (output == NULL)
-	// 	output = ft_strdup(to_join);
-	// else
+	if (output == NULL)
+		output = ft_strdup(to_join);
+	else if (to_join != NULL)
 		output = ft_strjoin_fr(output, to_join);
+	if (output == NULL)
+		error_exit("mickeyshell: malloc failed", 1);
 	free (to_join);
 	*i += end;
 	return (output);
