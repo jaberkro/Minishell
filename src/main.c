@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 15:10:44 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/11 11:17:07 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/11 14:40:52 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,10 @@ int	check_str(char *str)
 		if (ft_isemptyline(str) == 0)
 			return 0;
 		if (check_double_red(str) < 0)
-			return 0;
+		{
+			printf("mickeyshell: wrong use of redirectors\n");
+			return (-1);
+		}
 		exec_minishell(str);
 	}
 	return (1);
@@ -68,7 +71,7 @@ int	main()
 			sigaction(SIGQUIT, &sa, NULL);
 			return (0);
 		}
-		if (check_str(str) == 0)
+		if (check_str(str) < 0)
 			return (0);
 		free (str);
 	}
