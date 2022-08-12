@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 13:04:24 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 16:58:51 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 17:03:18 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "libft.h"
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 static char	*make_path(char *path)
 {
