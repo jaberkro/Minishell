@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 15:20:03 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 16:46:04 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ int	update_readfd(int i, int readfd, t_part_split *parts)
 	{
 		while (parts[i].in[j])
 		{
-			printf("infiles: %s\n", parts[i].in[j]);
 			close(readfd);
 			if (access(parts[i].in[j], F_OK) == -1 || \
 			access(parts[i].in[j], R_OK) == -1)
@@ -65,7 +64,6 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 	{
 		while (parts[i].out[j])
 		{
-			printf("outfiles: [%s]\n", parts[i].out[j]);
 			close(fd);
 			if (parts[i].out_r[j] == '>')
 				fd = open(parts[i].out[j], O_WRONLY | O_TRUNC | O_CREAT, 0644);
