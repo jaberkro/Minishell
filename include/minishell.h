@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 14:36:50 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 15:14:17 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ int		execute_export(char **commands);
 int		execute_env(void);
 
 //executer functions
-void	error_exit(char *message, int exit_code);
 int		executer(int i, int max, int readfd, t_part_split *parts);
 char	*command_in_paths(char	*argument, char **paths);
+void	error_exit(char *message, int exit_code);
 void	write_exit(char *message, int exit_code);
 void	write_exit_argument(char *argument, char *message, int exit_code);
 
