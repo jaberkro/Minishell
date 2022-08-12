@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/10 14:28:47 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 14:09:00 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 15:46:50 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,4 +130,22 @@ int	set_env_variable(char *variable)
 	}
 	//free (variable); //BS toegevoegd op 10/8 15:00, maar soms is voor variable niet altijd gemallocd dus weer weg
 	return (1);
+}
+
+int	execute_env(void)
+{
+	int	i;
+
+	i = 0;
+	while (g_info.env[i])
+	{
+		if (ft_strncmp(g_info.env[i], "?=", 2) != 0 && \
+		ft_strchr(g_info.env[i], '='))
+		{
+			write(STDOUT_FILENO, g_info.env[i], ft_strlen(g_info.env[i]));
+			write(STDOUT_FILENO, "\n", 1);
+		}
+		i++;
+	}
+	return (0);
 }
