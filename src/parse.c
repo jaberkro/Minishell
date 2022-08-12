@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/12 14:06:14 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/12 16:27:57 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,12 +285,13 @@ void	clean_up(int heredocs, char **input_split, t_part_split *part_split, int co
 
 	i = 0;
 	free_array(input_split);
-	while (i < count)
+	while (i < count)//(part_split[i] != NULL)
 	{
-		free_struct_split(&part_split[i]);
-		free (&part_split[i]);
+		free_struct_split(part_split[i]);
 		i++;
 	}
+	free (part_split);
+
 	delete_temp_heredoc_files(heredocs);
 }
 
@@ -330,9 +331,10 @@ int	set_fill_split_parts(char **input_split, int count_pipe, t_part_split *part_
 		heredocs = assign_parts(&parts[i], input_split[i]);
 		split_parts(&parts[i], &part_split[i]);
 		// print_part_split(&part_split[i]);
+		free_struct(parts[i]);
 		i++;
 	}
-	free_struct(parts);
+	free(parts);
 	return (heredocs);
 }
 
@@ -348,14 +350,15 @@ void	exec_minishell(char *input)
 	count_pipe = count_pipes(input);
 	if (count_pipe < 0 || input_split == NULL)
 		error_exit("mickeyshell: malloc failed", 1);
-	part_split = malloc((count_pipe + 1) * sizeof(t_part_split));
+	part_split = malloc((count_pipe + 2) * sizeof(t_part_split));
 	if (part_split == NULL)
 		error_exit("mickeyshell: malloc failed", 1);
+	ft_bzero(&part_split[count_pipe + 1], sizeof(t_part_split));
 	heredocs = set_fill_split_parts(input_split, count_pipe, part_split, heredocs);
 	if (heredocs < 0)
 		error_exit("mickeyshell: malloc failed", 1);
 	call_executer(count_pipe, part_split);
-	clean_up(heredocs, input_split, part_split, count_pipe); //removed +1 12/8
+	clean_up(heredocs, input_split, part_split, count_pipe + 2); //removed +1 12/8, added again
 }
 
 int	check_double_red(char *str)

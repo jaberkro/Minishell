@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/20 10:17:48 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/12 14:04:51 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/12 16:29:16 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,7 @@ char	*remove_quotes(char *str)
 	}
 	i = 0;
 	str_new = malloc((len - count_quotes + 1) * sizeof(char));
-	strdup_no_quotes(str, str_new, i, len);
-	// free (str); //deze toegevoegd tijdens leaks checks op 10-8 - NIET DOEN, wordt double free!
+	str_new = strdup_no_quotes(str, str_new, i, len);
 	return (str_new);
 }
 
@@ -114,23 +113,23 @@ char	*set_space(char *str, int start, int len)
 	return (str);
 }
 
-void	free_struct(t_part *parts)
+void	free_struct(t_part parts)
 {
-	free(parts->in);
-	free(parts->cmd);
-	free(parts->out);
-	free(parts->out_r);
-	free(parts);
+	free(parts.in);
+	free(parts.cmd);
+	free(parts.out);
+	free(parts.out_r);
+	//free(parts);
 }
 
-void	free_struct_split(t_part_split *part_split)
+void	free_struct_split(t_part_split part_split)
 {
-	if (part_split->in != NULL)
-		free_array(part_split->in);
-	if (part_split->cmd != NULL)
-		free_array(part_split->cmd);
-	if (part_split->out != NULL)
-		free_array(part_split->out);
-	if (part_split->out_r != NULL)
-		free(part_split->out_r);
+	if (part_split.in != NULL)
+		free_array(part_split.in);
+	if (part_split.cmd != NULL)
+		free_array(part_split.cmd);
+	if (part_split.out != NULL)
+		free_array(part_split.out);
+	if (part_split.out_r != NULL)
+		free(part_split.out_r);
 }
