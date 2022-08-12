@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   builtin_export.c                                   :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
+/*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/09 10:28:52 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 15:43:15 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 16:42:43 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,12 +106,10 @@ void	print_key_value(char *to_print)
 void	print_export(char **sorted)
 {
 	char	*key;
-	char	*value;
 	int		i;
 
 	i = 0;
 	key = NULL;
-	value = NULL;
 	while (sorted[i])
 	{
 		if (ft_strchr(sorted[i], '='))
