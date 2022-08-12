@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/12 16:41:33 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/12 18:03:27 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,20 +152,20 @@ char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr)
 	return (str);
 }
 
-int	assign_parts(t_part *part, char *str)
+int	assign_parts(t_part *part, char *str, int heredocs)
 {
 	int	i;
 	int	start;
 	int	len;
 	char	*tmp;
-	int	heredocs;
+	// int	heredocs;
 	int	q;
 
 	i = 0;
 	start = 0;
 	len = 0;
 	tmp = NULL;
-	heredocs = 0;
+	// heredocs = 0;
 	q = 0;
 	while (i < ((int)ft_strlen(str)))
 	{
@@ -332,7 +332,7 @@ int	set_fill_split_parts(char **input_split, int count_pipe, t_part_split *part_
 	while (i < (count_pipe + 1))
 	{
 		set_zero_parts(&parts[i], &part_split[i]);
-		heredocs = assign_parts(&parts[i], input_split[i]);
+		heredocs = assign_parts(&parts[i], input_split[i], heredocs);
 		split_parts(&parts[i], &part_split[i]);
 		// print_part_split(&part_split[i]);
 		free_struct(parts[i]);
@@ -352,8 +352,13 @@ void	exec_minishell(char *input)
 	heredocs = 0;
 	input_split = ft_split_pipes(input, '|');
 	count_pipe = count_pipes(input);
-	if (count_pipe < 0 || input_split == NULL)
+	if (input_split == NULL)
 		error_exit("mickeyshell: malloc failed", 1);
+	if (count_pipe < 0)
+	{
+		free_array(input_split);
+		return ;
+	}
 	part_split = malloc((count_pipe + 2) * sizeof(t_part_split));
 	if (part_split == NULL)
 		error_exit("mickeyshell: malloc failed", 1);
