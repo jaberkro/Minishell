@@ -6,14 +6,13 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 17:25:30 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 16:59:23 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 17:01:55 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
 #include <unistd.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 void	protected_pipe(int fd[2])
