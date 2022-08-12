@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 14:08:43 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 14:32:30 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,20 +101,20 @@ int	execute_echo(char **commands)
 	i = 1;
 	if (!commands[i])
 	{
-		printf("\n");//write(STDOUT_FILENO, "\n", 1);
+		write(STDOUT_FILENO, "\n", 1);
 		return (0);
 	}
 	if (ft_strncmp(commands[1], "-n", 3) == 0)
 		i++;
 	while (commands[i])
 	{
-		printf("%s", commands[i]); //write(STDOUT_FILENO, commands[i], ft_strlen(commands[i]));
+		write(STDOUT_FILENO, commands[i], ft_strlen(commands[i]));
 		if (commands[i + 1])
-			printf(" "); //write(STDOUT_FILENO, " ", 1);
+			write(STDOUT_FILENO, " ", 1);
 		i++;
 	}
 	if (ft_strncmp(commands[1], "-n", 3) != 0)
-		printf("\n");//write(STDOUT_FILENO, "\n", 1);
+		write(STDOUT_FILENO, "\n", 1);
 	return (0);
 }
 
