@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/12 12:00:45 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/12 12:56:05 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void	split_parts(t_part *part, t_part_split *part_split)
 	part_split->out = extend_dollars_remove_quotes(part_split->out);
 	part_split->cmd = extend_dollars_remove_quotes(part_split->cmd);
 	part_split->in = extend_dollars_remove_quotes(part_split->in);
-	printf("Block out_r: [%s]\n", part_split->out_r);
+	// printf("Block out_r: [%s]\n", part_split->out_r);
 }
 
 char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr)
@@ -168,7 +168,7 @@ int	assign_parts(t_part *part, char *str)
 	while (i < ((int)ft_strlen(str)))
 	{
 		q = set_quote_flag(q, str[i]);
-		printf("before: q: %d, i: %d\n", q, i);
+		// printf("before: q: %d, i: %d\n", q, i);
 		if (str[i] == '>' && str[i + 1] != '>')//>, dus woord hierna is outfile
 			str = to_outfile(part, str, &q, &i);
 		else if (str[i] == '>' && str[i + 1] == '>') //>>, dus woord hierna is outfile
@@ -197,8 +197,11 @@ int	assign_parts(t_part *part, char *str)
 				part->out = ft_strjoin_fr(part->out, " ");
 				part->out = ft_strjoin_fr(part->out, tmp);
 			}
+			// printf("Part out: [%s]\n", part->out);
 			free(tmp);
-			str = set_space(str, i, len);
+			// printf("Str before set: [%s], i: %d, len: %d\n", str, i, len);
+			str = set_space(str, i - len, len);
+			// printf("Str after set: [%s], i: %d, len: %d\n", str, i, len);
 		}
 		else if (str[i] == '<' && str[i + 1] != '<')//dus woord hierna is infile
 		{
