@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/09 10:28:52 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/11 17:34:16 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 15:43:15 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 #include "libft.h"
 #include <stdio.h>
 
+/**
+ * @brief checks if a char ** is sorted alphabetically
+ * 
+ * @param to_check 	the char ** to check
+ * @return int 		1 if sorted, 0 if not sorted
+ */
 int	is_sorted(char **to_check)
 {
 	int		i;
@@ -33,14 +39,18 @@ int	is_sorted(char **to_check)
 	return (1);
 }
 
+/**
+ * @brief bubble sort algorithm to sort a char **
+ * 
+ * @param to_sort 	the char ** to sort
+ * @return char** 	the sorted char **
+ */
 char	**bubble_sort(char **to_sort)
 {
 	char	*tmp;
 	int		i;
 	int		j;
 
-	if (to_sort == NULL) // is dit nodig??? Zal iemand alle env variabelen unsetten?
-		return (NULL);
 	while (!is_sorted(to_sort))
 	{
 		i = 0;
@@ -61,6 +71,38 @@ char	**bubble_sort(char **to_sort)
 	return (to_sort);
 }
 
+/**
+ * @brief prints one line of export with a key and value
+ * 
+ * @param to_print the line to print
+ */
+void	print_key_value(char *to_print)
+{
+	char	*key;
+	char	*value;
+
+	key = protected_split_grep_one(to_print, '=', 0);
+	if (key == NULL)
+		error_exit("Malloc failed", 1);
+	value = ft_strdup(to_print + ft_strlen(key) + 1);
+	if ((key[0] != '?' && key[0] != '_' ) || to_print[1] != '=')
+	{
+		write(STDOUT_FILENO, "declare -x ", 11);
+		write(STDOUT_FILENO, key, ft_strlen(key));
+		write(STDOUT_FILENO, "=\"", 2);
+		write(STDOUT_FILENO, value, ft_strlen(value));
+		write(STDOUT_FILENO, "\"\n", 2);
+	}
+	free(key);
+	free(value);
+	free(to_print);
+}
+
+/**
+ * @brief prints as export depending on if ther is an '=' sign in the string
+ * 
+ * @param sorted 	the sorted char ** to be printed
+ */
 void	print_export(char **sorted)
 {
 	char	*key;
@@ -70,30 +112,13 @@ void	print_export(char **sorted)
 	i = 0;
 	key = NULL;
 	value = NULL;
-	if (sorted == NULL)
-		return ;
 	while (sorted[i])
 	{
 		if (ft_strchr(sorted[i], '='))
-		{
-			key = protected_split_grep_one(sorted[i], '=', 0);
-			if (key == NULL)
-				error_exit("Malloc failed", 1);
-			value = sorted[i] + ft_strlen(key) + 1;
-			if (key[0] != '?' && (key[0] != '_' || sorted[i][1] != '='))
-			{
-				write(STDOUT_FILENO, "declare -x ", 11);
-				write(STDOUT_FILENO, key, ft_strlen(key));
-				write(STDOUT_FILENO, "=\"", 2);
-				write(STDOUT_FILENO, value, ft_strlen(value));
-				write(STDOUT_FILENO, "\"\n", 2);
-			}
-			free(key);
-			free(sorted[i]);
-		}
+			print_key_value(sorted[i]);
 		else
 		{
-			key = sorted[i];
+			key = ft_strdup(sorted[i]);
 			write(STDOUT_FILENO, "declare -x ", 11);
 			write(STDOUT_FILENO, key, ft_strlen(key));
 			write(STDOUT_FILENO, "\n", 1);
@@ -105,22 +130,25 @@ void	print_export(char **sorted)
 	free(sorted);
 }
 
+/**
+ * @brief if export has no arguments, it will print the sorted env list.
+ * If export has arguments it will export those to the env list
+ * 
+ * @param commands 	the arguments to export
+ * @return int 		1 in case of invalid input, 0 if everything went fine
+ */
 int	execute_export(char **commands)
 {
 	int	i;
 
 	i = 1;
 	if (!commands[i])
-	{
 		print_export(bubble_sort(copy_array(g_info.env)));
-	}
 	while (commands[i])
 	{
 		if (ft_isalpha(commands[i][0]) || \
 		(commands[i][0] == '_' && commands[i][1] != '='))
-		{
 			set_env_variable(commands[i]);
-		}
 		else if ((commands[i][0] != '_'))
 		{
 			write(STDERR_FILENO, "mickeyshell: export: `", 22);
