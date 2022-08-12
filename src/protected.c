@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 17:25:30 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 17:01:55 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 17:52:27 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ char	*protected_split_grep_one(char *to_split, char delimiter, int index)
 	splitted = protected_split(to_split, delimiter);
 	output = ft_strdup(splitted[index]);
 	if (output == NULL)
-		return (NULL);
+		error_exit("mickeyshell: malloc failed", 1);
 	while (splitted[i])
 	{
 		free(splitted[i]);
