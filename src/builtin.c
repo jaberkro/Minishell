@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 14:32:30 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 15:46:54 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,56 +15,10 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int	execute_env(void)
-{
-	int	i;
-
-	i = 0;
-	while (g_info.env[i])
-	{
-		if (ft_strncmp(g_info.env[i], "?=", 2) != 0 && \
-		ft_strchr(g_info.env[i], '='))
-		{
-			write(STDOUT_FILENO, g_info.env[i], ft_strlen(g_info.env[i]));
-			write(STDOUT_FILENO, "\n", 1);
-		}
-		i++;
-	}
-	return (0);
-}
-
 int	execute_unset(char *command)
 {
 	printf("unsetting %s...\n", command);
 	return (0);
-}
-
-void	execute_exit(char **commands, int max)
-{
-	int	num;
-	int	i;
-
-	i = 0;
-	num = 0;
-	while (commands[i] != NULL)
-		i++;
-	if (max == 1)
-		write(STDOUT_FILENO, "exit\n", 5);
-	if (i == 2)
-	{
-		num = ft_atoi(commands[1]);
-		if (ft_isnumber(commands[1]) == 0)
-		{
-			write(STDERR_FILENO, "mickeyshell: exit: ", 19);
-			write(STDERR_FILENO, commands[1], ft_strlen(commands[1]));
-			write(STDERR_FILENO, ": numeric argument required\n", 28);
-			exit(255);
-		}
-		exit(num % 256);
-	}
-	if (i > 2)
-		write_exit("exit: too many arguments\n", 1);
-	exit(0);
 }
 
 int	execute_cd(char *command)
