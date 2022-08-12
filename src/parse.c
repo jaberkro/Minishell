@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/12 16:27:57 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/12 16:41:33 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,15 @@ int	count_pipes(char *str)
 
 char	**extend_dollars_remove_quotes(char **array)
 {
-	int	i;
+	int		i;
+	char	*tmp;
 
 	i = 0;
 	while (array && array[i] != NULL)
 	{
-		array[i] = extend_dollars(array[i]);
+		tmp = array[i];
+		array[i] = extend_dollars(tmp);
+		free(tmp);
 		array[i] = remove_quotes(array[i]);
 		i++;
 	}
@@ -305,6 +308,7 @@ void	call_executer(int count_pipe, t_part_split *part_split)
 	fd = dup(0);
 	i = 1;
 	// print_part_split(part_split);
+
 	pid = executer(0, count_pipe + 1, fd, part_split);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))

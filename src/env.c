@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/10 14:28:47 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/11 11:17:56 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/12 15:46:50 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,9 +120,9 @@ int	set_env_variable(char *variable)
 	else
 	{
 		tmp2 = ft_strdup(g_info.env[i]);
-		if (g_info.env[j] == NULL)
+		if (tmp2 == NULL)
 			error_exit("Malloc failed", 1);
-		free (g_info.env[i]);
+		free(g_info.env[i]);
 		g_info.env[i] = ft_strdup(variable);
 		if (g_info.env[i] == NULL)
 			error_exit("Malloc failed", 1);
@@ -130,4 +130,22 @@ int	set_env_variable(char *variable)
 	}
 	//free (variable); //BS toegevoegd op 10/8 15:00, maar soms is voor variable niet altijd gemallocd dus weer weg
 	return (1);
+}
+
+int	execute_env(void)
+{
+	int	i;
+
+	i = 0;
+	while (g_info.env[i])
+	{
+		if (ft_strncmp(g_info.env[i], "?=", 2) != 0 && \
+		ft_strchr(g_info.env[i], '='))
+		{
+			write(STDOUT_FILENO, g_info.env[i], ft_strlen(g_info.env[i]));
+			write(STDOUT_FILENO, "\n", 1);
+		}
+		i++;
+	}
+	return (0);
 }

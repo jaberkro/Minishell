@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/11 13:52:58 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/12 15:46:54 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,52 +15,10 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int	execute_env(void)
-{
-	int	i;
-
-	i = 0;
-	while (g_info.env[i])
-	{
-		if (ft_strncmp(g_info.env[i], "?=", 2) != 0 && \
-		ft_strchr(g_info.env[i], '='))
-			printf("%s\n", g_info.env[i]);
-		i++;
-	}
-	return (0);
-}
-
 int	execute_unset(char *command)
 {
 	printf("unsetting %s...\n", command);
 	return (0);
-}
-
-void	execute_exit(char **commands, int max)
-{
-	int	num;
-	int	i;
-
-	i = 0;
-	num = 0;
-	while (commands[i] != NULL)
-		i++;
-	if (max == 1)
-		printf("exit\n");
-	if (i == 2)
-	{
-		num = ft_atoi(commands[1]);
-		if (ft_isnumber(commands[1]) == 0)
-		{
-			printf("mickeyshell: exit: %s: numeric argument required\n", \
-				commands[1]);
-			exit(255);
-		}
-		exit(num % 256);
-	}
-	if (i > 2)
-		write_exit("mickeyshell: exit: too many arguments", 1);
-	exit(0);
 }
 
 int	execute_cd(char *command)
@@ -97,21 +55,20 @@ int	execute_echo(char **commands)
 	i = 1;
 	if (!commands[i])
 	{
-		printf("\n");
+		write(STDOUT_FILENO, "\n", 1);
 		return (0);
 	}
+	if (ft_strncmp(commands[1], "-n", 3) == 0)
+		i++;
 	while (commands[i])
 	{
-		if (i != 1 || (i == 1 && ft_strncmp(commands[1], "-n", 3) != 0))
-		{
-			if ((i != 1 && ft_strncmp(commands[1], "-n", 3) != 0))
-				printf(" ");
-			printf("%s", commands[i]);
-		}
+		write(STDOUT_FILENO, commands[i], ft_strlen(commands[i]));
+		if (commands[i + 1])
+			write(STDOUT_FILENO, " ", 1);
 		i++;
 	}
 	if (ft_strncmp(commands[1], "-n", 3) != 0)
-		printf("\n");
+		write(STDOUT_FILENO, "\n", 1);
 	return (0);
 }
 

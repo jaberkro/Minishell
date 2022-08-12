@@ -6,13 +6,13 @@
 #    By: bsomers <bsomers@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/08/10 15:00:15 by bsomers       ########   odam.nl          #
+#    Updated: 2022/08/12 16:32:34 by jaberkro      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
-FLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
-LDFLAGS = -L /Users/$(USER)/.brew/opt/readline/lib -lreadline -g3 -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -fsanitize=address -g3
+LDFLAGS = -L /Users/$(USER)/.brew/opt/readline/lib -lreadline -fsanitize=address -g3
 INC = -I ./libft -I ./include -I/Users/$(USER)/.brew/opt/readline/include
 
 LIBFT_DIR = libft/
@@ -33,7 +33,8 @@ SRC = 	$(SRC_DIR)/init_global.c \
 		$(SRC_DIR)/builtin.c \
 		$(SRC_DIR)/dollar.c \
 		$(SRC_DIR)/builtin_export.c \
-		$(SRC_DIR)/env.c
+		$(SRC_DIR)/env.c \
+		$(SRC_DIR)/exit.c
 
 OBJ = $(subst $(SRC_DIR), $(BUILD_DIR), $(SRC:.c=.o))
 
@@ -53,7 +54,7 @@ $(BUILD_DIR):
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(FLAGS) $(INC) -c $^ -o $@
 
-$(NAME): $(LIBFT) $(OBJ) 
+$(NAME): $(LIBFT) $(OBJ)
 	cp $(LIBFT) ./$(NAME)
 	$(CC) $(OBJ) $(LDFLAGS) $(LIBFT) $(INC) -o $(NAME)
 	@echo "$(RED)Done $(GREEN)COM$(YELLOW)PI$(BLUE)LING $(PINK)MINISHELL$(RESET):)"

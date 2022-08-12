@@ -6,85 +6,15 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/11 13:30:08 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 15:20:03 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
-#include <stdio.h>
 #include <unistd.h>
-#include <stdlib.h>
 #include <fcntl.h>
-
-/**
- * @brief writes a message to stderr and exits
- * 
- * @param message 	the message to print
- * @param exit_code the code to exit with
- */
-void	write_exit(char *message, int exit_code)
-{
-	char	*return_value;
-	char	*exit_num;
-
-	exit_num = ft_itoa(exit_code);
-	if (exit_num == NULL)
-		error_exit("Malloc failed", 1);
-	return_value = ft_strjoin("?=", exit_num);
-	free(exit_num);
-	set_env_variable(return_value);
-	free(return_value);
-	write(2, message, ft_strlen(message));
-	exit(exit_code);
-}
-
-/**
- * @brief writes a message with an argument in front of it to stderr, exits
- * 
- * @param argument	the 'topic' the message is about
- * @param message 	the message to be printed (about the variable)
- * @param exit_code the code to exit with
- */
-void	write_exit_argument(char *argument, char *message, int exit_code)
-{
-	char	*return_value;
-	char	*exit_num;
-
-	exit_num = ft_itoa(exit_code);
-	if (exit_num == NULL)
-		error_exit("Malloc failed", 1);
-	return_value = ft_strjoin("?=", exit_num);
-	free(exit_num);
-	set_env_variable(return_value);
-	free(return_value);
-	if (argument)
-		write(2, argument, ft_strlen(argument));
-	write(2, message, ft_strlen(message));
-	exit(exit_code);
-}
-
-/**
- * @brief uses perror to print an error message and exits
- * 
- * @param message 	the message to given to perror
- * @param exit_code the code to exit with
- */
-void	error_exit(char *message, int exit_code)
-{
-	char	*return_value;
-	char	*exit_num;
-
-	exit_num = ft_itoa(exit_code);
-	if (exit_num == NULL)
-		error_exit("Malloc failed", 1);
-	return_value = ft_strjoin("?=", exit_num);
-	free(exit_num);
-	set_env_variable(return_value);
-	free(return_value);
-	perror(message);
-	exit(exit_code);
-}
+#include <stdio.h>
 
 /**
  * @brief updates the readfd 
@@ -103,6 +33,7 @@ int	update_readfd(int i, int readfd, t_part_split *parts)
 	{
 		while (parts[i].in[j])
 		{
+			printf("infiles: %s\n", parts[i].in[j]);
 			close(readfd);
 			if (access(parts[i].in[j], F_OK) == -1 || \
 			access(parts[i].in[j], R_OK) == -1)
@@ -121,7 +52,7 @@ int	update_readfd(int i, int readfd, t_part_split *parts)
  * 
  * @param i 		index of which part between pipes we look at
  * @param max 		amount of parts in total
- * @param fd	write fd from last pipe. Initialized as 1 
+ * @param fd		write fd from last pipe. Initialized as 1 
  * @param parts 	array of t_part_split
  * @return int 
  */
@@ -134,6 +65,8 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 	{
 		while (parts[i].out[j])
 		{
+			printf("outfiles: [%s]\n", parts[i].out[j]);
+			close(fd);
 			if (parts[i].out_r[j] == '>')
 				fd = open(parts[i].out[j], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 			else
@@ -145,7 +78,8 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 	}
 	else if (i == max - 1)
 	{
-		fd = dup(STDOUT_FILENO);
+		close (fd);
+		fd = dup(1);
 		if (fd == -1)
 			error_exit("Dup failed", 1);
 	}
@@ -167,33 +101,36 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 	int		pid;
 	char	*path;
 	int		exit_code;
+	int		standard_readfd;
+	int		standard_writefd;
 
 	pid = 0;
-	exit_code = 0;
 	protected_pipe(fd);
 	if (max == 1)
 	{
+		standard_readfd = dup(0);
+		standard_writefd = dup(1);
 		readfd = update_readfd(i, readfd, parts);
 		fd[1] = update_writefd(i, max, fd[1], parts);
-		exit_code += find_builtin_function(parts[i].cmd, max);
-		// protected_dup2s(readfd, fd[1]);
-		// close(fd[0]);
-		// close(fd[1]);
-		// close(readfd);
+		protected_dup2s(readfd, fd[1]);
+		close(fd[0]);
+		close(fd[1]);
+		close(readfd);
+		exit_code = find_builtin_function(parts[i].cmd, max);
+		protected_dup2s(standard_readfd, standard_writefd);
+		close(standard_readfd);
+		close(standard_writefd);
 	}
 	pid = protected_fork();
 	if (pid == 0)
 	{
+		readfd = update_readfd(i, readfd, parts);
+		fd[1] = update_writefd(i, max, fd[1], parts);
+		protected_dup2s(readfd, fd[1]);
+		close(fd[0]);
+		close(fd[1]);
+		close(readfd);
 		if (max != 1)
-		{
-			readfd = update_readfd(i, readfd, parts);
-			fd[1] = update_writefd(i, max, fd[1], parts);
-			protected_dup2s(readfd, fd[1]);
-			close(fd[0]);
-			close(fd[1]);
-			close(readfd);
-		}
-		if (max != 1 && exit_code == -1)
 			exit_code = find_builtin_function(parts[i].cmd, max);
 		if (exit_code != -1)
 			exit(exit_code);
