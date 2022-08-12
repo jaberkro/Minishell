@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/10 14:28:47 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 15:46:50 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 17:56:49 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,66 +72,71 @@ char	*get_env_variable(char *to_find)
 	return (NULL);
 }
 
+void	add_variable_to_end(int i, char *variable)
+{
+	char	**tmp;
+	int		j;
+
+	j = 0;
+	tmp = copy_array(g_info.env);
+	free_array(g_info.env);
+	g_info.env = malloc((i + 2) * sizeof(char *));
+	if (g_info.env == NULL)
+		error_exit("mickeyshell: malloc failed", 1);
+	while (j < i)
+	{
+		g_info.env[j] = ft_strdup(tmp[j]);
+		if (g_info.env[j] == NULL)
+			error_exit("mickeyshell: malloc failed", 1);
+		free(tmp[j]);
+		j++;
+	}
+	g_info.env[j] = ft_strdup(variable);
+	if (g_info.env[j] == NULL)
+		error_exit("mickeyshell: malloc failed", 1);
+	g_info.env[j + 1] = NULL;
+	free (tmp);
+}
+
 /**
- * @brief Set the env variable object
+ * @brief Set the env variable object. In case it does not exist yet, it will
+ * be added to env. If its exists already it's value will be updated
  * 
  * @param variable 	the env variable to be added to g_info.env
- * @return int 		return 1 if it worked // not needed to catch this anymore
  */
-int	set_env_variable(char *variable)
+void	set_env_variable(char *variable)
 {
 	int		i;
 	char	*to_find;
-	char	**tmp;
 	char	*tmp2;
-	int		j;
 
 	i = 0;
-	j = 0;
 	to_find = protected_split_grep_one(variable, '=', 0);
-	if (to_find == NULL)
-		error_exit("Malloc failed", 1);
 	while (g_info.env[i] && \
-	ft_strncmp(g_info.env[i], to_find, ft_strlen(to_find)) != 0 &&\
-	g_info.env[i][ft_strlen(to_find)] != '=') // and check for enter in correct space
+	!(ft_strncmp(g_info.env[i], to_find, ft_strlen(to_find)) == 0 && \
+	g_info.env[i][ft_strlen(to_find)] == '='))
 		i++;
 	free(to_find);
 	if (!g_info.env[i])
-	{
-		tmp = copy_array(g_info.env);
-		free_array(g_info.env);
-		g_info.env = malloc((i + 2) * sizeof(char *));
-		if (g_info.env == NULL)
-			error_exit("Malloc failed", 1);
-		while (j < i)
-		{
-			g_info.env[j] = ft_strdup(tmp[j]);
-			if (g_info.env[j] == NULL)
-				error_exit("Malloc failed", 1);
-			free(tmp[j]);
-			j++;
-		}
-		g_info.env[j] = ft_strdup(variable);
-		if (g_info.env[j] == NULL)
-			error_exit("Malloc failed", 1);
-		g_info.env[j + 1] = NULL;
-		free (tmp);
-	}
+		add_variable_to_end(i, variable);
 	else
 	{
 		tmp2 = ft_strdup(g_info.env[i]);
 		if (tmp2 == NULL)
-			error_exit("Malloc failed", 1);
+			error_exit("mickeyshell: malloc failed", 1);
 		free(g_info.env[i]);
 		g_info.env[i] = ft_strdup(variable);
 		if (g_info.env[i] == NULL)
-			error_exit("Malloc failed", 1);
+			error_exit("mickeyshell: malloc failed", 1);
 		free(tmp2);
 	}
-	//free (variable); //BS toegevoegd op 10/8 15:00, maar soms is voor variable niet altijd gemallocd dus weer weg
-	return (1);
 }
 
+/**
+ * @brief prints all env variables that have an '=' sign in them
+ * 
+ * @return int returnvalue to exit with. It is always 0
+ */
 int	execute_env(void)
 {
 	int	i;

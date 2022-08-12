@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 16:41:03 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/12 17:56:24 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	init_global(char **env);
 
 //env functions
 char	*get_env_variable(char *to_find);
-int		set_env_variable(char *variable);
+void	set_env_variable(char *variable);
 char	**get_paths(void);
 char	**copy_array(char **to_copy);
 

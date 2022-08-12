@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 15:46:54 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 16:57:16 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	find_builtin_function(char **commands, int max)
 		exit(status);
 	status_num = ft_itoa(status);
 	if (status_num == NULL)
-		error_exit("Malloc failed", 1);
+		error_exit("mickeyshell: malloc failed", 1);
 	if (status != -1)
 	{
 		status_str = ft_strjoin("?=", status_num);

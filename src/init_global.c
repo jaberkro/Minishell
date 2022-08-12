@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/08 14:46:35 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/11 13:11:42 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 16:58:12 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	increase_shlvl(void)
 	new_shlvl = ft_strjoin("SHLVL=", new_level);
 	free(new_level);
 	if (new_shlvl == NULL)
-		error_exit("Malloc failed", 1);
+		error_exit("mickeyshell: malloc failed", 1);
 	set_env_variable(new_shlvl);
 	free(new_shlvl);
 }
@@ -51,12 +51,12 @@ void	init_env_variables(char **env)
 		len++;
 	g_info.env = malloc((len + 1) * sizeof(char *));
 	if (g_info.env == NULL)
-		error_exit("Malloc failed", 1);
+		error_exit("mickeyshell: malloc failed", 1);
 	while (i < len)
 	{
 		g_info.env[i] = ft_strdup(env[i]);
 		if (g_info.env[i] == NULL)
-			error_exit("Malloc failed", 1);
+			error_exit("mickeyshell: malloc failed", 1);
 		i++;
 	}
 	g_info.env[i] = NULL;

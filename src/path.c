@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 13:04:24 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/10 18:25:39 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 17:03:18 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "libft.h"
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 static char	*make_path(char *path)
 {
@@ -23,12 +22,12 @@ static char	*make_path(char *path)
 
 	command = ft_strdup(path);
 	if (command == NULL)
-		error_exit("Malloc failed", 1);
+		error_exit("mickeyshell: malloc failed", 1);
 	tmp = command;
 	command = ft_strjoin(command, "/");
 	free(tmp);
 	if (command == NULL)
-		error_exit("Malloc failed", 1);
+		error_exit("mickeyshell: malloc failed", 1);
 	return (command);
 }
 
@@ -44,7 +43,7 @@ char	*command_in_paths(char	*argument, char **paths)
 	if (!paths)
 		write_exit_argument(argument, ": No such file or directory\n", 127);
 	if (!argument)
-		exit(0); //dit is nieuw
+		exit(0);
 	while (paths && paths[i])
 	{
 		command = make_path(paths[i]);
@@ -52,10 +51,10 @@ char	*command_in_paths(char	*argument, char **paths)
 		command = ft_strjoin(command, argument);
 		free(tmp);
 		if (command == NULL)
-			error_exit("Malloc failed", 1);
+			error_exit("mickeyshell: malloc failed", 1);
 		if (access(command, X_OK) != -1)
 			return (command);
-		free(command); // is this necessary?
+		free(command);
 		i++;
 	}
 	write_exit_argument(argument, ": command not found\n", 127);
