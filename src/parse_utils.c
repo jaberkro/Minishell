@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/20 10:17:48 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/10 18:21:20 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/12 13:14:26 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,5 +133,4 @@ void	free_struct_split(t_part_split *part_split)
 		free_array(part_split->out);
 	if (part_split->out_r)
 		free(part_split->out_r);
-	free(part_split);
 }

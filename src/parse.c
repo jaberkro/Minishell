@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/12 12:56:05 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/12 13:18:49 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ char	**extend_dollars_remove_quotes(char **array)
 	{
 		array[i] = extend_dollars(array[i]);
 		array[i] = remove_quotes(array[i]);
-		printf("Block: [%s]\n", array[i]);
 		i++;
 	}
 	return (array);
@@ -280,11 +279,18 @@ void	if_exited(int status)
 	free(return_value);
 }
 
-void	clean_up(int heredocs, char **input_split, t_part_split *part_split)
+void	clean_up(int heredocs, char **input_split, t_part_split *part_split, int count)
 {
+	int	i;
+
+	i = 0;
 	free_array(input_split);
-	// free_struct(parts);
-	free_struct_split(part_split);
+	while (i < count)
+	{
+		free_struct_split(&part_split[i]);
+		free (&part_split[i]);
+		i++;
+	}
 	delete_temp_heredoc_files(heredocs);
 }
 
@@ -349,7 +355,7 @@ void	exec_minishell(char *input)
 	if (heredocs < 0)
 		error_exit("mickeyshell: malloc failed", 1);
 	call_executer(count_pipe, part_split);
-	clean_up(heredocs, input_split, part_split);
+	clean_up(heredocs, input_split, part_split, count_pipe + 1);
 }
 
 int	check_double_red(char *str)
