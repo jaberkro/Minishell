@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 14:57:10 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/15 18:47:10 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,8 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 			fd[1] = update_writefd(i, max, fd[1], parts);
 		if (fd[1] == -1)
 			exit_code = 1;
+		if (!parts[i].cmd || !parts[i].cmd[0])
+			exit_code = 0;
 		if (exit_code == -1)
 		{
 			protected_dup2s(readfd, fd[1]);
@@ -163,6 +165,8 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 			exit_code = find_builtin_function(parts[i].cmd, max);
 		if (exit_code != -1)
 			exit(exit_code);
+		if (!parts[i].cmd[0] || ft_strncmp(parts[i].cmd[0], "", 1) == 0)
+			exit(0);
 		path = command_in_paths(parts[i].cmd[0], g_info.paths);
 		if (execve(path, parts[i].cmd, g_info.env) < 0)
 			error_exit("mickeyshell: execve failed", 1);
