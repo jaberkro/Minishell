@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/15 14:16:38 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/15 14:25:21 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	delete_temp_heredoc_files(int heredocs)
 	while (heredocs > 0)
 	{
 		itoa_hd = ft_itoa(heredocs);
-		tmp = ft_strjoin(".heredoc", itoa_hd);//ft_itoa(heredocs));
+		tmp = ft_strjoin(".heredoc", itoa_hd);
 		unlink(tmp);
 		free(itoa_hd);
 		free(tmp);
