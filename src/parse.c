@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/12 18:03:27 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/15 13:53:17 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,17 +109,121 @@ void	split_parts(t_part *part, t_part_split *part_split)
 	// printf("Block out_r: [%s]\n", part_split->out_r);
 }
 
-char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr)
+char	*set_value(char *to_set, char *str, int start, int len)
+{
+	char *tmp;
+
+	tmp = ft_substr(str, start, len);
+	tmp = ft_strtrim_fr(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
+	if (to_set == NULL)
+		to_set = ft_strdup(tmp);
+	else
+	{
+		to_set = ft_strjoin_fr(to_set, " ");
+		to_set = ft_strjoin_fr(to_set, tmp);
+	}
+	free(tmp);
+	return (to_set);
+}
+
+char	*from_heredoc(t_part *part, char *str, int heredocs, int *i_ptr)
+{
+	int	len;
+	int	i;
+	char	*tmp;
+
+	len = 0;
+	i = *i_ptr;
+	tmp = NULL;
+	str[i] = ' ';
+	str[i + 1] = ' ';
+	while (ft_isspace(str[i]) != 0)
+		i++;
+	tmp = handle_here_doc(str, i, heredocs);
+	if (part->in == NULL)
+		part->in = ft_strdup(tmp);
+	else
+	{
+		part->in = ft_strjoin_fr(part->in, " ");
+		part->in = ft_strjoin_fr(part->in, tmp);
+	}
+	free (tmp);
+	len = calc_len_word_after(str, i);
+	str = set_space(str, i, len);
+	i = i + len;
+	return (str);
+}
+
+char	*from_infile(t_part *part, char *str, int *q_ptr, int *i_ptr)
 {
 	int	start;
 	int	len;
-	char *tmp;
+	int	i;
+	int	q;
+
+	start = *i_ptr;
+	len = 0;
+	i = *i_ptr;
+	q = *q_ptr;
+	str[i] = ' ';
+	while (ft_isspace(str[i]) != 0)
+		i++;
+	while (((q == 0 && ft_isspace(str[i]) == 0 && ft_isred(str[i]) == 0) || (q == 1)) && str[i] != '\0')
+	{
+		q = set_quote_flag(q, str[i]);
+		i++;
+	}
+	len = i - start;
+	part->in = set_value(part->in, str, start, len);
+	str = set_space(str, start, len);
+	*q_ptr = q;
+	*i_ptr = i;
+	return(str);
+}
+
+char	*to_outfile_app(t_part *part, char *str, int *q_ptr, int *i_ptr)
+{
+	int	start;
+	int	len;
 	int	i;
 	int	q;
 
 	start = 0;
 	len = 0;
-	tmp = NULL;
+	i = *i_ptr;
+	q = *q_ptr;
+
+	if (part->out_r == NULL)
+		part->out_r = ft_strdup("]");
+	else
+		part->out_r = ft_strjoin_fr(part->out_r, "]");
+	str[i] = ' ';
+	str[i + 1] = ' ';
+	while (ft_isspace(str[i]) != 0)
+		i++;
+	start = i;
+	while (((q == 0 && ft_isspace(str[i]) == 0 && ft_isred(str[i]) == 0) || (q == 1)) && str[i] != '\0')
+	{
+		q = set_quote_flag(q, str[i]);
+		i++;
+	}
+	len = i - start;
+	part->out = set_value(part->out, str, start, len);
+	str = set_space(str, i - len, len);
+	*q_ptr = q;
+	*i_ptr = i;
+	return (str);
+}
+
+char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr)
+{
+	int	start;
+	int	len;
+	int	i;
+	int	q;
+
+	start = 0;
+	len = 0;
 	i = *i_ptr;
 	q = *q_ptr;
 	if (part->out_r == NULL)
@@ -136,16 +240,7 @@ char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr)
 		i++;
 	}
 	len = i - start;
-	tmp = ft_substr(str, start, len);
-	tmp = ft_strtrim_fr(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
-	if (part->out == NULL)
-		part->out = ft_strdup(tmp);
-	else
-	{
-		part->out = ft_strjoin_fr(part->out, " ");
-		part->out = ft_strjoin_fr(part->out, tmp);
-	}
-	free(tmp);
+	part->out = set_value(part->out, str, start, len);
 	str = set_space(str, start, len);
 	*q_ptr = q;
 	*i_ptr = i;
@@ -155,104 +250,26 @@ char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr)
 int	assign_parts(t_part *part, char *str, int heredocs)
 {
 	int	i;
-	int	start;
-	int	len;
-	char	*tmp;
-	// int	heredocs;
 	int	q;
 
 	i = 0;
-	start = 0;
-	len = 0;
-	tmp = NULL;
-	// heredocs = 0;
 	q = 0;
 	while (i < ((int)ft_strlen(str)))
 	{
 		q = set_quote_flag(q, str[i]);
-		// printf("before: q: %d, i: %d\n", q, i);
 		if (str[i] == '>' && str[i + 1] != '>')//>, dus woord hierna is outfile
 			str = to_outfile(part, str, &q, &i);
 		else if (str[i] == '>' && str[i + 1] == '>') //>>, dus woord hierna is outfile
-		{
-			if (part->out_r == NULL)
-				part->out_r = ft_strdup("]");
-			else
-				part->out_r = ft_strjoin_fr(part->out_r, "]");
-			str[i] = ' ';
-			str[i + 1] = ' ';
-			while (ft_isspace(str[i]) != 0)
-				i++;
-			start = i;
-			while (((q == 0 && ft_isspace(str[i]) == 0 && ft_isred(str[i]) == 0) || (q == 1)) && str[i] != '\0')
-			{
-				q = set_quote_flag(q, str[i]);
-				i++;
-			}
-			len = i - start;
-			tmp = ft_substr(str, start, len);
-			tmp = ft_strtrim_fr(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
-			if (part->out == NULL)
-				part->out = ft_strdup(tmp);
-			else
-			{
-				part->out = ft_strjoin_fr(part->out, " ");
-				part->out = ft_strjoin_fr(part->out, tmp);
-			}
-			// printf("Part out: [%s]\n", part->out);
-			free(tmp);
-			// printf("Str before set: [%s], i: %d, len: %d\n", str, i, len);
-			str = set_space(str, i - len, len);
-			// printf("Str after set: [%s], i: %d, len: %d\n", str, i, len);
-		}
-		else if (str[i] == '<' && str[i + 1] != '<')//dus woord hierna is infile
-		{
-			str[i] = ' ';
-			while (ft_isspace(str[i]) != 0)
-				i++;
-			start = i;
-			while (((q == 0 && ft_isspace(str[i]) == 0 && ft_isred(str[i]) == 0) || (q == 1)) && str[i] != '\0')
-			{
-				q = set_quote_flag(q, str[i]);
-				i++;
-			}
-			len = i - start;
-			tmp = ft_substr(str, start, len);
-			tmp = ft_strtrim_fr(tmp, " "); //Voor het geval meerdere spaties tussen de woorden zaten
-			if (part->in == NULL)
-				part->in = ft_strdup(tmp);
-			else
-			{
-				part->in = ft_strjoin_fr(part->in, " ");
-				part->in = ft_strjoin_fr(part->in, tmp);
-			}
-			free(tmp);
-			str = set_space(str, start, len);
-		}
+			str = to_outfile_app(part, str, &q, &i);
+		else if (str[i] == '<' && str[i + 1] != '<')//<, dus woord hierna is infile
+			str = from_infile(part, str, &q, &i);
 		else if (str[i] == '<' && str[i + 1] == '<') //Bij heredoc <<, dus woord hierna is stopwoord
 		{
 			heredocs++;
-			str[i] = ' ';
-			str[i + 1] = ' ';
-			while (ft_isspace(str[i]) != 0)
-				i++;
-			tmp = handle_here_doc(str, i, heredocs);
-			if (part->in == NULL)
-				part->in = ft_strdup(tmp);
-			else
-			{
-				part->in = ft_strjoin_fr(part->in, " ");
-				part->in = ft_strjoin_fr(part->in, tmp);
-			}
-			free (tmp);
-			len = calc_len_word_after(str, i);
-			str = set_space(str, i, len);
-			i = i + len;
+			str = from_heredoc(part, str, heredocs, &i);
 		}
 		else
 			i++;
-		// start = 0;
-		len = 0;
 	}
 	part->cmd = ft_strdup(str);
 	return (heredocs);
