@@ -6,7 +6,7 @@
 #    By: bsomers <bsomers@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/08/15 14:36:02 by jaberkro      ########   odam.nl          #
+#    Updated: 2022/08/15 15:21:11 by jaberkro      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,22 +21,23 @@ LIBFT = libft/libft.a
 SRC_DIR = src
 BUILD_DIR = obj
 
-SRC = 	$(SRC_DIR)/init_global.c \
-		$(SRC_DIR)/executer.c \
-		$(SRC_DIR)/protected.c \
-		$(SRC_DIR)/main.c \
-		$(SRC_DIR)/path.c \
-		$(SRC_DIR)/parse.c \
-		$(SRC_DIR)/parse_split_pipes.c \
-		$(SRC_DIR)/parse_heredoc.c \
-		$(SRC_DIR)/parse_utils.c \
-		$(SRC_DIR)/builtin.c \
-		$(SRC_DIR)/dollar.c \
-		$(SRC_DIR)/builtin_export.c \
-		$(SRC_DIR)/env.c \
-		$(SRC_DIR)/exit.c
+SRC = 	init_global.c \
+		executer.c \
+		protected.c \
+		main.c \
+		path.c \
+		parse.c \
+		parse_split_pipes.c \
+		parse_heredoc.c \
+		parse_utils.c \
+		builtin/builtin.c \
+		builtin/export.c \
+		dollar.c \
+		env.c \
+		exit.c \
 
-OBJ = $(subst $(SRC_DIR), $(BUILD_DIR), $(SRC:.c=.o))
+OBJ := $(addprefix $(BUILD_DIR)/, $(SRC:.c=.o))
+SRC := $(addprefix $(SRC_DIR)/, $(SRC))
 
 # COLORS
 PINK	= \x1b[35m
@@ -46,17 +47,15 @@ GREEN	= \x1b[32m
 RED		= \x1b[31m
 RESET	= \x1b[0m
 
-all: $(BUILD_DIR) $(NAME)
-
-$(BUILD_DIR):
-	mkdir $(BUILD_DIR)
+all: $(NAME)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(FLAGS) $(INC) -c $^ -o $@
+	mkdir -p $(dir $@)
+	CC $(FLAGS) $(INC) -c $^ -o $@
 
 $(NAME): $(LIBFT) $(OBJ)
 	cp $(LIBFT) ./$(NAME)
-	$(CC) $(OBJ) $(LDFLAGS) $(LIBFT) $(INC) -o $(NAME)
+	CC $(OBJ) $(LDFLAGS) $(LIBFT) $(INC) -o $(NAME)
 	@echo "$(RED)Done $(GREEN)COM$(YELLOW)PI$(BLUE)LING $(PINK)MINISHELL$(RESET):)"
 
 $(LIBFT):
