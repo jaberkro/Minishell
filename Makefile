@@ -6,7 +6,7 @@
 #    By: bsomers <bsomers@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/08/15 19:08:26 by jaberkro      ########   odam.nl          #
+#    Updated: 2022/08/15 19:14:51 by jaberkro      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,8 +21,10 @@ LIBFT = libft/libft.a
 SRC_DIR = src
 BUILD_DIR = obj
 
-SRC = 	global/init_global.c \
-		global/env.c \
+SRC = 	global/get_env.c \
+		global/init.c \
+		global/set_env.c \
+		global/unset_env.c \
 		executer.c \
 		protected.c \
 		dollar.c \
