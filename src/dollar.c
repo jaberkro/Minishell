@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/04 12:31:29 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 18:23:28 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/15 20:27:11 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,14 @@ char	*add_extended_variable(char *input, int *i, char *output, int d_quote)
 	end = 1;
 	if (ft_isspace(input[*i + end]))
 	{
-		printf("only one dollar!\n");
+		// printf("only one dollar!\n");
 		to_join = ft_strdup("$");
 		if (to_join == NULL)
 			error_exit("mickeyshell: malloc failed", 1);
 	}
 	else
 	{
-		printf("something behind the dollar!\n");
+		// printf("something behind the dollar!\n");
 		if (!(d_quote == 0 && double_quote(input[*i + end])))
 		{
 			while (input[*i + end] != '\0' && !ft_isspace(input[*i + end]) && \
@@ -86,7 +86,7 @@ char	*add_extended_variable(char *input, int *i, char *output, int d_quote)
 			!single_quote(input[*i + end]) && ((!double_quote(input[*i + end]) && d_quote == 0) || (double_quote(input[*i + end]) && d_quote == 0))) // dit moet nog anders
 				end++;
 		}
-		printf("len to_find:[%d]\n", end);
+		// printf("len to_find:[%d]\n", end);
 		to_find = ft_substr(input, (unsigned int)(*i) + 1, end - 1);
 		if (to_find == NULL)
 			error_exit("mickeyshell: malloc failed", 1);
@@ -178,6 +178,6 @@ char	*extend_dollars(char *input)
 			i++;
 	}
 	output = add_normal_text(input, &start, i - start, output);
-	printf("out:[%s]\n", output);
+	// printf("out:[%s]\n", output);
 	return (output);
 }
