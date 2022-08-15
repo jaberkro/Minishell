@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 14:34:56 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/15 14:57:10 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	update_readfd(int i, int max, int readfd, t_part_split *parts)
 			{
 				if (max != 1)
 					error_exit(parts[i].in[j], 1);
+				write(STDOUT_FILENO, "mickeyshell: ", 13);
 				perror(parts[i].in[j]);
 				return (-1);
 			}
@@ -49,6 +50,7 @@ int	update_readfd(int i, int max, int readfd, t_part_split *parts)
 			}
 			else if (readfd < 0)
 			{
+				write(STDOUT_FILENO, "mickeyshell: ", 13);
 				perror(parts[i].in[j]);
 				return (-1);
 			}
@@ -85,6 +87,7 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 				error_exit(parts[i].out[j], 1);
 			else if (fd < 0)
 			{
+				write(STDOUT_FILENO, "mickeyshell: ", 13);
 				perror(parts[i].out[j]);
 				return (-1);
 			}
