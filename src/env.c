@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/10 14:28:47 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 17:56:49 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/15 15:33:30 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,27 +130,4 @@ void	set_env_variable(char *variable)
 			error_exit("mickeyshell: malloc failed", 1);
 		free(tmp2);
 	}
-}
-
-/**
- * @brief prints all env variables that have an '=' sign in them
- * 
- * @return int returnvalue to exit with. It is always 0
- */
-int	execute_env(void)
-{
-	int	i;
-
-	i = 0;
-	while (g_info.env[i])
-	{
-		if (ft_strncmp(g_info.env[i], "?=", 2) != 0 && \
-		ft_strchr(g_info.env[i], '='))
-		{
-			write(STDOUT_FILENO, g_info.env[i], ft_strlen(g_info.env[i]));
-			write(STDOUT_FILENO, "\n", 1);
-		}
-		i++;
-	}
-	return (0);
 }

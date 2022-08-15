@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 14:37:37 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/15 15:33:16 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,63 +14,6 @@
 #include "libft.h"
 #include <stdio.h>
 #include <unistd.h>
-
-int	execute_unset(char *command)
-{
-	printf("unsetting %s...\n", command);
-	return (0);
-}
-
-int	execute_cd(char *command)
-{
-	int		ret;
-	char	cwd[256];
-
-	ret = 0;
-	ret = chdir(command);
-	if (ret < 0) //betekent dat map niet bestaat
-	{
-		printf("%s: no such file or directorrrry\n", command);
-		return (1); //exit code!?
-	}
-	getcwd(cwd, sizeof(cwd));
-	set_env_variable(ft_strjoin("PWD=", cwd));
-	return (0); //deze 0 wordt later de exit code
-}
-
-int	execute_pwd(void) //char **commands)
-{
-	// if (execve("/bin/pwd", commands, g_info.env) < 0)
-	// 	error_exit("Execve failed", 1);
-	printf("%s\n", get_env_variable("PWD"));
-	// ook hier goede exit code returnen!!!!!!
-	// exit(0);
-	return (0);
-}
-
-int	execute_echo(char **commands)
-{
-	int	i;
-
-	i = 1;
-	if (!commands[i])
-	{
-		write(STDOUT_FILENO, "\n", 1);
-		return (0);
-	}
-	if (ft_strncmp(commands[1], "-n", 3) == 0)
-		i++;
-	while (commands[i])
-	{
-		write(STDOUT_FILENO, commands[i], ft_strlen(commands[i]));
-		if (commands[i + 1])
-			write(STDOUT_FILENO, " ", 1);
-		i++;
-	}
-	if (ft_strncmp(commands[1], "-n", 3) != 0)
-		write(STDOUT_FILENO, "\n", 1);
-	return (0);
-}
 
 int	find_builtin_function(char **commands, int max)
 {

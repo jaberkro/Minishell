@@ -6,7 +6,7 @@
 #    By: bsomers <bsomers@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/08/15 15:21:11 by jaberkro      ########   odam.nl          #
+#    Updated: 2022/08/15 15:41:40 by jaberkro      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,17 +24,23 @@ BUILD_DIR = obj
 SRC = 	init_global.c \
 		executer.c \
 		protected.c \
+		dollar.c \
 		main.c \
+		exit.c \
+		env.c \
 		path.c \
 		parse.c \
 		parse_split_pipes.c \
 		parse_heredoc.c \
 		parse_utils.c \
 		builtin/builtin.c \
+		builtin/cd.c \
+		builtin/echo.c \
+		builtin/env.c \
+		builtin/exit.c \
 		builtin/export.c \
-		dollar.c \
-		env.c \
-		exit.c \
+		builtin/pwd.c \
+		builtin/unset.c
 
 OBJ := $(addprefix $(BUILD_DIR)/, $(SRC:.c=.o))
 SRC := $(addprefix $(SRC_DIR)/, $(SRC))
