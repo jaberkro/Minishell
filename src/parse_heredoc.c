@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/12 17:54:34 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/15 14:16:38 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	read_from_stdin(char *stop, char *hd_filename, int len)
 	int		cmp;
 	char	*input;
 	int		fd;
+	char	*tmp;
 
 	cmp = 1;
 	input = NULL;
@@ -49,6 +50,10 @@ void	read_from_stdin(char *stop, char *hd_filename, int len)
 		cmp = ft_strncmp(input, stop, len + 1);//ft_strlen(stop));
 		if (cmp == 0)
 			break ;
+		tmp = ft_strdup(input);
+		free(input);
+		input = extend_dollars(tmp);
+		free (tmp);
 		ft_putstr_fd(input, fd);
 		free (input);
 	}
