@@ -6,14 +6,24 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/15 15:28:36 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 15:42:51 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/15 19:04:01 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
 
-void	execute_exit(char **commands, int max)
+/**
+ * @brief executes the exit command and in case max is 1 exits minishell
+ * In case max is not 1, execute_exit will exit a child process
+ * 
+ * @param commands	command[1] is the exit code to exit with. There should not 
+ * be more commands
+ * @param max 		the amount of parts. In case of 1, "exit\n" will be printed
+ * to the STDOUT_FILENO
+ * @return int 		the exit code
+ */
+int	execute_exit(char **commands, int max)
 {
 	int	num;
 	int	i;
@@ -39,4 +49,5 @@ void	execute_exit(char **commands, int max)
 	if (i > 2)
 		write_exit("exit: too many arguments\n", 1);
 	exit(0);
+	return (0);
 }

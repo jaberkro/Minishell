@@ -6,17 +6,28 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/15 15:28:58 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 15:33:10 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/15 18:57:30 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	execute_echo(char **commands)
+/**
+ * @brief executes the echo command. Prints all commands with a space inbetween.
+ * Ends with a newline unless commands[1] is -n 
+ * 
+ * @param commands	the commands to be printed. commands[0] is echo and will not
+ * be printed. If commands[1] is -n, it will not be printed and there won't be
+ * a newline in the end.
+ * @param max 		the amount of parts
+ * @return int 		the exit code of echo
+ */
+int	execute_echo(char **commands, int max)
 {
 	int	i;
 
 	i = 1;
+	(void)max;
 	if (!commands[i])
 	{
 		ft_putstr_fd("\n", STDOUT_FILENO);

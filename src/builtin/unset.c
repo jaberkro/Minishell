@@ -6,15 +6,16 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/15 15:28:44 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 15:38:13 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/15 18:33:44 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h> //weghalen
 
-int	execute_unset(char *command)
+int	execute_unset(char **commands, int max)
 {
-	printf("unsetting %s...\n", command);
+	(void)max;
+	printf("unsetting %s...\n", commands[1]);
 	return (0);
 }

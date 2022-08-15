@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/15 15:28:55 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 15:42:26 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/15 18:34:21 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,17 @@
 #include "libft.h"
 #include <stdio.h> //weghalen
 
-int	execute_cd(char *command)
+int	execute_cd(char **commands, int max)
 {
 	int		ret;
 	char	cwd[256];
 
+	(void)max;
 	ret = 0;
-	ret = chdir(command);
+	ret = chdir(commands[1]);
 	if (ret < 0) //betekent dat map niet bestaat
 	{
-		printf("%s: no such file or directorrrry\n", command);
+		printf("%s: no such file or directorrrry\n", commands[1]);
 		return (1); //exit code!?
 	}
 	getcwd(cwd, sizeof(cwd));

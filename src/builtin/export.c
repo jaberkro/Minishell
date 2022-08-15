@@ -1,18 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   builtin_export.c                                   :+:    :+:            */
+/*   export.c                                           :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/09 10:28:52 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 16:42:43 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/15 18:32:59 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
-#include <stdio.h>
 
 /**
  * @brief checks if a char ** is sorted alphabetically
@@ -135,11 +134,12 @@ void	print_export(char **sorted)
  * @param commands 	the arguments to export
  * @return int 		1 in case of invalid input, 0 if everything went fine
  */
-int	execute_export(char **commands)
+int	execute_export(char **commands, int max)
 {
 	int	i;
 
 	i = 1;
+	(void)max;
 	if (!commands[i])
 		print_export(bubble_sort(copy_array(g_info.env)));
 	while (commands[i])
