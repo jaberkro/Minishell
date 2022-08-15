@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/04 12:31:29 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 18:29:38 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/15 14:00:22 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,19 @@ int	single_quote(char c)
 }
 
 /**
+ * @brief checks if a char is a double quote: "
+ * 
+ * @param c 	the char to check
+ * @return int 	1 if it is indeed a double quote, 0 if it is not
+ */
+int	double_quote(char c)
+{
+	if (c == 34)
+		return (1);
+	return (0);
+}
+
+/**
  * @brief copies input between start_index and i to the end of output
  * 
  * @param input 	the string to copy from
@@ -35,19 +48,24 @@ int	single_quote(char c)
  * @param output 	the output so far, where the extended var gets added to
  * @return char* 	the old output with the extended variable added to it
  */
-char	*add_extended_variable(char *input, int *i, char *output)
+char	*add_extended_variable(char *input, int *i, char *output, int d_quote)
 {
 	char	*to_join;
 	char	*to_find;
 	int		end;
 
 	end = 1;
-	while (input[*i + end] != '\0' && !ft_isspace(input[*i + end]) && \
-	input[*i + end] != '$' && ft_isred(input[*i + end]) == 0)
-		end++;
+	if (!(d_quote == 0 && double_quote(input[*i + end])))
+	{
+		while (input[*i + end] != '\0' && !ft_isspace(input[*i + end]) && \
+		input[*i + end] != '$' && ft_isred(input[*i + end]) == 0 && \
+		!single_quote(input[*i + end]))
+			end++;
+	}
 	to_find = ft_substr(input, (unsigned int)(*i) + 1, end - 1);
 	if (to_find == NULL)
 		error_exit("mickeyshell: malloc failed", 1);
+	to_find = remove_double_quotes(to_find);
 	to_join = get_env_variable(to_find);
 	if (to_join == NULL && output == NULL)
 		return (ft_strdup(""));
@@ -99,27 +117,36 @@ char	*extend_dollars(char *input)
 {
 	int		i;
 	int		start;
-	int		quote;
+	int		s_quote;
+	int		d_quote;
 	char	*output;
 
 	i = 0;
 	start = 0;
-	quote = 0;
+	s_quote = 0;
+	d_quote = 0;
 	output = NULL;
 	while (input[i] != '\0')
 	{
 		if (single_quote(input[i]))
-			quote = !quote;
-		else if (quote == 0 && input[i] == '$' && \
-		input[i + 1] != '\0' && !ft_isspace(input[i + 1]))
+			s_quote = !s_quote;
+		else if (double_quote(input[i]))
+			d_quote = !d_quote;
+		else if (s_quote == 0 && input[i] == '$' && \
+		input[i + 1] != '\0' && !ft_isspace(input[i + 1]) && \
+		!(d_quote == 1 && double_quote(input[i + 1])))
 		{
-			output = add_normal_text(input, &start, i, output);
-			output = add_extended_variable(input, &i, output);
+			if (input[start] != '$')
+				output = add_normal_text(input, &start, i, output);
+			output = add_extended_variable(input, &i, output, d_quote);
+			// printf("i now:[%d]\n", i);
+			// printf("out:[%s]\n", output);
 			start = i;
 		}
-		if (input[i] != '\0')
+		if (input[i] != '\0' && input[i] != '$')
 			i++;
 	}
 	output = add_normal_text(input, &start, i - start, output);
+	// printf("out:[%s]\n", output);
 	return (output);
 }
