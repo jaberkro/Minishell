@@ -6,7 +6,7 @@
 #    By: bsomers <bsomers@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/08/15 15:41:40 by jaberkro      ########   odam.nl          #
+#    Updated: 2022/08/15 19:08:26 by jaberkro      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,13 +21,13 @@ LIBFT = libft/libft.a
 SRC_DIR = src
 BUILD_DIR = obj
 
-SRC = 	init_global.c \
+SRC = 	global/init_global.c \
+		global/env.c \
 		executer.c \
 		protected.c \
 		dollar.c \
 		main.c \
 		exit.c \
-		env.c \
 		path.c \
 		parse.c \
 		parse_split_pipes.c \
