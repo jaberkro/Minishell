@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 15:41:08 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/15 18:36:08 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,12 @@ typedef struct s_part_split
 	char	*out_r;
 }	t_part_split;
 
+typedef struct s_builtin
+{
+	char	*key;
+	int		(*func)(char **commands, int max);
+}				t_builtin;
+
 //global function
 void	init_global(char **env);
 
@@ -57,13 +63,13 @@ char	**copy_array(char **to_copy);
 
 // builtin functions
 int		find_builtin_function(char **commands, int max);
-int		execute_cd(char *command);
-int		execute_echo(char **commands);
-int		execute_env(void);
-void	execute_exit(char **commands, int max);
-int		execute_export(char **commands);
-int		execute_pwd(void);
-int		execute_unset(char *command);
+int		execute_cd(char **commands, int max);
+int		execute_echo(char **commands, int max);
+int		execute_env(char **commands, int max);
+int		execute_exit(char **commands, int max);
+int		execute_export(char **commands, int max);
+int		execute_pwd(char **commands, int max);
+int		execute_unset(char **commands, int max);
 
 //executer functions
 int		executer(int i, int max, int readfd, t_part_split *parts);
