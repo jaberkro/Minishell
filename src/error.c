@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/12 15:10:32 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 11:27:37 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 15:52:08 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ void	write_exit(char *message, int exit_code)
 
 	exit_num = ft_itoa(exit_code);
 	if (exit_num == NULL)
-		error_exit("Malloc failed", 1);
+		error_exit("malloc failed", 1);
 	return_value = ft_strjoin("?=", exit_num);
 	free(exit_num);
 	set_env_variable(return_value);
 	free(return_value);
-	write(STDERR_FILENO, "mickeyshell: ", 13);
-	write(STDERR_FILENO, message, ft_strlen(message));
+	ft_putstr_fd("mickeyshell: ", STDERR_FILENO);
+	ft_putstr_fd(message, STDERR_FILENO);
 	exit(exit_code);
 }
 
@@ -53,15 +53,15 @@ void	write_exit_argument(char *argument, char *message, int exit_code)
 
 	exit_num = ft_itoa(exit_code);
 	if (exit_num == NULL)
-		error_exit("mickeyshell: malloc failed", 1);
+		error_exit("malloc failed", 1);
 	return_value = ft_strjoin("?=", exit_num);
 	free(exit_num);
 	set_env_variable(return_value);
 	free(return_value);
-	write(STDERR_FILENO, "mickeyshell: ", 13);
+	ft_putstr_fd("mickeyshell: ", STDERR_FILENO);
 	if (argument)
-		write(STDERR_FILENO, argument, ft_strlen(argument));
-	write(STDERR_FILENO, message, ft_strlen(message));
+		ft_putstr_fd(argument, STDERR_FILENO);
+	ft_putstr_fd(message, STDERR_FILENO);
 	exit(exit_code);
 }
 
@@ -78,7 +78,7 @@ void	error_exit(char *message, int exit_code)
 
 	exit_num = ft_itoa(exit_code);
 	if (exit_num == NULL)
-		error_exit("mickeyshell: malloc failed", 1);
+		error_exit("malloc failed", 1);
 	return_value = ft_strjoin("?=", exit_num);
 	free(exit_num);
 	set_env_variable(return_value);
