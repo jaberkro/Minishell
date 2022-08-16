@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 14:37:37 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 11:19:40 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	execute_cd(char *command)
 	ret = chdir(command);
 	if (ret < 0) //betekent dat map niet bestaat
 	{
-		printf("%s: no such file or directorrrry\n", command);
+		printf("%s: no such file or directorrrry\n", command);//STDOUT FILENO
 		return (1); //exit code!?
 	}
 	getcwd(cwd, sizeof(cwd));
