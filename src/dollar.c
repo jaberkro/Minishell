@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/04 12:31:29 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 20:27:11 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 10:51:03 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,26 +154,19 @@ char	*extend_dollars(char *input)
 	output = NULL;
 	while (input[i] != '\0')
 	{
-		if (single_quote(input[i]))
+		if (single_quote(input[i]) && (d_quote == 0 || s_quote == 1))
 			s_quote = !s_quote;
-		else if (double_quote(input[i]))
+		else if (double_quote(input[i]) && (d_quote == 1 || s_quote == 0))
 			d_quote = !d_quote;
 		else if (s_quote == 0 && input[i] == '$' && \
-		input[i + 1] != '\0' /*&& !ft_isspace(input[i + 1])*/ && \
+		input[i + 1] != '\0' && \
 		!(d_quote == 1 && double_quote(input[i + 1])))
 		{
 			if (input[start] != '$')
 				output = add_normal_text(input, &start, i, output);
 			output = add_extended_variable(input, &i, output, d_quote);
-			// printf("i now:[%d]\n", i);
-			// printf("out:[%s]\n", output);
 			start = i;
 		}
-		// else if (s_quote == 0 && ft_isspace(input[i + 1]))
-		// {
-		// 	output = add_dollar(output);
-		// 	i++;
-		// }
 		if (input[i] != '\0')
 			i++;
 	}
