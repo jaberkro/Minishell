@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/04 12:31:29 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 12:00:46 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/16 14:25:57 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,30 +71,39 @@ char	*add_extended_variable(char *input, int *i, char *output, int d_quote)
 	end = 1;
 	if (ft_isspace(input[*i + end]))
 	{
-		// printf("only one dollar!\n");
 		to_join = ft_strdup("$");
 		if (to_join == NULL)
 			error_exit("mickeyshell: malloc failed", 1);
 	}
 	else
 	{
-		// printf("something behind the dollar!\n");
 		if (!(d_quote == 0 && double_quote(input[*i + end])))
 		{
 			while (input[*i + end] != '\0' && !ft_isspace(input[*i + end]) && \
 			input[*i + end] != '$' && ft_isred(input[*i + end]) == 0 && \
-			!single_quote(input[*i + end]) && ((!double_quote(input[*i + end]) && d_quote == 0) || (double_quote(input[*i + end]) && d_quote == 0))) // dit moet nog anders
+			!single_quote(input[*i + end]) && !double_quote(input[*i + end]))
 				end++;
 		}
-		// printf("len to_find:[%d]\n", end);
-		to_find = ft_substr(input, (unsigned int)(*i) + 1, end - 1);
-		if (to_find == NULL)
-			error_exit("mickeyshell: malloc failed", 1);
-		to_find = remove_double_quotes(to_find);
-		to_join = get_env_variable(to_find);
-		if (to_join == NULL && output == NULL)
-			return (ft_strdup(""));
-		free(to_find);
+		if (end > 1)
+		{
+			to_find = ft_substr(input, (unsigned int)(*i) + 1, end - 1);
+			if (to_find == NULL)
+				error_exit("mickeyshell: malloc failed", 1);
+			to_find = remove_double_quotes(to_find);
+			to_join = get_env_variable(to_find);
+			if (to_join == NULL && output == NULL)
+			{
+				*i += end;
+				return (ft_strdup(""));
+			}
+			free(to_find);
+		}
+		else
+		{
+			to_join = ft_strdup("");
+			if (to_join == NULL)
+				error_exit("mickeyshell: malloc failed", 1);
+		}
 	}
 	if (output == NULL)
 		output = ft_strdup(to_join);
@@ -171,6 +180,5 @@ char	*extend_dollars(char *input)
 			i++;
 	}
 	output = add_normal_text(input, &start, i - start, output);
-	// printf("out:[%s]\n", output);
 	return (output);
 }
