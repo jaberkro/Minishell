@@ -6,52 +6,39 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/04 12:31:29 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 14:25:57 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 17:33:34 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
-#include <stdio.h>
 
 /**
- * @brief checks if a char is a single quote: '
+ * @brief extends a variable
  * 
- * @param c 	the char to check
- * @return int 	1 if it is indeed a single quote, 0 if it is not
+ * @param i 		the index of the input we want to extend
+ * @param len 		the length of the word to be extended
+ * @param input 	the input that we want to extend 
+ * @return char* 	the extended variable
  */
-int	single_quote(char c)
+char	*extend_variable(int i, int *len, char *input)
 {
-	if (c == 39)
-		return (1);
-	return (0);
-}
+	char	*to_find;
+	char	*to_join;
 
-/**
- * @brief checks if a char is a double quote: "
- * 
- * @param c 	the char to check
- * @return int 	1 if it is indeed a double quote, 0 if it is not
- */
-int	double_quote(char c)
-{
-	if (c == 34)
-		return (1);
-	return (0);
-}
-
-char	*add_dollar(char *input)
-{
-	char	*to_add;
-
-	to_add = ft_strdup("$");
-	if (to_add == NULL)
-		error_exit("mickeyshell: malloc failed", 1);
-	input = ft_strjoin_fr(input, to_add);
-	if (input == NULL)
-		error_exit("mickeyshell: malloc failed", 1);
-	free(to_add);
-	return (input);
+	while (input[i + *len] != '\0' && !ft_isspace(input[i + *len]) && \
+		input[i + *len] != '$' && ft_isred(input[i + *len]) == 0 && \
+		input[i + *len] != 39 && input[i + *len] != 34)
+			(*len)++;
+	to_find = ft_substr(input, (unsigned int)(i) + 1, *len - 1);
+	if (to_find == NULL)
+		error_exit("malloc failed", 1);
+	to_find = remove_double_quotes(to_find);
+	to_join = get_env_variable(to_find);
+	if (to_join == NULL)
+		to_join = ft_strdup("");
+	free(to_find);
+	return (to_join);
 }
 
 /**
@@ -62,57 +49,28 @@ char	*add_dollar(char *input)
  * @param output 	the output so far, where the extended var gets added to
  * @return char* 	the old output with the extended variable added to it
  */
-char	*add_extended_variable(char *input, int *i, char *output, int d_quote)
+char	*add_extended_variable(char *input, int *i, char *output, int quotes)
 {
 	char	*to_join;
-	char	*to_find;
-	int		end;
+	int		len;
 
-	end = 1;
-	if (ft_isspace(input[*i + end]))
-	{
+	len = 1;
+	if (ft_isspace(input[*i + 1]))
 		to_join = ft_strdup("$");
-		if (to_join == NULL)
-			error_exit("mickeyshell: malloc failed", 1);
-	}
+	else if (quotes != 2 && input[*i + 1] == 34)
+		to_join = ft_strdup("");
 	else
-	{
-		if (!(d_quote == 0 && double_quote(input[*i + end])))
-		{
-			while (input[*i + end] != '\0' && !ft_isspace(input[*i + end]) && \
-			input[*i + end] != '$' && ft_isred(input[*i + end]) == 0 && \
-			!single_quote(input[*i + end]) && !double_quote(input[*i + end]))
-				end++;
-		}
-		if (end > 1)
-		{
-			to_find = ft_substr(input, (unsigned int)(*i) + 1, end - 1);
-			if (to_find == NULL)
-				error_exit("mickeyshell: malloc failed", 1);
-			to_find = remove_double_quotes(to_find);
-			to_join = get_env_variable(to_find);
-			if (to_join == NULL && output == NULL)
-			{
-				*i += end;
-				return (ft_strdup(""));
-			}
-			free(to_find);
-		}
-		else
-		{
-			to_join = ft_strdup("");
-			if (to_join == NULL)
-				error_exit("mickeyshell: malloc failed", 1);
-		}
-	}
+		to_join = extend_variable(*i, &len, input);
+	if (to_join == NULL)
+		error_exit("malloc failed", 1);
 	if (output == NULL)
 		output = ft_strdup(to_join);
-	else if (to_join != NULL)
+	else
 		output = ft_strjoin_fr(output, to_join);
 	if (output == NULL)
-		error_exit("mickeyshell: malloc failed", 1);
+		error_exit("malloc failed", 1);
 	free (to_join);
-	*i += end;
+	*i += len;
 	return (output);
 }
 
@@ -131,15 +89,35 @@ char	*add_normal_text(char *input, int *start, int i, char *output)
 
 	to_join = ft_substr(input, *start, i);
 	if (to_join == NULL)
-		error_exit("mickeyshell: malloc failed", 1);
+		error_exit("malloc failed", 1);
 	if (output == NULL)
 		output = ft_strdup(to_join);
 	else
 		output = ft_strjoin_fr(output, to_join);
 	if (output == NULL)
-		error_exit("mickeyshell: malloc failed", 1);
+		error_exit("malloc failed", 1);
 	free(to_join);
 	return (output);
+}
+
+/**
+ * @brief updates quotes. quotes is either 0 (no quotes), 1 (single quote) or
+ * 2 (double quote). If quotes is 0, any quote can be set. If it's 1, quotes
+ * can only be updated with the occurrence of a single quote. If it's 2, 
+ * quotes can only be updated with the occurrence of a double quote
+ * 
+ * @param c 		the current char to check
+ * @param quotes 	0, 1 or 2 dependent on if we encountered no quotes, a 
+ * single quote or double quotes before encountering this char c
+ * @return int 		0, 1 or 2 dependent on the updated state of quotes
+ */
+int	update_quotes(char c, int quotes)
+{
+	if (c == 39 && quotes != 2)
+		quotes = !quotes;
+	else if (c == 34 && quotes != 1)
+		quotes = !quotes * 2;
+	return (quotes);
 }
 
 /**
@@ -152,28 +130,22 @@ char	*extend_dollars(char *input)
 {
 	int		i;
 	int		start;
-	int		s_quote;
-	int		d_quote;
+	int		quotes;
 	char	*output;
 
 	i = 0;
 	start = 0;
-	s_quote = 0;
-	d_quote = 0;
+	quotes = 0;
 	output = NULL;
 	while (input[i] != '\0')
 	{
-		if (single_quote(input[i]) && (d_quote == 0 || s_quote == 1))
-			s_quote = !s_quote;
-		else if (double_quote(input[i]) && (d_quote == 1 || s_quote == 0))
-			d_quote = !d_quote;
-		else if (s_quote == 0 && input[i] == '$' && \
-		input[i + 1] != '\0' && \
-		!(d_quote == 1 && double_quote(input[i + 1])))
+		quotes = update_quotes(input[i], quotes);
+		if (quotes != 1 && input[i] == '$' && input[i + 1] != '\0' && \
+		!(quotes == 2 && input[i + 1] == 34))
 		{
 			if (input[start] != '$')
 				output = add_normal_text(input, &start, i, output);
-			output = add_extended_variable(input, &i, output, d_quote);
+			output = add_extended_variable(input, &i, output, quotes);
 			start = i;
 		}
 		if (input[i] != '\0')
