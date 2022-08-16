@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/12 15:10:32 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 15:34:48 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 11:27:37 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,21 @@ void	error_exit(char *message, int exit_code)
 	free(exit_num);
 	set_env_variable(return_value);
 	free(return_value);
+	ft_putstr_fd("mickeyshell: ", STDOUT_FILENO);
 	perror(message);
 	exit(exit_code);
+}
+
+/**
+ * @brief prints error message and returns the exit code to use with exit later
+ * 
+ * @param message 	the message to print about the errno
+ * @param return_code the return_code to return
+ * @return int 		the return_code to return
+ */
+int	error_return(char *message, int return_code)
+{
+	ft_putstr_fd("mickeyshell: ", STDOUT_FILENO);
+	perror(message);
+	return (return_code);
 }
