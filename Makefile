@@ -6,13 +6,13 @@
 #    By: bsomers <bsomers@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/08/15 19:14:51 by jaberkro      ########   odam.nl          #
+#    Updated: 2022/08/16 12:03:37 by bsomers       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
-FLAGS = -Wall -Wextra -Werror# -fsanitize=address -g3
-LDFLAGS = -L /Users/$(USER)/.brew/opt/readline/lib -lreadline #-fsanitize=address -g3
+FLAGS = -Wall -Wextra -Werror -fsanitize=address -g3
+LDFLAGS = -L /Users/$(USER)/.brew/opt/readline/lib -lreadline -fsanitize=address -g3
 INC = -I ./libft -I ./include -I/Users/$(USER)/.brew/opt/readline/include
 
 LIBFT_DIR = libft/

@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/15 13:53:17 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/16 11:51:30 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,21 +33,26 @@ int	count_pipes(char *str)
 	quotes = 0;
 	while (str[i] != '\0')
 	{
-        if ((str[i] == 34 || str[i] == 39) && q == 0)
-        {
-			q = 1;
-			quotes++;
-		}
-		else if ((str[i] == 34 || str[i] == 39) && q == 1)
+        // if ((str[i] == 34 || str[i] == 39) && q == 0)
+        // {
+		// 	q = 1;
+		// 	quotes++;
+		// }
+		// else if ((str[i] == 34 || str[i] == 39) && q == 1)
+		// {
+		// 	quotes++;
+		// 	q = 0;
+		// }
+		if (str[i] == 39 || str[i] == 34)
 		{
+			q = set_quote_flag(q, str[i]);
 			quotes++;
-			q = 0;
 		}
 		if (str[i] == '|' && q == 0)
 			j++;
 		i++;
 	}
-	if (((i - quotes) == j + (quotes / 2)) || q == 1) //means there are only pipes on the cmd line.
+	if (((i - quotes) == j + (quotes / 2)) || q != 0) //means there are only pipes on the cmd line.
 	{
 		printf("mickeyshell: wrong use of quotes and/or pipes\n");
 		return(-1);
