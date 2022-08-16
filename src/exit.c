@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/12 15:10:32 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 16:57:51 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 11:27:37 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,34 +83,21 @@ void	error_exit(char *message, int exit_code)
 	free(exit_num);
 	set_env_variable(return_value);
 	free(return_value);
+	ft_putstr_fd("mickeyshell: ", STDOUT_FILENO);
 	perror(message);
 	exit(exit_code);
 }
 
-void	execute_exit(char **commands, int max)
+/**
+ * @brief prints error message and returns the exit code to use with exit later
+ * 
+ * @param message 	the message to print about the errno
+ * @param return_code the return_code to return
+ * @return int 		the return_code to return
+ */
+int	error_return(char *message, int return_code)
 {
-	int	num;
-	int	i;
-
-	i = 0;
-	num = 0;
-	while (commands[i] != NULL)
-		i++;
-	if (max == 1)
-		write(STDOUT_FILENO, "exit\n", 5);
-	if (i == 2)
-	{
-		num = ft_atoi(commands[1]);
-		if (ft_isnumber(commands[1]) == 0)
-		{
-			write(STDERR_FILENO, "mickeyshell: exit: ", 19);
-			write(STDERR_FILENO, commands[1], ft_strlen(commands[1]));
-			write(STDERR_FILENO, ": numeric argument required\n", 28);
-			exit(255);
-		}
-		exit(num % 256);
-	}
-	if (i > 2)
-		write_exit("exit: too many arguments\n", 1);
-	exit(0);
+	ft_putstr_fd("mickeyshell: ", STDOUT_FILENO);
+	perror(message);
+	return (return_code);
 }

@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 12:10:39 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 11:24:39 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,12 @@ typedef struct s_part_split
 	char	*out_r;
 }	t_part_split;
 
+typedef struct s_builtin
+{
+	char	*key;
+	int		(*func)(char **commands, int max);
+}				t_builtin;
+
 //global function
 void	init_global(char **env);
 
@@ -54,13 +60,17 @@ char	*get_env_variable(char *to_find);
 void	set_env_variable(char *variable);
 char	**get_paths(void);
 char	**copy_array(char **to_copy);
+void	unset_env_variable(char *variable);
 
 // builtin functions
 int		find_builtin_function(char **commands, int max);
-int		execute_echo(char **commands);
-int		execute_export(char **commands);
-int		execute_env(void);
-void	execute_exit(char **commands, int max);
+int		execute_cd(char **commands, int max);
+int		execute_echo(char **commands, int max);
+int		execute_env(char **commands, int max);
+int		execute_exit(char **commands, int max);
+int		execute_export(char **commands, int max);
+int		execute_pwd(char **commands, int max);
+int		execute_unset(char **commands, int max);
 
 //executer functions
 int		executer(int i, int max, int readfd, t_part_split *parts);
@@ -68,6 +78,7 @@ char	*command_in_paths(char	*argument, char **paths);
 void	error_exit(char *message, int exit_code);
 void	write_exit(char *message, int exit_code);
 void	write_exit_argument(char *argument, char *message, int exit_code);
+int		error_return(char *message, int exit_code);
 
 //protected functions
 void	protected_pipe(int fd[2]);
