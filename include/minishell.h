@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 11:24:39 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 16:42:47 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ char	**protected_split(char *to_split, char delimiter);
 char	*protected_split_grep_one(char *to_split, char delimiter, int index);
 
 //parser functions
-int		calc_len_word_before(char *str, int i);
 int		calc_len_word_after(char *str, int i);
 int		ft_isemptyline(char *str);
 char	ft_isred(char c);
@@ -100,11 +99,17 @@ void	delete_temp_heredoc_files(int heredocs);
 char	*remove_quotes(char *str);
 char	*remove_double_quotes(char *str);
 int		set_quote_flag(int q, char c);
-int		check_double_red(char *str);
+int		is_double_red(char *str);
 void	exec_minishell(char *input);
 void	free_struct(t_part parts);
-// void	free_struct_split(t_part_split *part_plit);
-void	free_struct_split(t_part_split part_split);
+void	clean_up(int heredocs, char **input_split, t_part_split *part_split, int count);
+int	set_fill_split_parts(char **input_split, int count_pipe, t_part_split *part_split, int heredocs);
+int	count_pipes(char *str);
+char	*set_value(char *to_set, char *str, int start, int len);
+char	*from_heredoc(t_part *part, char *str, int heredocs, int *i_ptr);
+char	*from_infile(t_part *part, char *str, int *q_ptr, int *i_ptr);
+char	*to_outfile_app(t_part *part, char *str, int *q_ptr, int *i_ptr);
+char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr);
 
 //dollar functions
 char	*extend_dollars(char *input);

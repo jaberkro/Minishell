@@ -6,7 +6,7 @@
 #    By: bsomers <bsomers@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/08/16 12:03:37 by bsomers       ########   odam.nl          #
+#    Updated: 2022/08/16 16:34:52 by bsomers       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,10 +31,14 @@ SRC = 	global/get_env.c \
 		main.c \
 		exit.c \
 		path.c \
-		parse.c \
-		parse_split_pipes.c \
-		parse_heredoc.c \
-		parse_utils.c \
+		parse/parse.c \
+		parse/split_pipes.c \
+		parse/heredoc.c \
+		parse/utils.c \
+		parse/clean_and_free.c \
+		parse/init_and_finish.c \
+		parse/quotes.c \
+		parse/write_parts.c \
 		builtin/builtin.c \
 		builtin/cd.c \
 		builtin/echo.c \
@@ -59,11 +63,11 @@ all: $(NAME)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(dir $@)
-	CC $(FLAGS) $(INC) -c $^ -o $@
+	$(CC) $(FLAGS) $(INC) -c $^ -o $@
 
 $(NAME): $(LIBFT) $(OBJ)
 	cp $(LIBFT) ./$(NAME)
-	CC $(OBJ) $(LDFLAGS) $(LIBFT) $(INC) -o $(NAME)
+	$(CC) $(OBJ) $(LDFLAGS) $(LIBFT) $(INC) -o $(NAME)
 	@echo "$(RED)Done $(GREEN)COM$(YELLOW)PI$(BLUE)LING $(PINK)MINISHELL$(RESET):)"
 
 $(LIBFT):

@@ -6,20 +6,15 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 15:10:44 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 14:20:03 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/16 16:47:56 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-// #include <stdio.h>
 #include "libft.h"
-#include "minishell.h"
-#include <stdio.h> //welke van deze includes hebben we nog nodig?? Even checken
-#include <unistd.h>
-#include <stdlib.h>
+#include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <sys/wait.h>
 #include <signal.h>
 
 void	sig_handler(int sig)
@@ -40,7 +35,7 @@ int	check_str(char *str)
 		add_history(str);
 		if (ft_isemptyline(str) == 0)
 			return 0;
-		if (check_double_red(str) < 0)
+		if (is_double_red(str) < 0)
 		{
 			printf("mickeyshell: wrong use of redirectors\n");
 			return (1);

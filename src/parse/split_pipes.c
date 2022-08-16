@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/28 17:05:37 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/12 14:00:38 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/16 15:23:05 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	wcount(char const *s, char c)
 		{
 			if (d > 0)
 				if (s[d] != c && ((s[d - 1] == c && (s[d] != 34 && s[d] != 39)) \
-				|| (d - 1) == - 1))
+				|| (d - 1) == -1))
 					w++;
 			if (d < 1)
 				if (s[d] != c)
