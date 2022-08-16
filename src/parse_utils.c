@@ -6,55 +6,56 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/20 10:17:48 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/16 11:52:07 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/16 14:25:39 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
+#include <stdio.h> //wegggg
 
-// static char	*strdup_no_double_quotes(char *str, char *str_new, int i, int len)
-// {
-// 	int	j;
+static char	*strdup_no_double_quotes(char *str, char *str_new, int i, int len)
+{
+	int	j;
 
-// 	j = 0;
-// 	while (i < len)
-// 	{
-// 		if (str[i] != 34)
-// 		{
-// 			str_new[j] = str[i];
-// 			i++;
-// 			j++;
-// 		}
-// 		else
-// 			i++;
-// 	}
-// 	str_new[j] = '\0';
-// 	free(str);
-// 	return (str_new);
-// }
+	j = 0;
+	while (i < len)
+	{
+		if (str[i] != 34)
+		{
+			str_new[j] = str[i];
+			i++;
+			j++;
+		}
+		else
+			i++;
+	}
+	str_new[j] = '\0';
+	free(str);
+	return (str_new);
+}
 
-// char	*remove_double_quotes(char *str)
-// {
-// 	int		len;
-// 	char	*str_new;
-// 	int		count_quotes;
-// 	int		i;
+char	*remove_double_quotes(char *str)
+{
+	int		len;
+	char	*str_new;
+	int		count_quotes;
+	int		i;
 
-// 	i = 0;
-// 	count_quotes = 0;
-// 	len = ft_strlen(str);
-// 	while (i < len)
-// 	{
-// 		if (str[i] == 34)
-// 			count_quotes++;
-// 		i++;
-// 	}
-// 	i = 0;
-// 	str_new = malloc((len - count_quotes + 1) * sizeof(char));
-// 	str_new = strdup_no_double_quotes(str, str_new, i, len);
-// 	return (str_new);
-// }
+	i = 0;
+	count_quotes = 0;
+	len = ft_strlen(str);
+	while (i < len)
+	{
+		if (str[i] == 34)
+			count_quotes++;
+		i++;
+	}
+	i = 0;
+	str_new = malloc((len - count_quotes + 1) * sizeof(char));
+	str_new = strdup_no_double_quotes(str, str_new, i, len);
+	return (str_new);
+}
 
 
 int	set_quote_flag(int q, char c)
@@ -77,6 +78,7 @@ static char	*strdup_no_quotes(char *str, char *str_new, int i, int len)
 
 	j = 0;
 	q = 0;
+	// printf("str: [%s]\n", str);
 	while (i < len)
 	{
 		if ((str[i] == 34 || str[i] == 39) && q == 0)
@@ -100,6 +102,7 @@ static char	*strdup_no_quotes(char *str, char *str_new, int i, int len)
 			j++;
 			i++;
 		}
+		// printf("str_new[j]: [%c], j: %d, i: %d, q: %d\n", str_new[j], j, i, q);
 
 		// if (str[i] != 34 && str[i] != 39)
 		// {

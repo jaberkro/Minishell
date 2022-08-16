@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/16 11:51:30 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/16 14:25:48 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,10 @@ char	**extend_dollars_remove_quotes(char **array)
 	while (array && array[i] != NULL)
 	{
 		tmp = array[i];
+		// printf("Array[i] = [%s], tmp: [%s]\n", array[i], tmp);
 		array[i] = extend_dollars(tmp);
 		free(tmp);
+		// printf("Array[i] = [%s]\n", array[i]);
 		array[i] = remove_quotes(array[i]);
 		i++;
 	}
