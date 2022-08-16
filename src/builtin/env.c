@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/15 15:29:01 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 18:59:08 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 15:01:07 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ int	execute_env(char **commands, int max)
 		if (ft_strncmp(g_info.env[i], "?=", 2) != 0 && \
 		ft_strchr(g_info.env[i], '='))
 		{
-			ft_putstr_fd(g_info.env[i], STDOUT_FILENO);
-			ft_putstr_fd("\n", STDOUT_FILENO);
+			ft_putendl_fd(g_info.env[i], STDOUT_FILENO);
 		}
 		i++;
 	}
