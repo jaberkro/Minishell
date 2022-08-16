@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/10 14:28:47 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 19:16:42 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 10:52:39 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,12 @@ char	**copy_array(char **to_copy)
 	return (output);
 }
 
+/**
+ * @brief copies g_info.env and adds variable to the end
+ * 
+ * @param i 		the index to add the variable
+ * @param variable 	the variable to add
+ */
 void	add_variable_to_end(int i, char *variable)
 {
 	char	**tmp;
