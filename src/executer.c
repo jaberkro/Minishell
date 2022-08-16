@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 11:55:28 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 12:11:22 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,8 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 int	update_fds_dup2_close(int i, int *readfd, int (*fd)[2], t_part_split *parts)
 {
 	int	max;
-	int	exit_code;
 
 	max = 0;
-	exit_code = -1;
 	while (parts[max].cmd)
 		max++;
 	*readfd = update_readfd(i, *readfd, parts);
