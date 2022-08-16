@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/20 10:17:48 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/16 14:25:39 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/16 14:28:30 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ char	*remove_double_quotes(char *str)
 	str_new = strdup_no_double_quotes(str, str_new, i, len);
 	return (str_new);
 }
-
 
 int	set_quote_flag(int q, char c)
 {
