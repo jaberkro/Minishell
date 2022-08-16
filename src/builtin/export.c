@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/09 10:28:52 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 18:32:59 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 15:12:00 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,15 +82,15 @@ void	print_key_value(char *to_print)
 
 	key = protected_split_grep_one(to_print, '=', 0);
 	if (key == NULL)
-		error_exit("Malloc failed", 1);
+		error_exit("malloc failed", 1);
 	value = ft_strdup(to_print + ft_strlen(key) + 1);
 	if ((key[0] != '?' && key[0] != '_' ) || to_print[1] != '=')
 	{
-		write(STDOUT_FILENO, "declare -x ", 11);
-		write(STDOUT_FILENO, key, ft_strlen(key));
-		write(STDOUT_FILENO, "=\"", 2);
-		write(STDOUT_FILENO, value, ft_strlen(value));
-		write(STDOUT_FILENO, "\"\n", 2);
+		ft_putstr_fd("declare -x ", STDOUT_FILENO);
+		ft_putstr_fd(key, STDOUT_FILENO);
+		ft_putstr_fd("=\"", STDOUT_FILENO);
+		ft_putstr_fd(value, STDOUT_FILENO);
+		ft_putstr_fd("\"\n", STDOUT_FILENO);
 	}
 	free(key);
 	free(value);
@@ -116,9 +116,9 @@ void	print_export(char **sorted)
 		else
 		{
 			key = ft_strdup(sorted[i]);
-			write(STDOUT_FILENO, "declare -x ", 11);
-			write(STDOUT_FILENO, key, ft_strlen(key));
-			write(STDOUT_FILENO, "\n", 1);
+			ft_putstr_fd("declare -x ", STDOUT_FILENO);
+			ft_putstr_fd(key, STDOUT_FILENO);
+			ft_putstr_fd("\n", STDOUT_FILENO);
 			free(key);
 			free(sorted[i]);
 		}
@@ -149,9 +149,9 @@ int	execute_export(char **commands, int max)
 			set_env_variable(commands[i]);
 		else if ((commands[i][0] != '_'))
 		{
-			write(STDERR_FILENO, "mickeyshell: export: `", 22);
-			write(STDERR_FILENO, commands[i], ft_strlen(commands[i]));
-			write(STDERR_FILENO, "': not a valid identifier\n", 26);
+			ft_putstr_fd("mickeyshell: export: `", STDERR_FILENO);
+			ft_putstr_fd(commands[i], STDERR_FILENO);
+			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 			return (1);
 		}
 		i++;

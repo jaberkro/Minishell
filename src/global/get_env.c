@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/15 19:15:13 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 19:16:33 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 15:07:35 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*get_env_variable(char *to_find)
 	{
 		output = ft_strdup(g_info.env[i] + ft_strlen(to_find) + 1);
 		if (output == NULL)
-			error_exit("Malloc failed", 1);
+			error_exit("malloc failed", 1);
 		return (output);
 	}
 	return (NULL);

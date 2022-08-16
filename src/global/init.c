@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   init_global.c                                      :+:    :+:            */
+/*   init.c                                             :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/08 14:46:35 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 16:58:12 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 15:17:45 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,15 @@ void	increase_shlvl(void)
 	char	*new_level;
 
 	old_level_str = get_env_variable("SHLVL");
+	if (old_level_str == NULL)
+		old_level_str = ft_strdup("0");
 	old_level_int = ft_atoi(old_level_str);
 	free(old_level_str);
 	new_level = ft_itoa(old_level_int + 1);
 	new_shlvl = ft_strjoin("SHLVL=", new_level);
 	free(new_level);
 	if (new_shlvl == NULL)
-		error_exit("mickeyshell: malloc failed", 1);
+		error_exit("malloc failed", 1);
 	set_env_variable(new_shlvl);
 	free(new_shlvl);
 }
@@ -51,12 +53,12 @@ void	init_env_variables(char **env)
 		len++;
 	g_info.env = malloc((len + 1) * sizeof(char *));
 	if (g_info.env == NULL)
-		error_exit("mickeyshell: malloc failed", 1);
+		error_exit("malloc failed", 1);
 	while (i < len)
 	{
 		g_info.env[i] = ft_strdup(env[i]);
 		if (g_info.env[i] == NULL)
-			error_exit("mickeyshell: malloc failed", 1);
+			error_exit("malloc failed", 1);
 		i++;
 	}
 	g_info.env[i] = NULL;

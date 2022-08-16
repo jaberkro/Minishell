@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 13:04:24 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/12 17:03:18 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 16:14:09 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ static char	*make_path(char *path)
 
 	command = ft_strdup(path);
 	if (command == NULL)
-		error_exit("mickeyshell: malloc failed", 1);
+		error_exit("malloc failed", 1);
 	tmp = command;
 	command = ft_strjoin(command, "/");
 	free(tmp);
 	if (command == NULL)
-		error_exit("mickeyshell: malloc failed", 1);
+		error_exit("malloc failed", 1);
 	return (command);
 }
 
@@ -35,7 +35,6 @@ char	*command_in_paths(char	*argument, char **paths)
 {
 	int		i;
 	char	*command;
-	char	*tmp;
 
 	i = 0;
 	if (access(argument, X_OK) != -1)
@@ -47,11 +46,9 @@ char	*command_in_paths(char	*argument, char **paths)
 	while (paths && paths[i])
 	{
 		command = make_path(paths[i]);
-		tmp = command;
-		command = ft_strjoin(command, argument);
-		free(tmp);
+		command = ft_strjoin_fr(command, argument);
 		if (command == NULL)
-			error_exit("mickeyshell: malloc failed", 1);
+			error_exit("malloc failed", 1);
 		if (access(command, X_OK) != -1)
 			return (command);
 		free(command);

@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/15 19:17:18 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 20:28:54 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 15:10:41 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	unset_env_variable(char *variable)
 			len++;
 		g_info.env = malloc(len * sizeof(char *));
 		if (g_info.env == NULL)
-			error_exit("mickeyshell: malloc failed", 1);
+			error_exit("malloc failed", 1);
 		remove_variable_from_env(i, tmp);
 	}
 }

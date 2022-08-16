@@ -6,28 +6,36 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/15 15:28:55 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/15 18:34:21 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/16 15:02:53 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
-#include <stdio.h> //weghalen
 
+/**
+ * @brief change directory to commands[1]
+ * 
+ * @param commands 	the directory to change to
+ * @param max 		the amount of parts
+ * @return int 		0 if cd worked, 1 if it failed
+ */
 int	execute_cd(char **commands, int max)
 {
 	int		ret;
 	char	cwd[256];
+	char	*pwd_str;
 
 	(void)max;
 	ret = 0;
 	ret = chdir(commands[1]);
-	if (ret < 0) //betekent dat map niet bestaat
-	{
-		printf("%s: no such file or directorrrry\n", commands[1]);
-		return (1); //exit code!?
-	}
+	if (ret < 0)
+		return (error_return(commands[1], 1));
 	getcwd(cwd, sizeof(cwd));
-	set_env_variable(ft_strjoin("PWD=", cwd));
-	return (0); //deze 0 wordt later de exit code
+	pwd_str = ft_strjoin("PWD=", cwd);
+	if (pwd_str == NULL)
+		error_exit("malloc failed", 1);
+	set_env_variable(pwd_str);
+	free(pwd_str);
+	return (0);
 }
