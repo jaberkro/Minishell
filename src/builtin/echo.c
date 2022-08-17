@@ -6,11 +6,33 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/15 15:28:58 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 14:58:38 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/17 16:52:38 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+/**
+ * @brief checks if string is option n.
+ * 
+ * @param command 	the command to check
+ * @return int  	-n returns 1, -nnnnnn returns 1, otherwise return 0
+ */
+int	is_option_n(char *command)
+{
+	int	i;
+
+	i = 0;
+	if (command[i] == '-')
+		i++;
+	else
+		return (0);
+	while (command[i] == 'n')
+		i++;
+	if (command[i] != '\0')
+		return (0);
+	return (1);
+}
 
 /**
  * @brief executes the echo command. Prints all commands with a space inbetween.
@@ -33,7 +55,7 @@ int	execute_echo(char **commands, int max)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 		return (0);
 	}
-	if (ft_strncmp(commands[1], "-n", 3) == 0)
+	while (is_option_n(commands[i]))
 		i++;
 	while (commands[i])
 	{
@@ -42,7 +64,7 @@ int	execute_echo(char **commands, int max)
 			ft_putstr_fd(" ", STDOUT_FILENO);
 		i++;
 	}
-	if (ft_strncmp(commands[1], "-n", 3) != 0)
+	if (is_option_n(commands[1]) == 0)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 	return (0);
 }
