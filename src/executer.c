@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 15:51:00 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/17 11:30:55 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,8 @@ int	execute_builtin_reset(int i, int *readfd, int (*fd)[2], t_part_split *parts)
 
 	standard_in = dup(0);
 	standard_out = dup(1);
+	if (standard_in == -1 || standard_out == -1)
+		error_exit("dup failed", 1);
 	exit_code = dup2_builtin(i, readfd, fd, parts);
 	protected_dup2s(standard_in, standard_out);
 	close(standard_in);
