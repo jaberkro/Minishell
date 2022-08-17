@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/17 11:30:55 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/17 19:16:35 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,10 +156,9 @@ int	execute_builtin_reset(int i, int *readfd, int (*fd)[2], t_part_split *parts)
  * @param parts		array of t_part_split
  * @return int 		pid of inner child
  */
-int	executer(int i, int max, int readfd, t_part_split *parts)
+void	executer(int i, int max, int readfd, t_part_split *parts)
 {
 	int		fd[2];
-	int		pid;
 	char	*path;
 	int		exit_code;
 
@@ -167,8 +166,8 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 	exit_code = -1;
 	if (max == 1)
 		exit_code = execute_builtin_reset(i, &readfd, &fd, parts);
-	pid = protected_fork();
-	if (pid == 0)
+	g_info.pids[i] = protected_fork();
+	if (g_info.pids[i] == 0)
 	{
 		if (exit_code == -1)
 			exit_code = dup2_builtin(i, &readfd, &fd, parts);
@@ -181,6 +180,5 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 	close(readfd);
 	close(fd[1]);
 	if (i + 1 < max)
-		pid = executer(i + 1, max, fd[0], parts);
-	return (pid);
+		executer(i + 1, max, fd[0], parts);
 }
