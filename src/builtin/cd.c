@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/15 15:28:55 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/17 17:19:02 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/17 19:27:44 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	execute_cd(char **commands, int max)
 	ret = 0;
 	if (!commands[1])
 	{
-		ft_putstr_fd("cd: not enough arguments\n", STDERR_FILENO);
+		ft_putstr_fd("mickeyshell: cd: not enough arguments\n", STDERR_FILENO);
 		return (1);
 	}
 	ret = chdir(commands[1]);
