@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/09 10:28:52 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 15:12:00 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/17 15:12:36 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,11 @@ int	execute_export(char **commands, int max)
 	{
 		if (ft_isalpha(commands[i][0]) || \
 		(commands[i][0] == '_' && commands[i][1] != '='))
+		{
 			set_env_variable(commands[i]);
+			if (ft_strncmp(commands[i], "PATH", 4) == 0)
+				g_info.paths = get_paths();
+		}
 		else if ((commands[i][0] != '_'))
 		{
 			ft_putstr_fd("mickeyshell: export: `", STDERR_FILENO);

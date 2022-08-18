@@ -6,18 +6,20 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/18 11:27:34 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/18 12:16:37 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+# include <unistd.h>
 
 typedef struct s_env_info
 {
 	char	**env;
 	char	**paths;
 	int		return_value;
+	pid_t	*pids;
 }	t_env_info;
 
 t_env_info	g_info;

@@ -6,7 +6,11 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
+<<<<<<< HEAD
 /*   Updated: 2022/08/18 11:15:42 by bsomers       ########   odam.nl         */
+=======
+/*   Updated: 2022/08/17 19:16:35 by jaberkro      ########   odam.nl         */
+>>>>>>> 52a00ff73dd0a4f57954ea47a9175d77823d9e2c
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +145,8 @@ int	execute_builtin_reset(int i, int *readfd, int (*fd)[2], t_part_split *parts)
 
 	standard_in = dup(0);
 	standard_out = dup(1);
+	if (standard_in == -1 || standard_out == -1)
+		error_exit("dup failed", 1);
 	exit_code = dup2_builtin(i, readfd, fd, parts);
 	protected_dup2s(standard_in, standard_out);
 	close(standard_in);
@@ -157,10 +163,9 @@ int	execute_builtin_reset(int i, int *readfd, int (*fd)[2], t_part_split *parts)
  * @param parts		array of t_part_split
  * @return int 		pid of inner child
  */
-int	executer(int i, int max, int readfd, t_part_split *parts)
+void	executer(int i, int max, int readfd, t_part_split *parts)
 {
 	int		fd[2];
-	int		pid;
 	char	*path;
 	int		exit_code;
 	struct sigaction	sa;
@@ -171,8 +176,8 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 	if (max == 1)
 		exit_code = execute_builtin_reset(i, &readfd, &fd, parts);
 	sigaction(SIGINT, &sa, NULL);
-	pid = protected_fork();
-	if (pid == 0)
+	g_info.pids[i] = protected_fork();
+	if (g_info.pids[i] == 0)
 	{
 		suppress_output_terminal();
 		if (exit_code == -1)
@@ -186,6 +191,5 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 	close(readfd);
 	close(fd[1]);
 	if (i + 1 < max)
-		pid = executer(i + 1, max, fd[0], parts);
-	return (pid);
+		executer(i + 1, max, fd[0], parts);
 }
