@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/18 12:01:40 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/18 17:10:26 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,42 +29,49 @@ static char	*extend_dollars_hd(char *input)
 }
 
 
-static int	read_from_stdin(char *stop, char *hd_filename, int len)
+static int	read_from_stdin(char *stop, char *hd_filename, int len, int heredocs)
 {
 	int		cmp;
-	// int		fd[2];
 	char	*input;
 	int		readfd;
 	struct sigaction	sa;
 	int	status;
 	int	pid;
 
-	sa.sa_handler = &sig_handler;
+	sa.sa_handler = &sig_handler_hd;
 	cmp = 1;
 	input = NULL;
 	sigaction(SIGINT, &sa, NULL);
-	// protected_pipe(fd);
+	signal(SIGUSR1, SIG_IGN);
+	rl_catch_signals = 0; //readline now doesn't install default signal handlers :)
+
 	readfd = open(hd_filename, O_CREAT | O_RDWR | O_APPEND, 0644);
 	if (readfd < 0)
 		error_exit("open failed", 1);
 	pid = protected_fork();
+	g_info.sigflag = status;
 	if (pid == 0)
 	{
 		rl_catch_signals = 0; //readline now doesn't install default signal handlers :)
 		suppress_output_terminal();
-		// signal(SIGINT, SIG_IGN);
-		// signal(SIGQUIT, SIG_IGN);
-		// readfd = open(hd_filename, O_CREAT | O_RDWR | O_APPEND, 0644);
-		// if (readfd < 0)
-		// 	error_exit("open failed", 1);
 		while (cmp != 0)
 		{
-			input = readline("> ");
+			if (g_info.sigflag == 67)
+		        exit(67);
+			if (g_info.sigflag != 67)
+				input = readline("> ");
 			input = ft_strjoin_fr(input, "\n");
 			if (input == NULL)
 			{
-				sigaction(SIGQUIT, &sa, NULL);
+				close(readfd);
 				exit (0);
+			}
+			if (g_info.sigflag == 67)
+		    {
+				delete_temp_heredoc_files(heredocs);
+				close(readfd);
+		        kill(pid, SIGUSR1);
+				exit(67);
 			}
 			cmp = ft_strncmp(input, stop, len + 1);
 			if (cmp == 0)
@@ -73,13 +80,26 @@ static int	read_from_stdin(char *stop, char *hd_filename, int len)
 			ft_putstr_fd(input, readfd);
 			free (input);
 		}
+		close(readfd);
 		exit(0);
 	}
+	// sigaction(SIGUSR1, &sa, NULL);
 	free (input);
 	close(readfd);
 	waitpid(pid, &status, 0);
-	// close(fd[0]);
-	// close(fd[1]);
+	sigaction(SIGUSR1, &sa, NULL);
+	printf("here: %d, pid = %d\n", WEXITSTATUS(status), pid);
+	// if (WIFEXITED(status))
+	// {
+	// 	printf("%d\n", WEXITSTATUS(status));
+		//if (WEXITSTATUS(status) == 67)
+		if (g_info.sigflag == 67)
+		{
+			printf("yessss%d\n", WEXITSTATUS(status));
+			delete_temp_heredoc_files(heredocs);
+			return (-1);
+		}
+	
 	return (0);
 }
 
@@ -105,7 +125,7 @@ char	*handle_here_doc(char *str, int i, int heredocs)
 	}
 	stop[j] = '\n';
 	stop = remove_quotes(stop);
-	if (read_from_stdin(stop, hd_filename, len) < 0)
+	if (read_from_stdin(stop, hd_filename, len, heredocs) < 0)
 		return (NULL);	
 	free (stop);
 	free (hd_num);
