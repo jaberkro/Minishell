@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/08 14:46:35 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 15:17:45 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/18 14:20:12 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,5 @@ void	init_global(char **env)
 	g_info.paths = get_paths();
 	set_env_variable("?=0");
 	increase_shlvl();
+	g_info.pids = NULL;
 }
