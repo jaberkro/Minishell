@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 16:42:47 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/18 11:27:34 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,12 @@ char	*from_heredoc(t_part *part, char *str, int heredocs, int *i_ptr);
 char	*from_infile(t_part *part, char *str, int *q_ptr, int *i_ptr);
 char	*to_outfile_app(t_part *part, char *str, int *q_ptr, int *i_ptr);
 char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr);
+
+void	sig_handler(int sig);
+void	sig_handler_hd(int sig);
+void	sig_handler_exec(int sig);
+void    suppress_output_terminal(void);
+
 
 //dollar functions
 char	*extend_dollars(char *input);

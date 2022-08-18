@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 15:51:00 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/18 11:15:42 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 /**
  * @brief updates the readfd 
@@ -160,14 +163,18 @@ int	executer(int i, int max, int readfd, t_part_split *parts)
 	int		pid;
 	char	*path;
 	int		exit_code;
+	struct sigaction	sa;
 
+	sa.sa_handler = &sig_handler_exec;
 	protected_pipe(fd);
 	exit_code = -1;
 	if (max == 1)
 		exit_code = execute_builtin_reset(i, &readfd, &fd, parts);
+	sigaction(SIGINT, &sa, NULL);
 	pid = protected_fork();
 	if (pid == 0)
 	{
+		suppress_output_terminal();
 		if (exit_code == -1)
 			exit_code = dup2_builtin(i, &readfd, &fd, parts);
 		if (exit_code != -1)

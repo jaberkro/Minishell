@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 16:30:34 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/16 16:52:47 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/17 16:22:44 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ char	*from_heredoc(t_part *part, char *str, int heredocs, int *i_ptr)
 	while (ft_isspace(str[i]) != 0)
 		i++;
 	tmp = handle_here_doc(str, i, heredocs);
+	if (tmp == NULL)
+		return (NULL);
 	if (part->in == NULL)
 		part->in = ft_strdup(tmp);
 	else

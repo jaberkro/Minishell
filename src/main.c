@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 15:10:44 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 16:47:56 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/18 11:27:47 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,29 +17,15 @@
 #include <readline/history.h>
 #include <signal.h>
 
-void	sig_handler(int sig)
-{
-	if (sig == SIGINT)
-	{
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-}
-
 int	check_str(char *str)
 {
 	if (str != NULL && str[0])
 	{
 		add_history(str);
 		if (ft_isemptyline(str) == 0)
-			return 0;
+			return (0);
 		if (is_double_red(str) < 0)
-		{
-			printf("mickeyshell: wrong use of redirectors\n");
-			return (1);
-		}
+			return (error_return("wrong use of redirectors\n", 1));
 		exec_minishell(str);
 	}
 	return (1);
@@ -62,7 +48,7 @@ int	main()
 		str = readline("mickeyshell> ");
 		if (str == NULL) //which means EOF is encountered (that happens when ctrl-D is pressed)
 		{
-			printf("exit\n");
+			write(1, "exit\n", 5);
 			sigaction(SIGQUIT, &sa, NULL);
 			return (0);
 		}

@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/16 16:51:39 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/17 16:21:05 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ int	assign_parts(t_part *part, char *str, int heredocs)
 		{
 			heredocs++;
 			str = from_heredoc(part, str, heredocs, &i);
+			if (str == NULL)
+				return (-1);
 		}
 		else
 			i++;
@@ -100,6 +102,8 @@ t_part_split *part_split, int heredocs)
 	{
 		set_zero_parts(&parts[i], &part_split[i]);
 		heredocs = assign_parts(&parts[i], input_split[i], heredocs);
+		if (heredocs < 0)
+			return (-1);
 		split_parts(&parts[i], &part_split[i]);
 		free_struct(parts[i]);
 		i++;
