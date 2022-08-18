@@ -6,12 +6,13 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/17 20:02:24 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/17 20:03:17 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+# include <unistd.h>
 
 typedef struct s_env_info
 {
