@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 17:03:06 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/19 17:23:46 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,10 +161,10 @@ int	execute_builtin_reset(int i, int *readfd, int (*fd)[2], t_part_split *parts)
  */
 pid_t	executer(int i, int max, int readfd, t_part_split *parts)
 {
-	int		fd[2];
-	char	*path;
-	pid_t	pid;
-	int		exit_code;
+	int					fd[2];
+	char				*path;
+	pid_t				pid;
+	int					exit_code;
 	struct sigaction	sa;
 
 	sa.sa_handler = &sig_handler_exec;
