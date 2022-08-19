@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 16:21:10 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/16 16:22:34 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 17:13:40 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,11 @@ void	delete_temp_heredoc_files(int heredocs)
 	while (heredocs > 0)
 	{
 		itoa_hd = ft_itoa(heredocs);
+		if (itoa_hd == NULL)
+			error_exit("malloc", 1);
 		tmp = ft_strjoin(".heredoc", itoa_hd);
+		if (tmp == NULL)
+			error_exit("malloc", 1);
 		unlink(tmp);
 		free(itoa_hd);
 		free(tmp);

@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 16:23:06 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/16 16:57:38 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 17:17:38 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ char	*remove_double_quotes(char *str)
 	}
 	i = 0;
 	str_new = malloc((len - count_quotes + 1) * sizeof(char));
+	if (str_new == NULL)
+		error_exit("malloc", 1);
 	str_new = strdup_no_double_quotes(str, str_new, i, len);
 	return (str_new);
 }
@@ -120,6 +122,8 @@ char	*remove_quotes(char *str)
 	}
 	i = 0;
 	str_new = malloc((len - count_quotes + 1) * sizeof(char));
+	if (str_new == NULL)
+		error_exit("malloc", 1);
 	str_new = strdup_no_quotes(str, str_new, i, len);
 	return (str_new);
 }

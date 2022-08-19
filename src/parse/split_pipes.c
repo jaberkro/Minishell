@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   parse_split_pipes.c                                :+:    :+:            */
+/*   split_pipes.c                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/28 17:05:37 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/16 15:23:05 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 16:57:19 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static char	*wsplit(const char **s, char c)
 	check_quotes(s1, &w, &q, c);
 	word = ft_calloc(w + 1, sizeof(char));
 	if (word == NULL)
-		return (NULL);
+		error_exit("malloc", 1);
 	while (x < w)
 	{
 		word[x] = *s1;
@@ -114,7 +114,7 @@ char	**ft_split_pipes(char const *s, char c)
 	w = wcount(s, c);
 	array = ft_calloc(w + 1, sizeof(char *));
 	if (array == NULL)
-		return (NULL);
+		error_exit("malloc", 1);
 	while (w > x && *s != '\0')
 	{
 		array[x] = wsplit(&s, c);

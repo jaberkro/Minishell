@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/29 13:49:34 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 14:57:35 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 15:35:11 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,6 @@ char	*get_next_line_shell(int fd)
 		return (NULL);
 	gnl_arrange(fd, &gnl, &stat, buf);
 	if (gnl.nextline == NULL)
-		error_exit("malloc faild in get_next_line", 1);
+		error_return("malloc", 1);
 	return (gnl.nextline);
 }

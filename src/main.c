@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 15:10:44 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 15:06:03 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 16:55:50 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	check_str(char *str)
 			return (0);
 		if (is_double_red(str) < 0)
 			return (error_return("wrong use of redirectors\n", 1));
-		exec_minishell(str);
+		parse_exec_minishell(str);
 	}
 	return (1);
 }

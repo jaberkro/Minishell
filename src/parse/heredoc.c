@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 15:05:46 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 17:11:58 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*read_stdin_until(char *limiter)
 
 	input = ft_strdup("");
 	if (input == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	request_next_line(&buf);
 	if (buf == NULL && g_info.signal_status != 67)
 		return (input);
@@ -41,7 +41,7 @@ char	*read_stdin_until(char *limiter)
 	{
 		input = ft_strjoin_fr(input, buf);
 		if (input == NULL)
-			error_exit("malloc failed", 1);
+			error_exit("malloc", 1);
 		free(buf);
 		request_next_line(&buf);
 		if (buf == NULL && g_info.signal_status != 67)
@@ -58,6 +58,8 @@ static char	*extend_dollars_hd(char *input)
 	char	*tmp;
 
 	tmp = ft_strdup(input);
+	if (tmp == NULL)
+		error_exit("malloc", 1);
 	free(input);
 	input = extend_dollars(tmp);
 	free (tmp);
@@ -91,7 +93,7 @@ static int	read_from_stdin(char *stop, char *hd_filename, int len, int heredocs)
 	input = extend_dollars_hd(input);
 	ft_putstr_fd(input, readfd);
 	free (input);
-	close(readfd);
+	protected_close(readfd);
 	return (0);
 }
 
@@ -106,9 +108,15 @@ char	*handle_here_doc(char *str, int i, int heredocs)
 	len = 0;
 	j = 0;
 	hd_num = ft_itoa(heredocs);
+	if (hd_num == NULL)
+		error_exit("malloc", 1);
 	hd_filename = ft_strjoin(".heredoc", hd_num);
+	if (hd_filename == NULL)
+		error_exit("malloc", 1);
 	len = calc_len_word_after(str, i);
 	stop = malloc((len + 1) * sizeof(char));
+	if (stop == NULL)
+		error_exit("malloc", 1);
 	while (j < len)
 	{
 		stop[j] = str[i];

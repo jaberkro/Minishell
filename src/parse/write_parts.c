@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 16:30:34 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 13:08:29 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 17:07:34 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,21 @@ char	*set_value(char *to_set, char *str, int start, int len)
 	char	*tmp;
 
 	tmp = ft_substr(str, start, len);
+	if (tmp == NULL)
+		error_exit("malloc", 1);
 	tmp = ft_strtrim_fr(tmp, " ");
+	if (tmp == NULL)
+		error_exit("malloc", 1);
 	if (to_set == NULL)
 		to_set = ft_strdup(tmp);
 	else
 	{
 		to_set = ft_strjoin_fr(to_set, " ");
+		if (to_set == NULL)
+			error_exit("malloc", 1);
 		to_set = ft_strjoin_fr(to_set, tmp);
+		if (to_set == NULL)
+			error_exit("malloc", 1);
 	}
 	free(tmp);
 	return (to_set);
@@ -51,8 +59,12 @@ char	*from_heredoc(t_part *part, char *str, int heredocs, int *i_ptr)
 	else
 	{
 		part->in = ft_strjoin_fr(part->in, " ");
+		if (part->in == NULL)
+			error_exit("malloc", 1);
 		part->in = ft_strjoin_fr(part->in, tmp);
 	}
+	if (part->in == NULL)
+		error_exit("malloc", 1);
 	free (tmp);
 	len = calc_len_word_after(str, i);
 	str = set_space(str, i, len);
@@ -103,6 +115,8 @@ char	*to_outfile_app(t_part *part, char *str, int *q_ptr, int *i_ptr)
 		part->out_r = ft_strdup("]");
 	else
 		part->out_r = ft_strjoin_fr(part->out_r, "]");
+	if (part->out == NULL)
+		error_exit("malloc", 1);
 	str[i] = ' ';
 	str[i + 1] = ' ';
 	while (ft_isspace(str[i]) != 0)
@@ -137,6 +151,8 @@ char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr)
 		part->out_r = ft_strdup(">");
 	else
 		part->out_r = ft_strjoin_fr(part->out_r, ">");
+	if (part->out_r == NULL)
+		error_exit("malloc", 1);
 	str[i] = ' ';
 	while (ft_isspace(str[i]) != 0)
 		i++;
@@ -153,6 +169,5 @@ char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr)
 	str = set_space(str, start, len);
 	*q_ptr = q;
 	*i_ptr = i;
-	printf("Outfile: [%s], str: [%s]\n", part->out, str);
 	return (str);
 }
