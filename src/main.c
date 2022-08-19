@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 15:10:44 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/18 11:27:47 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 13:54:06 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,12 @@ int	main()
 		signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
 		sigaction(SIGINT, &sa, NULL);
+		// sigaction(SIGQUIT, &sa, NULL);
 		str = readline("mickeyshell> ");
 		if (str == NULL) //which means EOF is encountered (that happens when ctrl-D is pressed)
 		{
 			write(1, "exit\n", 5);
-			sigaction(SIGQUIT, &sa, NULL);
+			// sigaction(SIGQUIT, &sa, NULL);
 			return (0);
 		}
 		check_str(str);
