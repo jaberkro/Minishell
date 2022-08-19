@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 11:51:31 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/19 14:49:36 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 		close(fd);
 		fd = dup(1);
 		if (fd == -1)
-			error_exit("dup failed", 1);
+			error_exit("dup", 1);
 	}
 	return (fd);
 }
@@ -142,7 +142,7 @@ int	execute_builtin_reset(int i, int *readfd, int (*fd)[2], t_part_split *parts)
 	standard_in = dup(0);
 	standard_out = dup(1);
 	if (standard_in == -1 || standard_out == -1)
-		error_exit("dup failed", 1);
+		error_exit("dup", 1);
 	exit_code = dup2_builtin(i, readfd, fd, parts);
 	protected_dup2s(standard_in, standard_out);
 	close(standard_in);
@@ -159,33 +159,35 @@ int	execute_builtin_reset(int i, int *readfd, int (*fd)[2], t_part_split *parts)
  * @param parts		array of t_part_split
  * @return int 		pid of inner child
  */
-void	executer(int i, int max, int readfd, t_part_split *parts)
+pid_t	executer(int i, int max, int readfd, t_part_split *parts)
 {
 	int		fd[2];
 	char	*path;
+	pid_t	pid;
 	int		exit_code;
 	struct sigaction	sa;
 
 	sa.sa_handler = &sig_handler_exec;
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
 	protected_pipe(fd);
 	exit_code = -1;
 	if (max == 1)
 		exit_code = execute_builtin_reset(i, &readfd, &fd, parts);
-	sigaction(SIGINT, &sa, NULL);
-	g_info.pids[i] = protected_fork();
-	if (g_info.pids[i] == 0)
+	pid = protected_fork();
+	if (pid == 0)
 	{
-		suppress_output_terminal();
 		if (exit_code == -1)
 			exit_code = dup2_builtin(i, &readfd, &fd, parts);
 		if (exit_code != -1)
 			exit(exit_code);
 		path = command_in_paths(parts[i].cmd[0], g_info.paths);
 		if (execve(path, parts[i].cmd, g_info.env) < 0)
-			error_exit("execve failed", 1);
+			error_exit("execve", 1);
 	}
 	close(readfd);
 	close(fd[1]);
 	if (i + 1 < max)
-		executer(i + 1, max, fd[0], parts);
+		pid = executer(i + 1, max, fd[0], parts);
+	return (pid);
 }
