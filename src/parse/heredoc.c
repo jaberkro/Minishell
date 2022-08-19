@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/18 12:01:40 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 11:47:43 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,42 @@
 #include <readline/readline.h>
 #include <stdio.h> //weggg
 #include <sys/wait.h>
+
+static void	request_next_line(char **buf)
+{
+	write(1, "> ", 2);
+	*buf = get_next_line(0);
+}
+
+char	*read_stdin_until(char *limiter)
+{
+	char	*input;
+	char	*buf;
+
+	input = ft_strdup("");
+	if (input == NULL)
+		error_exit("malloc failed", 1);
+	request_next_line(&buf);
+	if (buf == NULL && g_info.signal_status != 67)
+		return (input);
+	if (buf == NULL && g_info.signal_status == 67)
+		return (NULL);
+	while (!(ft_strncmp(buf, limiter, ft_strlen(limiter) - 1) == 0 && \
+			ft_strlen(buf) == ft_strlen(limiter)))
+	{
+		input = ft_strjoin_fr(input, buf);
+		if (input == NULL)
+			error_exit("malloc failed", 1);
+		free(buf);
+		request_next_line(&buf);
+		if (buf == NULL && g_info.signal_status != 67)
+			return (input);
+		if (buf == NULL && g_info.signal_status == 67)
+			return (NULL);
+	}
+	free(buf);
+	return (input);
+}
 
 static char	*extend_dollars_hd(char *input)
 {
@@ -28,58 +64,34 @@ static char	*extend_dollars_hd(char *input)
 	return (input);
 }
 
-
-static int	read_from_stdin(char *stop, char *hd_filename, int len)
+static int	read_from_stdin(char *stop, char *hd_filename, int len, int heredocs)
 {
 	int		cmp;
-	// int		fd[2];
 	char	*input;
 	int		readfd;
 	struct sigaction	sa;
-	int	status;
-	int	pid;
 
-	sa.sa_handler = &sig_handler;
+	(void)len;
+	sa.sa_handler = &sig_handler_hd;
 	cmp = 1;
 	input = NULL;
+	g_info.signal_status = 0;
 	sigaction(SIGINT, &sa, NULL);
-	// protected_pipe(fd);
 	readfd = open(hd_filename, O_CREAT | O_RDWR | O_APPEND, 0644);
 	if (readfd < 0)
 		error_exit("open failed", 1);
-	pid = protected_fork();
-	if (pid == 0)
+	rl_catch_signals = 0; //readline now doesn't install default signal handlers :)
+	suppress_output_terminal();
+	input = read_stdin_until(stop);
+	if (input == NULL)
 	{
-		rl_catch_signals = 0; //readline now doesn't install default signal handlers :)
-		suppress_output_terminal();
-		// signal(SIGINT, SIG_IGN);
-		// signal(SIGQUIT, SIG_IGN);
-		// readfd = open(hd_filename, O_CREAT | O_RDWR | O_APPEND, 0644);
-		// if (readfd < 0)
-		// 	error_exit("open failed", 1);
-		while (cmp != 0)
-		{
-			input = readline("> ");
-			input = ft_strjoin_fr(input, "\n");
-			if (input == NULL)
-			{
-				sigaction(SIGQUIT, &sa, NULL);
-				exit (0);
-			}
-			cmp = ft_strncmp(input, stop, len + 1);
-			if (cmp == 0)
-				break ;
-			input = extend_dollars_hd(input);
-			ft_putstr_fd(input, readfd);
-			free (input);
-		}
-		exit(0);
+		delete_temp_heredoc_files(heredocs);
+		return (-1);
 	}
+	input = extend_dollars_hd(input);
+	ft_putstr_fd(input, readfd);
 	free (input);
 	close(readfd);
-	waitpid(pid, &status, 0);
-	// close(fd[0]);
-	// close(fd[1]);
 	return (0);
 }
 
@@ -105,7 +117,7 @@ char	*handle_here_doc(char *str, int i, int heredocs)
 	}
 	stop[j] = '\n';
 	stop = remove_quotes(stop);
-	if (read_from_stdin(stop, hd_filename, len) < 0)
+	if (read_from_stdin(stop, hd_filename, len, heredocs) < 0)
 		return (NULL);	
 	free (stop);
 	free (hd_num);

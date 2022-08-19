@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/18 10:24:16 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/18 12:07:44 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 10:47:18 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,25 @@ void	sig_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
-		// write(1, "Wayo\n", 5);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
+		
+			write(1, "\n", 1);
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
+		
+	}
+}
+
+void	sig_handler_hd(int sig)
+{
+	if (sig == SIGINT)
+	{
+		g_info.signal_status = 67;
+		write(1, "\n", 1);
+		// kill(g_info.pid_hd, 0);
+		// rl_on_new_line();
+		// rl_replace_line("", 0);
+		// rl_redisplay();
 	}
 }
 

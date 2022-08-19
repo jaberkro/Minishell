@@ -6,13 +6,14 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/18 12:21:50 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 09:57:17 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include <unistd.h>
+# include <stdio.h>	//laten staan
 
 typedef struct s_env_info
 {
@@ -20,6 +21,8 @@ typedef struct s_env_info
 	char	**paths;
 	int		return_value;
 	pid_t	*pids;
+	pid_t	pid_hd;
+	int		signal_status;
 }	t_env_info;
 
 t_env_info	g_info;

@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/18 12:19:45 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 10:14:59 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,14 +164,14 @@ void	executer(int i, int max, int readfd, t_part_split *parts)
 	int		fd[2];
 	char	*path;
 	int		exit_code;
-	struct sigaction	sa;
+	// struct sigaction	sa;
 
-	sa.sa_handler = &sig_handler_exec;
+	// sa.sa_handler = &sig_handler_exec;
 	protected_pipe(fd);
 	exit_code = -1;
 	if (max == 1)
 		exit_code = execute_builtin_reset(i, &readfd, &fd, parts);
-	sigaction(SIGINT, &sa, NULL);
+	// sigaction(SIGINT, &sa, NULL);
 	g_info.pids[i] = protected_fork();
 	if (g_info.pids[i] == 0)
 	{
