@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/18 10:24:16 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/18 17:08:12 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 10:15:53 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,10 @@ void	sig_handler_hd(int sig)
 {
 	if (sig == SIGINT)
 	{
-        g_info.sigflag = 67;
-
+		sigset_t	set;
+        // g_info.sigflag = 67;
+		sigemptyset(&set);
+		sigaddset(&set, SIGUSR1);
 		// write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);

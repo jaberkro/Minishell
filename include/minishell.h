@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/18 12:21:50 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/18 14:48:44 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ typedef struct s_env_info
 	char	**paths;
 	int		return_value;
 	pid_t	*pids;
+	int		sigflag;
 }	t_env_info;
 
 t_env_info	g_info;
