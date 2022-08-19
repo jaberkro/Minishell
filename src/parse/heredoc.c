@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 15:05:46 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 17:20:32 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,23 +30,23 @@ char	*read_stdin_until(char *limiter)
 
 	input = ft_strdup("");
 	if (input == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	request_next_line(&buf);
 	if (buf == NULL && g_info.signal_status != 67)
 		return (input);
-	if (buf == NULL && g_info.signal_status == 67)
+	if (buf == NULL)
 		return (NULL);
 	while (!(ft_strncmp(buf, limiter, ft_strlen(limiter) - 1) == 0 && \
 			ft_strlen(buf) == ft_strlen(limiter)))
 	{
 		input = ft_strjoin_fr(input, buf);
 		if (input == NULL)
-			error_exit("malloc failed", 1);
+			error_exit("malloc", 1);
 		free(buf);
 		request_next_line(&buf);
 		if (buf == NULL && g_info.signal_status != 67)
 			return (input);
-		if (buf == NULL && g_info.signal_status == 67)
+		if (buf == NULL)
 			return (NULL);
 	}
 	free(buf);
