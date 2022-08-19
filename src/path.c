@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 13:04:24 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 16:14:09 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/19 17:02:25 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ static char	*make_path(char *path)
 
 	command = ft_strdup(path);
 	if (command == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	tmp = command;
 	command = ft_strjoin(command, "/");
 	free(tmp);
 	if (command == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	return (command);
 }
 
@@ -48,7 +48,7 @@ char	*command_in_paths(char	*argument, char **paths)
 		command = make_path(paths[i]);
 		command = ft_strjoin_fr(command, argument);
 		if (command == NULL)
-			error_exit("malloc failed", 1);
+			error_exit("malloc", 1);
 		if (access(command, X_OK) != -1)
 			return (command);
 		free(command);
