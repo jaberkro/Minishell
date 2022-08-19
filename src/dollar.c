@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/04 12:31:29 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 17:33:34 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/19 17:04:38 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*extend_variable(int i, int *len, char *input)
 			(*len)++;
 	to_find = ft_substr(input, (unsigned int)(i) + 1, *len - 1);
 	if (to_find == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	to_find = remove_double_quotes(to_find);
 	to_join = get_env_variable(to_find);
 	if (to_join == NULL)
@@ -62,13 +62,13 @@ char	*add_extended_variable(char *input, int *i, char *output, int quotes)
 	else
 		to_join = extend_variable(*i, &len, input);
 	if (to_join == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	if (output == NULL)
 		output = ft_strdup(to_join);
 	else
 		output = ft_strjoin_fr(output, to_join);
 	if (output == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	free (to_join);
 	*i += len;
 	return (output);
@@ -89,13 +89,13 @@ char	*add_normal_text(char *input, int *start, int i, char *output)
 
 	to_join = ft_substr(input, *start, i);
 	if (to_join == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	if (output == NULL)
 		output = ft_strdup(to_join);
 	else
 		output = ft_strjoin_fr(output, to_join);
 	if (output == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	free(to_join);
 	return (output);
 }
