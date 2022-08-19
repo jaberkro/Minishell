@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 16:20:37 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 15:05:29 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 17:06:13 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,21 @@
 #include <sys/wait.h>
 #include <stdio.h> //wegeggg
 
-void	if_exited(int status)
-{
-	char	*itoa_exit;
-	char	*return_value;
+// void	if_exited(int status)
+// {
+// 	char	*itoa_exit;
+// 	char	*return_value;
 
-	itoa_exit = ft_itoa(WEXITSTATUS(status));
-	if (itoa_exit == NULL)
-		error_exit("malloc failed", 1);
-	return_value = ft_strjoin("?=", itoa_exit);
-	if (return_value == NULL)
-		error_exit("malloc failed", 1);
-	free(itoa_exit);
-	set_env_variable(return_value);
-	free(return_value);
-}
+// 	itoa_exit = ft_itoa(WEXITSTATUS(status));
+// 	if (itoa_exit == NULL)
+// 		error_exit("malloc failed", 1);
+// 	return_value = ft_strjoin("?=", itoa_exit);
+// 	if (return_value == NULL)
+// 		error_exit("malloc failed", 1);
+// 	free(itoa_exit);
+// 	set_env_variable(return_value);
+// 	free(return_value);
+// }
 
 void	call_executer(int count_pipe, t_part_split *part_split)
 {
@@ -41,9 +41,14 @@ void	call_executer(int count_pipe, t_part_split *part_split)
 	fd = dup(0);
 	i = 1;
 	pid = executer(0, count_pipe + 1, fd, part_split);
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		if_exited(status);
+	if (pid >= 0)
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			set_exit_code(WEXITSTATUS(status));
+	}
+	else
+		set_exit_code(1);
 	while (i < count_pipe + 1)
 	{
 		wait(NULL);
