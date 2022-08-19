@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/15 15:28:58 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/17 16:52:38 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/18 13:04:16 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	execute_echo(char **commands, int max)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 		return (0);
 	}
-	while (is_option_n(commands[i]))
+	while (commands[i] && is_option_n(commands[i]))
 		i++;
 	while (commands[i])
 	{
@@ -64,7 +64,7 @@ int	execute_echo(char **commands, int max)
 			ft_putstr_fd(" ", STDOUT_FILENO);
 		i++;
 	}
-	if (is_option_n(commands[1]) == 0)
+	if (commands[1] && is_option_n(commands[1]) == 0)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 	return (0);
 }

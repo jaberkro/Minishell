@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 16:20:37 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/18 14:57:11 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 12:14:18 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	exec_minishell(char *input)
 	ft_bzero(&part_split[count_pipe + 1], sizeof(t_part_split));
 	heredocs = set_fill_split_parts(input_split, count_pipe, \
 	part_split, heredocs);
-	printf("Heredocs: %d\n", heredocs);
+	// printf("Heredocs: %d\n", heredocs);
 	if (heredocs < 0)
 		return ;
 	call_executer(count_pipe, part_split);
