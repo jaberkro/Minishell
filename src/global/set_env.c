@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/10 14:28:47 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 15:11:12 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/19 17:04:36 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ char	**copy_array(char **to_copy)
 		i++;
 	output = malloc((i + 1) * sizeof(char *));
 	if (output == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	i = 0;
 	while (to_copy[i])
 	{
 		output[i] = ft_strdup(to_copy[i]);
 		if (output[i] == NULL)
-			error_exit("malloc failed", 1);
+			error_exit("malloc", 1);
 		i++;
 	}
 	output[i] = NULL;
@@ -61,18 +61,18 @@ void	add_variable_to_end(int i, char *variable)
 	free_array(g_info.env);
 	g_info.env = malloc((i + 2) * sizeof(char *));
 	if (g_info.env == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	while (j < i)
 	{
 		g_info.env[j] = ft_strdup(tmp[j]);
 		if (g_info.env[j] == NULL)
-			error_exit("malloc failed", 1);
+			error_exit("malloc", 1);
 		free(tmp[j]);
 		j++;
 	}
 	g_info.env[j] = ft_strdup(variable);
 	if (g_info.env[j] == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	g_info.env[j + 1] = NULL;
 	free (tmp);
 }
@@ -102,11 +102,11 @@ void	set_env_variable(char *variable)
 	{
 		tmp = ft_strdup(g_info.env[i]);
 		if (tmp == NULL)
-			error_exit("malloc failed", 1);
+			error_exit("malloc", 1);
 		free(g_info.env[i]);
 		g_info.env[i] = ft_strdup(variable);
 		if (g_info.env[i] == NULL)
-			error_exit("malloc failed", 1);
+			error_exit("malloc", 1);
 		free(tmp);
 	}
 }
