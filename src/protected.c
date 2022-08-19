@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 17:25:30 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 14:34:23 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/19 17:02:00 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,30 +15,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-/**
- * @brief pipe and exit if pipe fails
- * 
- * @param fd the fd to pipe
- */
-void	protected_pipe(int fd[2])
+void	protected_close(int fd)
 {
-	if (pipe(fd) < 0)
-		error_exit("pipe", 1);
-}
-
-/**
- * @brief fork and exit if fork failed
- * 
- * @return int the pid created by fork
- */
-int	protected_fork(void)
-{
-	int	pid;
-
-	pid = fork();
-	if (pid < 0)
-		error_exit("fork", 1);
-	return (pid);
+	if (close(fd) < 0)
+		error_exit("close", 1);
 }
 
 /**

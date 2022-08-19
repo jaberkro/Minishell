@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 16:56:00 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 17:29:23 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ typedef struct s_env_info
 {
 	char	**env;
 	char	**paths;
-	int		return_value;
 	int		signal_status;
 }	t_env_info;
 
@@ -82,14 +81,14 @@ void	error_exit(char *message, int exit_code);
 void	write_exit(char *message, int exit_code);
 void	write_exit_argument(char *argument, char *message, int exit_code);
 int		error_return(char *message, int exit_code);
-int	write_return(char *message, int return_code);
+int		write_return(char *message, int return_code);
+int		set_exit_code(int exit_code);
 
 //protected functions
-void	protected_pipe(int fd[2]);
-int		protected_fork(void);
 void	protected_dup2s(int readfd, int writefd);
 char	**protected_split(char *to_split, char delimiter);
 char	*protected_split_grep_one(char *to_split, char delimiter, int index);
+void	protected_close(int fd);
 
 //parser functions
 char	**ft_split_pipes(char const *s, char c);
@@ -126,7 +125,7 @@ char	*get_next_line_shell(int fd);
 void	sig_handler(int sig);
 void	sig_handler_hd(int sig);
 void	sig_handler_exec(int sig);
-void    suppress_output_terminal(void);
+void	suppress_output_terminal(void);
 
 //dollar functions
 char	*extend_dollars(char *input);

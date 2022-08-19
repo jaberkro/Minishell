@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/18 10:24:16 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 15:04:53 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 17:13:22 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@
 #include <termios.h>
 #include <stdlib.h>
 
-void    suppress_output_terminal(void)
+void	suppress_output_terminal(void)
 {
-    struct termios  new_settings;
+	struct termios	new_settings;
 
-    if (tcgetattr(0, &new_settings))
-        error_exit("tcgetattr", 1);
-    new_settings.c_lflag &= ~ECHOCTL;
-    if (tcsetattr(0, 0, &new_settings))
-        error_exit("tcsetattr", 1);
+	if (tcgetattr(0, &new_settings))
+		error_exit("tcgetattr", 1);
+	new_settings.c_lflag &= ~ECHOCTL;
+	if (tcsetattr(0, 0, &new_settings))
+		error_exit("tcsetattr", 1);
 }
 
 void	sig_handler(int sig)
@@ -49,31 +49,6 @@ void	sig_handler_hd(int sig)
 	}
 }
 
-// void	sig_handler_hd(int sig)
-// {
-// 	if (sig == SIGINT)
-// 	{
-// 		sigset_t	set;
-//         // g_info.sigflag = 67;
-// 		sigemptyset(&set);
-// 		sigaddset(&set, SIGUSR1);
-// 		// write(1, "\n", 1);
-// 		rl_on_new_line();
-// 		rl_replace_line("", 0);
-// 		// rl_redisplay();
-//         // kill(0, SIGUSR1);
-//         // sigemptyset(sig);
-//         // sigaddset(sig, )
-// 	}
-// 	if (sig == SIGUSR1)
-// 	{
-//         g_info.sigflag = 67;
-// 		// rl_on_new_line();
-// 		// rl_replace_line("", 0);
-
-// 	}
-// }
-
 void	sig_handler_exec(int sig)
 {
 	if (sig == SIGINT)
@@ -84,6 +59,6 @@ void	sig_handler_exec(int sig)
 	{
 		write(1, "Quit: 3\n", 8);
 		rl_on_new_line();
-        rl_replace_line("", 0);
+		rl_replace_line("", 0);
 	}
 }

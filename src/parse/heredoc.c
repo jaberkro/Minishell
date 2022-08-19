@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 17:11:58 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 17:27:07 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*read_stdin_until(char *limiter)
 	request_next_line(&buf);
 	if (buf == NULL && g_info.signal_status != 67)
 		return (input);
-	if (buf == NULL && g_info.signal_status == 67)
+	if (buf == NULL)
 		return (NULL);
 	while (!(ft_strncmp(buf, limiter, ft_strlen(limiter) - 1) == 0 && \
 			ft_strlen(buf) == ft_strlen(limiter)))
@@ -46,7 +46,7 @@ char	*read_stdin_until(char *limiter)
 		request_next_line(&buf);
 		if (buf == NULL && g_info.signal_status != 67)
 			return (input);
-		if (buf == NULL && g_info.signal_status == 67)
+		if (buf == NULL)
 			return (NULL);
 	}
 	free(buf);
