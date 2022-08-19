@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 16:20:37 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/18 12:15:19 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 15:00:49 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,20 +32,15 @@ void	if_exited(int status)
 
 void	call_executer(int count_pipe, t_part_split *part_split)
 {
-	int	fd;
-	int	i;
-	int	status;
-	// struct sigaction	sa;
+	int		fd;
+	int		i;
+	int		status;
+	pid_t	pid;
 
-	// sa.sa_handler = &sig_handler;
 	fd = dup(0);
 	i = 1;
-	g_info.pids = malloc((count_pipe + 2) * sizeof(pid_t));
-	if (g_info.pids == NULL)
-		error_exit("malloc failed", 1);
-	g_info.pids[count_pipe + 1] = 0;
-	executer(0, count_pipe + 1, fd, part_split);
-	waitpid(g_info.pids[count_pipe], &status, 0);
+	pid = executer(0, count_pipe + 1, fd, part_split);
+	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		if_exited(status);
 	while (i < count_pipe + 1)
