@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 12:11:30 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 14:58:03 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 static void	request_next_line(char **buf)
 {
 	write(1, "> ", 2);
-	*buf = get_next_line(0);
+	*buf = get_next_line_shell(0);
 }
 
 char	*read_stdin_until(char *limiter)

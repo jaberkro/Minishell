@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 12:12:31 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 14:57:47 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void	error_exit(char *message, int exit_code);
 void	write_exit(char *message, int exit_code);
 void	write_exit_argument(char *argument, char *message, int exit_code);
 int		error_return(char *message, int exit_code);
+int	write_return(char *message, int return_code);
 
 //protected functions
 void	protected_pipe(int fd[2]);
@@ -107,19 +108,20 @@ int		is_double_red(char *str);
 void	exec_minishell(char *input);
 void	free_struct(t_part parts);
 void	clean_up(int heredocs, char **input_split, t_part_split *part_split, int count);
-int	set_fill_split_parts(char **input_split, int count_pipe, t_part_split *part_split, int heredocs);
-int	count_pipes(char *str);
+int		set_fill_split_parts(char **input_split, int count_pipe, t_part_split *part_split, int heredocs);
+int		count_pipes(char *str);
 char	*set_value(char *to_set, char *str, int start, int len);
 char	*from_heredoc(t_part *part, char *str, int heredocs, int *i_ptr);
 char	*from_infile(t_part *part, char *str, int *q_ptr, int *i_ptr);
 char	*to_outfile_app(t_part *part, char *str, int *q_ptr, int *i_ptr);
 char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr);
+char	*get_next_line_shell(int fd);
 
+//signal functions
 void	sig_handler(int sig);
 void	sig_handler_hd(int sig);
 void	sig_handler_exec(int sig);
 void    suppress_output_terminal(void);
-
 
 //dollar functions
 char	*extend_dollars(char *input);

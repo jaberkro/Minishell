@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/20 10:17:48 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/17 15:48:10 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 14:54:47 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,16 +112,12 @@ int	count_pipes(char *str)
 			quotes++;
 		}
 		if (str[i] == '|' && str[i + 1] == '|' && q == 0)
-			return(error_return("wrong use of pipes\n", -1));
+			return(write_return("wrong use of pipes\n", -1));
 		if (str[i] == '|' && q == 0)
 			j++;
 		i++;
 	}
 	if ((i - quotes) == j || q != 0)
-		return(error_return("wrong use of quotes and/or pipes\n", -1));
-	// {
-	// 	printf("mickeyshell: wrong use of quotes and/or pipes\n");
-	// 	return (-1);
-	// }
+		return(write_return("wrong use of quotes and/or pipes\n", -1));
 	return (j);
 }

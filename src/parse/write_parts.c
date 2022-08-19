@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 16:30:34 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/17 16:22:44 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 13:08:29 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,10 +141,11 @@ char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr)
 	while (ft_isspace(str[i]) != 0)
 		i++;
 	start = i;
-	while (((q == 0 && ft_isspace(str[i]) == 0 && ft_isred(str[i]) == 0) || \
-	(q == 1)) && str[i] != '\0')
+	while (((q == 0) && (ft_isspace(str[i]) == 0) && (ft_isred(str[i]) == 0) && (str[i] != '\0')) || \
+	((q != 0) && str[i] != '\0'))//laatste toegvd
 	{
 		q = set_quote_flag(q, str[i]);
+		printf("str[i]: [%c], q: %d\n", str[i], q);
 		i++;
 	}
 	len = i - start;
@@ -152,5 +153,6 @@ char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr)
 	str = set_space(str, start, len);
 	*q_ptr = q;
 	*i_ptr = i;
+	printf("Outfile: [%s], str: [%s]\n", part->out, str);
 	return (str);
 }
