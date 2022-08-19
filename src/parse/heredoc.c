@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 14:58:03 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 15:05:46 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,12 @@ static int	read_from_stdin(char *stop, char *hd_filename, int len, int heredocs)
 	sa.sa_handler = &sig_handler_hd;
 	input = NULL;
 	g_info.signal_status = 0;
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	sigaction(SIGINT, &sa, NULL);
 	readfd = open(hd_filename, O_CREAT | O_RDWR | O_APPEND, 0644);
 	if (readfd < 0)
-		error_exit("open failed", 1);
+		error_exit("open", 1);
 	rl_catch_signals = 0; //readline now doesn't install default signal handlers :)
 	suppress_output_terminal();
 	input = read_stdin_until(stop);

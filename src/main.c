@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 15:10:44 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 12:13:07 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 15:06:03 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ int	main()
 		if (str == NULL) //which means EOF is encountered (that happens when ctrl-D is pressed)
 		{
 			write(1, "exit\n", 5);
-			sigaction(SIGQUIT, &sa, NULL);
 			return (0);
 		}
 		check_str(str);
