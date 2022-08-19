@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 09:57:17 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/19 14:58:23 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ typedef struct s_env_info
 	char	**env;
 	char	**paths;
 	int		return_value;
-	pid_t	*pids;
-	pid_t	pid_hd;
 	int		signal_status;
 }	t_env_info;
 
@@ -78,7 +76,7 @@ int		execute_pwd(char **commands, int max);
 int		execute_unset(char **commands, int max);
 
 //executer functions
-void	executer(int i, int max, int readfd, t_part_split *parts);
+pid_t	executer(int i, int max, int readfd, t_part_split *parts);
 char	*command_in_paths(char	*argument, char **paths);
 void	error_exit(char *message, int exit_code);
 void	write_exit(char *message, int exit_code);
@@ -108,8 +106,8 @@ int		is_double_red(char *str);
 void	exec_minishell(char *input);
 void	free_struct(t_part parts);
 void	clean_up(int heredocs, char **input_split, t_part_split *part_split, int count);
-int	set_fill_split_parts(char **input_split, int count_pipe, t_part_split *part_split, int heredocs);
-int	count_pipes(char *str);
+int		set_fill_split_parts(char **input_split, int count_pipe, t_part_split *part_split, int heredocs);
+int		count_pipes(char *str);
 char	*set_value(char *to_set, char *str, int start, int len);
 char	*from_heredoc(t_part *part, char *str, int heredocs, int *i_ptr);
 char	*from_infile(t_part *part, char *str, int *q_ptr, int *i_ptr);
