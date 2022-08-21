@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 15:10:44 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 17:28:57 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/21 18:42:43 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ int	check_str(char *str)
 	return (1);
 }
 
-int	main()
+int	main(void)
 {
-	extern char **environ;
-	char *str;
+	extern char			**environ;
+	char				*str;
 	struct sigaction	sa;
 
-	rl_catch_signals = 0; //readline now doesn't install default signal handlers :)
+	rl_catch_signals = 0;
 	sa.sa_handler = &sig_handler;
 	init_global(environ);
 	while (1)
@@ -46,7 +46,7 @@ int	main()
 		signal(SIGQUIT, SIG_IGN);
 		sigaction(SIGINT, &sa, NULL);
 		str = readline("mickeyshell> ");
-		if (str == NULL) //which means EOF is encountered (that happens when ctrl-D is pressed)
+		if (str == NULL)
 		{
 			write(1, "exit\n", 5);
 			return (0);
@@ -54,5 +54,5 @@ int	main()
 		check_str(str);
 		free (str);
 	}
-	return (0); //Hier exitcode invullen?
+	return (0);
 }

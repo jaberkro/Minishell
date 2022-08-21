@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 17:27:07 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/21 18:32:27 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,11 @@ static char	*extend_dollars_hd(char *input)
 	return (input);
 }
 
-static int	read_from_stdin(char *stop, char *hd_filename, int len, int heredocs)
+static int	read_from_stdin(char *stop, char *hd_filename, \
+int len, int heredocs)
 {
-	char	*input;
-	int		readfd;
+	char				*input;
+	int					readfd;
 	struct sigaction	sa;
 
 	(void)len;
@@ -82,7 +83,7 @@ static int	read_from_stdin(char *stop, char *hd_filename, int len, int heredocs)
 	readfd = open(hd_filename, O_CREAT | O_RDWR | O_APPEND, 0644);
 	if (readfd < 0)
 		error_exit("open", 1);
-	rl_catch_signals = 0; //readline now doesn't install default signal handlers :)
+	rl_catch_signals = 0;
 	suppress_output_terminal();
 	input = read_stdin_until(stop);
 	if (input == NULL)
@@ -126,7 +127,7 @@ char	*handle_here_doc(char *str, int i, int heredocs)
 	stop[j] = '\n';
 	stop = remove_quotes(stop);
 	if (read_from_stdin(stop, hd_filename, len, heredocs) < 0)
-		return (NULL);	
+		return (NULL);
 	free (stop);
 	free (hd_num);
 	return (hd_filename);
