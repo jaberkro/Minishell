@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/29 13:49:34 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 15:35:11 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 11:45:42 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,14 @@ char	*ft_charjoin(char *s1, char c)
 	{
 		sdef = malloc((2) * (sizeof(char)));
 		if (sdef == NULL)
-			return (NULL);
+			error_exit("malloc", 1);
 		sdef[0] = c;
 		sdef[1] = '\0';
 		return (sdef);
 	}
 	sdef = malloc((i + 2) * (sizeof(char)));
 	if (sdef == NULL)
-		return (NULL);
+		error_exit("malloc", 1);
 	sdef = joinstr_gnl(s1, c, sdef);
 	free(s1);
 	return (sdef);
@@ -121,10 +121,8 @@ char	*get_next_line_shell(int fd)
 	gnl.ret = 0;
 	gnl.n = 0;
 	gnl.nextline = NULL;
-	if (fd < 0 ||/* fd > OPEN_MAX ||*/ BUFFER_SIZE <= 0)
+	if (fd < 0 || fd > OPEN_MAX || BUFFER_SIZE <= 0)
 		return (NULL);
 	gnl_arrange(fd, &gnl, &stat, buf);
-	if (gnl.nextline == NULL)
-		error_return("malloc", 1);
 	return (gnl.nextline);
 }

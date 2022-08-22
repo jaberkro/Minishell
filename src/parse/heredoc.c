@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/21 18:32:27 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 11:46:08 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "libft.h"
 #include <signal.h>
 #include <readline/readline.h>
-#include <stdio.h> //weggg
 #include <sys/wait.h>
 
 static void	request_next_line(char **buf)
@@ -27,6 +26,8 @@ char	*read_stdin_until(char *limiter)
 {
 	char	*input;
 	char	*buf;
+	struct sigaction	sa;
+	sa.sa_handler = &sig_handler_hd;
 
 	input = ft_strdup("");
 	if (input == NULL)
@@ -40,6 +41,7 @@ char	*read_stdin_until(char *limiter)
 			ft_strlen(buf) == ft_strlen(limiter)))
 	{
 		input = ft_strjoin_fr(input, buf);
+		sigaction(SIGINT, &sa, NULL);
 		if (input == NULL)
 			error_exit("malloc", 1);
 		free(buf);
