@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 16:23:06 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 17:30:53 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 18:07:00 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ int	set_quote_flag(int q, char c)
 /**
  * @brief copies string str to str_new without double quotes
  * 
- * @param str 		the original string from which double quotes should be removed
+ * @param str 		the original string from which double quotes should be 
+ * 					removed
  * @param str_new 	the new string without double quotes
  * @param i 		the index on the original string
  * @param len 		the length of the original string
@@ -64,7 +65,8 @@ static char	*strdup_no_double_quotes(char *str, char *str_new, int i, int len)
 }
 
 /**
- * @brief counts double quotes, mallocs for new string and calls function to delete double quotes from string
+ * @brief counts double quotes, mallocs for new string and calls function to 
+ * delete double quotes from string
  * 
  * @param str 		the string from which double quotes need to be removed
  * @return char* 	the new string from which double quotes have been removed
@@ -129,7 +131,8 @@ static char	*strdup_no_quotes(char *str, char *str_new, int i, int len)
 }
 
 /**
- * @brief counts any quotes, mallocs for new string and calls function to delete  quotes from string
+ * @brief counts any quotes, mallocs for new string and calls function to 
+ * delete  quotes from string
  * 
  * @param str 		the string from which quotes need to be removed
  * @return char* 	the new string from which quotes have been removed

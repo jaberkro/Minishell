@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/22 15:36:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 17:08:25 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 18:05:38 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ char	*read_stdin_until(char *limiter)
 }
 
 /**
- * @brief sets the signals and terminal settings for heredoc mode, reads and write the heredoc 
- * input to the temporary heredoc files.
+ * @brief sets the signals and terminal settings for heredoc mode, 
+ * reads and write the heredoc input to the temporary heredoc files.
  * 
  * @param stop 			the word with which heredoc input ends
  * @param hd_filename 	the temporary heredoc file to write to

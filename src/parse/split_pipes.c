@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/28 17:05:37 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 12:30:39 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 18:07:14 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,13 @@ static char	**clearspace(char **array, int x)
 	return (NULL);
 }
 
+/**
+ * @brief 	ft_split that takes pipes and/or quotes into account
+ * 
+ * @param s 		string to split
+ * @param c 		character to split on
+ * @return char** 	splitted array
+ */
 char	**ft_split_pipes(char const *s, char c)
 {
 	char	**array;

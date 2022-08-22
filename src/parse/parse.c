@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 17:25:07 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 18:06:38 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
  * @brief calls functions to extend dollars and remove excessive quotes
  * 
  * @param array 	the array with strings to loop over
- * @return char** 	the original array but with extended dollars and removed quotes
+ * @return char** 	the original array but with extended dollars and removed 
+ * quotes
  */
 char	**extend_dollars_remove_quotes(char **array)
 {
@@ -38,8 +39,8 @@ char	**extend_dollars_remove_quotes(char **array)
 }
 
 /**
- * @brief splits strings in original array of structs into double arrays in new split structs,
- * extends dollars and removes excessive quotes.
+ * @brief splits strings in original array of structs into double arrays in 
+ * new split structs, extends dollars and removes excessive quotes.
  * 
  * @param part 			original struct
  * @param part_split 	new struct where words are split into double arrays
@@ -87,8 +88,8 @@ char	*select_red(t_part *part, char *str, int *q_ptr, int *i_ptr)
 }
 
 /**
- * @brief loops through string from cmd line, checks for redirectors and then assigns the filenames
- * and commands to corresponding parts in the structs
+ * @brief loops through string from cmd line, checks for redirectors and 
+ * then assigns the filenames and cmds to corresponding parts in the structs
  * 
  * @param part 		struct with strings to assign to
  * @param str 		user input string from cmd line
@@ -125,7 +126,8 @@ int	assign_parts(t_part *part, char *str, int heredocs)
 }
 
 /**
- * @brief makes struct with parts and assigns with corresponding word from cmd line input.
+ * @brief makes struct with parts and assigns with corresponding word 
+ * from cmd line input.
  * 
  */
 int	set_fill_split_parts(char **input_split, int count_pipe, \

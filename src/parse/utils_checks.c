@@ -6,13 +6,19 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/22 16:21:01 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 16:44:58 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 18:27:27 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
 
+/**
+ * @brief checks if a string is empty or only has whitespaces
+ * 
+ * @param str 	the string to check
+ * @return int 	0 if string is empty, 1 if string is not empty
+ */
 int	ft_isemptyline(char *str)
 {
 	int	i;
@@ -60,6 +66,12 @@ static int	isred_with_space(char *str, int i)
 	return (0);
 }
 
+/**
+ * @brief 		checks the presence of double redirectors in the string
+ * 
+ * @param str 	the string to check for double redirectors
+ * @return int 	0 on succes, -1 in case of double redirectors
+ */
 int	is_double_red(char *str)
 {
 	int	i;
@@ -87,4 +99,15 @@ int	is_double_red(char *str)
 		i++;
 	}
 	return (0);
+}
+
+/**
+ * @brief checks if a string is NULL after a malloc call
+ * 
+ * @param str the string to check
+ */
+void	malloc_check(char *str)
+{
+	if (str == NULL)
+		error_exit("malloc", 1);
 }
