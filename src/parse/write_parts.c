@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 16:30:34 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 13:08:29 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 11:46:25 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,40 @@ char	*set_value(char *to_set, char *str, int start, int len)
 	char	*tmp;
 
 	tmp = ft_substr(str, start, len);
+	if (tmp == NULL)
+		error_exit("malloc", 1);
 	tmp = ft_strtrim_fr(tmp, " ");
+	if (tmp == NULL)
+		error_exit("malloc", 1);
 	if (to_set == NULL)
 		to_set = ft_strdup(tmp);
 	else
 	{
 		to_set = ft_strjoin_fr(to_set, " ");
+		if (to_set == NULL)
+			error_exit("malloc", 1);
 		to_set = ft_strjoin_fr(to_set, tmp);
+		if (to_set == NULL)
+			error_exit("malloc", 1);
 	}
 	free(tmp);
 	return (to_set);
+}
+
+char	*assign_heredoc_part(char *str, char *tmp)
+{
+	if (str == NULL)
+		str = ft_strdup(tmp);
+	else
+	{
+		str = ft_strjoin_fr(str, " ");
+		if (str == NULL)
+			error_exit("malloc", 1);
+		str = ft_strjoin_fr(str, tmp);
+	}
+	if (str == NULL)
+		error_exit("malloc", 1);
+	return (str);
 }
 
 char	*from_heredoc(t_part *part, char *str, int heredocs, int *i_ptr)
@@ -46,13 +70,7 @@ char	*from_heredoc(t_part *part, char *str, int heredocs, int *i_ptr)
 	tmp = handle_here_doc(str, i, heredocs);
 	if (tmp == NULL)
 		return (NULL);
-	if (part->in == NULL)
-		part->in = ft_strdup(tmp);
-	else
-	{
-		part->in = ft_strjoin_fr(part->in, " ");
-		part->in = ft_strjoin_fr(part->in, tmp);
-	}
+	part->in = assign_heredoc_part(part->in, tmp);
 	free (tmp);
 	len = calc_len_word_after(str, i);
 	str = set_space(str, i, len);
@@ -88,6 +106,17 @@ char	*from_infile(t_part *part, char *str, int *q_ptr, int *i_ptr)
 	return (str);
 }
 
+char	*assign_redirector(char *str, char *red)
+{
+	if (str == NULL)
+		str = ft_strdup(red);
+	else
+		str = ft_strjoin_fr(str, red);
+	if (str == NULL)
+		error_exit("malloc", 1);
+	return (str);
+}
+
 char	*to_outfile_app(t_part *part, char *str, int *q_ptr, int *i_ptr)
 {
 	int	start;
@@ -99,10 +128,7 @@ char	*to_outfile_app(t_part *part, char *str, int *q_ptr, int *i_ptr)
 	len = 0;
 	i = *i_ptr;
 	q = *q_ptr;
-	if (part->out_r == NULL)
-		part->out_r = ft_strdup("]");
-	else
-		part->out_r = ft_strjoin_fr(part->out_r, "]");
+	part->out_r = assign_redirector(part->out_r, "]");
 	str[i] = ' ';
 	str[i + 1] = ' ';
 	while (ft_isspace(str[i]) != 0)
@@ -133,19 +159,15 @@ char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr)
 	len = 0;
 	i = *i_ptr;
 	q = *q_ptr;
-	if (part->out_r == NULL)
-		part->out_r = ft_strdup(">");
-	else
-		part->out_r = ft_strjoin_fr(part->out_r, ">");
+	part->out_r = assign_redirector(part->out_r, ">");
 	str[i] = ' ';
 	while (ft_isspace(str[i]) != 0)
 		i++;
 	start = i;
 	while (((q == 0) && (ft_isspace(str[i]) == 0) && (ft_isred(str[i]) == 0) && (str[i] != '\0')) || \
-	((q != 0) && str[i] != '\0'))//laatste toegvd
+	((q != 0) && str[i] != '\0'))
 	{
 		q = set_quote_flag(q, str[i]);
-		printf("str[i]: [%c], q: %d\n", str[i], q);
 		i++;
 	}
 	len = i - start;
@@ -153,6 +175,5 @@ char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr)
 	str = set_space(str, start, len);
 	*q_ptr = q;
 	*i_ptr = i;
-	printf("Outfile: [%s], str: [%s]\n", part->out, str);
 	return (str);
 }

@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 17:18:15 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/19 17:29:23 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,21 +91,12 @@ char	*protected_split_grep_one(char *to_split, char delimiter, int index);
 void	protected_close(int fd);
 
 //parser functions
-int		calc_len_word_after(char *str, int i);
-int		ft_isemptyline(char *str);
-char	ft_isred(char c);
 char	**ft_split_pipes(char const *s, char c);
 char	*readline(const char *prompt);
-char	*set_space(char *str, int start, int len);
-char	*handle_here_doc(char *str, int i, int heredocs);
-void	delete_temp_heredoc_files(int heredocs);
 char	*remove_quotes(char *str);
 char	*remove_double_quotes(char *str);
 int		set_quote_flag(int q, char c);
-int		is_double_red(char *str);
-void	exec_minishell(char *input);
-void	free_struct(t_part parts);
-void	clean_up(int heredocs, char **input_split, t_part_split *part_split, int count);
+void	parse_exec_minishell(char *input);
 int		set_fill_split_parts(char **input_split, int count_pipe, t_part_split *part_split, int heredocs);
 int		count_pipes(char *str);
 char	*set_value(char *to_set, char *str, int start, int len);
@@ -113,6 +104,21 @@ char	*from_heredoc(t_part *part, char *str, int heredocs, int *i_ptr);
 char	*from_infile(t_part *part, char *str, int *q_ptr, int *i_ptr);
 char	*to_outfile_app(t_part *part, char *str, int *q_ptr, int *i_ptr);
 char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr);
+
+//parser utils functions
+int		calc_len_word_after(char *str, int i);
+int		ft_isemptyline(char *str);
+char	ft_isred(char c);
+int		is_double_red(char *str);
+char	*set_space(char *str, int start, int len);
+
+//clean and free functions
+void	free_struct(t_part parts);
+void	clean_up(int heredocs, char **input_split, t_part_split *part_split, int count);
+
+//heredoc functions
+char	*handle_here_doc(char *str, int i, int heredocs);
+void	delete_temp_heredoc_files(int heredocs);
 char	*get_next_line_shell(int fd);
 
 //signal functions

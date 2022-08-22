@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   protected.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
+/*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 17:25:30 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 17:02:00 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/19 17:31:41 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@
 
 void	protected_close(int fd)
 {
-	if (close(fd) < 0)
-		error_exit("close", 1);
+	close(fd);
+	//if (close(fd) < 0)
+		//error_exit("close", 1);
 }
 
 /**

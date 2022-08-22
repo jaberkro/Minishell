@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 15:10:44 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 17:02:36 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/22 11:30:14 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,28 +26,28 @@ int	check_str(char *str)
 			return (0);
 		if (is_double_red(str) < 0)
 			return (error_return("wrong use of redirectors\n", 1));
-		exec_minishell(str);
+		parse_exec_minishell(str);
 	}
 	return (1);
 }
 
-int	main()
+int	main(void)
 {
-	extern char **environ;
-	char *str;
+	extern char			**environ;
+	char				*str;
 	struct sigaction	sa;
 
-	rl_catch_signals = 0; //readline now doesn't install default signal handlers :)
+	rl_catch_signals = 0;
 	sa.sa_handler = &sig_handler;
 	init_global(environ);
 	while (1)
 	{
 		signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
-		signal(SIGUSR1, SIG_IGN);
 		sigaction(SIGINT, &sa, NULL);
+		// sigaction(SIGQUIT, &sa, NULL);
 		str = readline("mickeyshell> ");
-		if (str == NULL) //which means EOF is encountered (that happens when ctrl-D is pressed)
+		if (str == NULL)
 		{
 			write(1, "exit\n", 5);
 			return (0);
@@ -55,5 +55,5 @@ int	main()
 		check_str(str);
 		free (str);
 	}
-	return (0); //Hier exitcode invullen?
+	return (0);
 }

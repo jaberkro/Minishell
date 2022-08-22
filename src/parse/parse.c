@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 13:51:26 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/21 18:38:08 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,6 @@ int	assign_parts(t_part *part, char *str, int heredocs)
 				heredocs++;
 			}
 			str = from_heredoc(part, str, heredocs, &i);
-			// if (hd_flag == 1)
-			// 	hd_flag == 0;
 			if (str == NULL)
 				return (-1);
 		}
@@ -105,7 +103,7 @@ t_part_split *part_split, int heredocs)
 	i = 0;
 	parts = malloc((count_pipe + 1) * sizeof(t_part));
 	if (parts == NULL)
-		return (-1);
+		error_exit("malloc", 1);
 	while (i < (count_pipe + 1))
 	{
 		set_zero_parts(&parts[i], &part_split[i]);
