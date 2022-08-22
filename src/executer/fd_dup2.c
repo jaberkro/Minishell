@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/22 16:40:36 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/22 16:47:04 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/22 17:11:51 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,9 +113,10 @@ int	dup2_builtin(int i, int *readfd, int (*fd)[2], t_part_split *parts)
 		return (0);
 	protected_dup2s(*readfd, (*fd)[1]);
 	if (max != 1)
+	{
 		protected_close(*readfd);
-	if (max != 1)
 		protected_close((*fd)[1]);
+	}
 	protected_close((*fd)[0]);
 	exit_code = find_builtin_function(parts[i].cmd, max);
 	return (exit_code);

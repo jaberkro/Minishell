@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/22 16:53:07 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/22 17:13:27 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
  * @return int -1 if everything went right and no builtin function was executed.
  * Otherwise return the exit_code to exit with
  */
-int	execute_builtin_reset(int i, int *readfd, int (*fd)[2], t_part_split *parts)
+static int	builtin_reset(int i, int *readfd, int (*fd)[2], t_part_split *parts)
 {
 	int	standard_in;
 	int	standard_out;
@@ -52,9 +52,9 @@ int	execute_builtin_reset(int i, int *readfd, int (*fd)[2], t_part_split *parts)
  * @param i 	the index of what part we should execute the commands now
  * @param parts the parts with the info on what to open and execute
  */
-void	execute_sysfunc(int i, t_part_split *parts)
+static void	execute_sysfunc(int i, t_part_split *parts)
 {	
-	char				*path;
+	char	*path;
 
 	path = command_in_paths(parts[i].cmd[0], g_info.paths);
 	if (execve(path, parts[i].cmd, g_info.env) < 0)
@@ -66,7 +66,7 @@ void	execute_sysfunc(int i, t_part_split *parts)
  * 
  * @param exit_code 	the exit code
  */
-void	check_exit(int exit_code)
+static void	check_exit(int exit_code)
 {
 	if (exit_code != -1)
 		exit(exit_code);
@@ -77,16 +77,16 @@ void	check_exit(int exit_code)
  * 
  * @param fd_to_pipe 	the fd to pipe
  * @param readfd 		the fd to close if pipe fails
- * @return int -1 if pipe failed, 1 if pipe succeeded
+ * @return int -1 if pipe failed, 0 on success
  */
-int	pipe_close_readfd(int (*fd_to_pipe)[2], int readfd)
+static int	pipe_close_readfd(int (*fd_to_pipe)[2], int readfd)
 {
 	if (pipe(*fd_to_pipe) < 0)
 	{
 		protected_close(readfd);
 		return (error_return("pipe", -1));
 	}
-	return (1);
+	return (0);
 }
 
 /**
@@ -109,7 +109,7 @@ pid_t	executer(int i, int max, int readfd, t_part_split *parts)
 		return (-1);
 	exit_code = -1;
 	if (max == 1)
-		exit_code = execute_builtin_reset(i, &readfd, &fd, parts);
+		exit_code = builtin_reset(i, &readfd, &fd, parts);
 	pid = fork();
 	if (pid < 0)
 		return (error_return("fork", -1));
