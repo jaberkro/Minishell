@@ -6,30 +6,13 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 16:20:37 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 17:29:50 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 12:39:35 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
 #include <sys/wait.h>
-#include <stdio.h> //wegeggg
-
-// void	if_exited(int status)
-// {
-// 	char	*itoa_exit;
-// 	char	*return_value;
-
-// 	itoa_exit = ft_itoa(WEXITSTATUS(status));
-// 	if (itoa_exit == NULL)
-// 		error_exit("malloc failed", 1);
-// 	return_value = ft_strjoin("?=", itoa_exit);
-// 	if (return_value == NULL)
-// 		error_exit("malloc failed", 1);
-// 	free(itoa_exit);
-// 	set_env_variable(return_value);
-// 	free(return_value);
-// }
 
 void	call_executer(int count_pipe, t_part_split *part_split)
 {
@@ -80,7 +63,6 @@ void	parse_exec_minishell(char *input)
 	ft_bzero(&part_split[count_pipe + 1], sizeof(t_part_split));
 	heredocs = set_fill_split_parts(input_split, count_pipe, \
 	part_split, heredocs);
-	// printf("Heredocs: %d\n", heredocs);
 	if (heredocs < 0)
 		return ;
 	call_executer(count_pipe, part_split);

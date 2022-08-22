@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 17:29:23 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 15:19:19 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,13 +111,14 @@ int		ft_isemptyline(char *str);
 char	ft_isred(char c);
 int		is_double_red(char *str);
 char	*set_space(char *str, int start, int len);
+void	malloc_check(char *str);
 
 //clean and free functions
 void	free_struct(t_part parts);
 void	clean_up(int heredocs, char **input_split, t_part_split *part_split, int count);
 
 //heredoc functions
-char	*handle_here_doc(char *str, int i, int heredocs);
+char	*handle_heredoc(char *str, int i, int heredocs);
 void	delete_temp_heredoc_files(int heredocs);
 char	*get_next_line_shell(int fd);
 
@@ -125,7 +126,7 @@ char	*get_next_line_shell(int fd);
 void	sig_handler(int sig);
 void	sig_handler_hd(int sig);
 void	sig_handler_exec(int sig);
-void	suppress_output_terminal(void);
+void	set_output_terminal(int flag);
 
 //dollar functions
 char	*extend_dollars(char *input);

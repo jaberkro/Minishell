@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/28 17:05:37 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 16:57:19 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 12:30:39 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,7 @@ static char	*wsplit(const char **s, char c)
 	q = 0;
 	check_quotes(s1, &w, &q, c);
 	word = ft_calloc(w + 1, sizeof(char));
-	if (word == NULL)
-		error_exit("malloc", 1);
+	malloc_check(word);
 	while (x < w)
 	{
 		word[x] = *s1;

@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/20 10:17:48 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 14:54:47 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 12:30:55 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,22 @@ char	*set_space(char *str, int start, int len)
 	return (str);
 }
 
+static void	loop_until_red(int *i_ptr, int *j_ptr, char *str)
+{
+	int	i;
+	int	j;
+
+	i = *i_ptr;
+	j = *j_ptr;
+	while (ft_isred(str[i]) != 0)
+	{
+		i++;
+		j++;
+	}
+	*i_ptr = i;
+	*j_ptr = j;
+}
+
 int	is_double_red(char *str)
 {
 	int	i;
@@ -73,11 +89,7 @@ int	is_double_red(char *str)
 	{
 		if (ft_isred(str[i]) != 0)
 		{
-			while (ft_isred(str[i]) != 0)
-			{
-				i++;
-				j++;
-			}
+			loop_until_red(&i, &j, str);
 			if ((j == 2 && str[0] == '<' && str[1] == '>') || (j == 3 && \
 			(str[i - j + 1] == '<')) || (j == 3 && (str[i - j + 1] == '>')) || \
 			(j == 2 && (str[i - j + 1] != str[i - j])))
@@ -112,12 +124,18 @@ int	count_pipes(char *str)
 			quotes++;
 		}
 		if (str[i] == '|' && str[i + 1] == '|' && q == 0)
-			return(write_return("wrong use of pipes\n", -1));
+			return (write_return("wrong use of pipes\n", -1));
 		if (str[i] == '|' && q == 0)
 			j++;
 		i++;
 	}
 	if ((i - quotes) == j || q != 0)
-		return(write_return("wrong use of quotes and/or pipes\n", -1));
+		return (write_return("wrong use of quotes and/or pipes\n", -1));
 	return (j);
+}
+
+void	malloc_check(char *str)
+{
+	if (str == NULL)
+		error_exit("malloc", 1);
 }

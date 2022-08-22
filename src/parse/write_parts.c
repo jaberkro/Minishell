@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 16:30:34 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 11:46:25 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 12:41:22 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,17 @@ char	*set_value(char *to_set, char *str, int start, int len)
 	char	*tmp;
 
 	tmp = ft_substr(str, start, len);
-	if (tmp == NULL)
-		error_exit("malloc", 1);
+	malloc_check(tmp);
 	tmp = ft_strtrim_fr(tmp, " ");
-	if (tmp == NULL)
-		error_exit("malloc", 1);
+	malloc_check(tmp);
 	if (to_set == NULL)
 		to_set = ft_strdup(tmp);
 	else
 	{
 		to_set = ft_strjoin_fr(to_set, " ");
-		if (to_set == NULL)
-			error_exit("malloc", 1);
+		malloc_check(to_set);
 		to_set = ft_strjoin_fr(to_set, tmp);
-		if (to_set == NULL)
-			error_exit("malloc", 1);
+		malloc_check(to_set);
 	}
 	free(tmp);
 	return (to_set);
@@ -45,12 +41,10 @@ char	*assign_heredoc_part(char *str, char *tmp)
 	else
 	{
 		str = ft_strjoin_fr(str, " ");
-		if (str == NULL)
-			error_exit("malloc", 1);
+		malloc_check(str);
 		str = ft_strjoin_fr(str, tmp);
 	}
-	if (str == NULL)
-		error_exit("malloc", 1);
+	malloc_check(str);
 	return (str);
 }
 
@@ -67,7 +61,7 @@ char	*from_heredoc(t_part *part, char *str, int heredocs, int *i_ptr)
 	str[i + 1] = ' ';
 	while (ft_isspace(str[i]) != 0)
 		i++;
-	tmp = handle_here_doc(str, i, heredocs);
+	tmp = handle_heredoc(str, i, heredocs);
 	if (tmp == NULL)
 		return (NULL);
 	part->in = assign_heredoc_part(part->in, tmp);
@@ -112,9 +106,25 @@ char	*assign_redirector(char *str, char *red)
 		str = ft_strdup(red);
 	else
 		str = ft_strjoin_fr(str, red);
-	if (str == NULL)
-		error_exit("malloc", 1);
+	malloc_check(str);
 	return (str);
+}
+
+void	loop_to_end_word(int *i_ptr, int *q_ptr, char *str)
+{
+	int	i;
+	int	q;
+
+	i = *i_ptr;
+	q = *q_ptr;
+	while (((q == 0) && (ft_isspace(str[i]) == 0) && (ft_isred(str[i]) == 0) && \
+	(str[i] != '\0')) || ((q != 0) && str[i] != '\0'))
+	{
+		q = set_quote_flag(q, str[i]);
+		i++;
+	}
+	*i_ptr = i;
+	*q_ptr = q;
 }
 
 char	*to_outfile_app(t_part *part, char *str, int *q_ptr, int *i_ptr)
@@ -134,12 +144,7 @@ char	*to_outfile_app(t_part *part, char *str, int *q_ptr, int *i_ptr)
 	while (ft_isspace(str[i]) != 0)
 		i++;
 	start = i;
-	while (((q == 0 && ft_isspace(str[i]) == 0 && ft_isred(str[i]) == 0) || \
-	(q == 1)) && str[i] != '\0')
-	{
-		q = set_quote_flag(q, str[i]);
-		i++;
-	}
+	loop_to_end_word(&i, &q, str);
 	len = i - start;
 	part->out = set_value(part->out, str, start, len);
 	str = set_space(str, i - len, len);
@@ -164,12 +169,7 @@ char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr)
 	while (ft_isspace(str[i]) != 0)
 		i++;
 	start = i;
-	while (((q == 0) && (ft_isspace(str[i]) == 0) && (ft_isred(str[i]) == 0) && (str[i] != '\0')) || \
-	((q != 0) && str[i] != '\0'))
-	{
-		q = set_quote_flag(q, str[i]);
-		i++;
-	}
+	loop_to_end_word(&i, &q, str);
 	len = i - start;
 	part->out = set_value(part->out, str, start, len);
 	str = set_space(str, start, len);

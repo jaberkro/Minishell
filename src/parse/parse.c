@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/21 18:38:08 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 13:33:05 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,34 @@ void	split_parts(t_part *part, t_part_split *part_split)
 	part_split->in = extend_dollars_remove_quotes(part_split->in);
 }
 
+int	set_hd_values(int *hd_flag, int heredocs)
+{
+	if (*hd_flag == 0)
+	{
+		*hd_flag = 1;
+		heredocs++;
+	}
+	return (heredocs);
+}
+
+char	*select_red(t_part *part, char *str, int *q_ptr, int *i_ptr)
+{
+	int	i;
+	int	q;
+
+	i = *i_ptr;
+	q = *q_ptr;
+	if (str[i] == '>' && str[i + 1] != '>')
+		str = to_outfile(part, str, &q, &i);
+	else if (str[i] == '>' && str[i + 1] == '>')
+		str = to_outfile_app(part, str, &q, &i);
+	else if (str[i] == '<' && str[i + 1] != '<')
+		str = from_infile(part, str, &q, &i);
+	*i_ptr = i;
+	*q_ptr = q;
+	return (str);
+}
+
 int	assign_parts(t_part *part, char *str, int heredocs)
 {
 	int	i;
@@ -58,19 +86,12 @@ int	assign_parts(t_part *part, char *str, int heredocs)
 	while (i < ((int)ft_strlen(str)))
 	{
 		q = set_quote_flag(q, str[i]);
-		if (str[i] == '>' && str[i + 1] != '>')
-			str = to_outfile(part, str, &q, &i);
-		else if (str[i] == '>' && str[i + 1] == '>')
-			str = to_outfile_app(part, str, &q, &i);
-		else if (str[i] == '<' && str[i + 1] != '<')
-			str = from_infile(part, str, &q, &i);
+		if ((str[i] == '>' && str[i + 1] != '>') || (str[i] == '>' && \
+		str[i + 1] == '>') || (str[i] == '<' && str[i + 1] != '<'))
+			str = select_red(part, str, &q, &i);
 		else if (str[i] == '<' && str[i + 1] == '<')
 		{
-			if (hd_flag == 0)
-			{
-				hd_flag = 1;
-				heredocs++;
-			}
+			heredocs = set_hd_values(&hd_flag, heredocs);
 			str = from_heredoc(part, str, heredocs, &i);
 			if (str == NULL)
 				return (-1);
