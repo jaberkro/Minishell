@@ -6,7 +6,7 @@
 #    By: bsomers <bsomers@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/08/19 12:38:27 by bsomers       ########   odam.nl          #
+#    Updated: 2022/08/22 16:59:50 by jaberkro      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,8 @@ SRC = 	global/get_env.c \
 		global/init.c \
 		global/set_env.c \
 		global/unset_env.c \
-		executer.c \
+		executer/executer.c \
+		executer/fd_dup2.c \
 		protected.c \
 		dollar.c \
 		main.c \
