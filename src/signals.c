@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/18 10:24:16 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 11:07:49 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 15:19:15 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,29 @@
 #include <termios.h>
 #include <stdlib.h>
 
-void	suppress_output_terminal(void)
+void	set_output_terminal(int flag)
 {
 	struct termios	new_settings;
 
-	if (tcgetattr(0, &new_settings))
-		error_exit("tcgetattr", 1);
-	new_settings.c_lflag &= ~ECHOCTL;
-	if (tcsetattr(0, 0, &new_settings))
-		error_exit("tcsetattr", 1);
+	printf("FLAG: %d\n", flag);
+	if (flag == 0)
+	{
+		printf("EERSTE");
+		if (tcgetattr(0, &new_settings))
+			error_exit("tcgetattr", 1);
+		new_settings.c_lflag &= ~ECHOCTL;
+		if (tcsetattr(0, 0, &new_settings))
+			error_exit("tcsetattr", 1);
+	}
+	else
+	{
+		printf("HIER");
+		if (tcgetattr(0, &new_settings))
+			error_exit("tcgetattr", 1);
+		new_settings.c_lflag |= ECHOCTL;
+		if (tcsetattr(0, 0, &new_settings))
+			error_exit("tcsetattr", 1);
+	}
 }
 
 void	sig_handler(int sig)
