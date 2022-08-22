@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/21 13:04:24 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 17:02:25 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/22 17:51:03 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,12 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+/**
+ * @brief takes a path and uses ft_strjoin to glue a '/' to the end.
+ * 
+ * @param path 		the path that will get a '/' behind it
+ * @return char* 	the new path with a '/' behind it
+ */
 static char	*make_path(char *path)
 {
 	char	*command;
@@ -31,6 +37,13 @@ static char	*make_path(char *path)
 	return (command);
 }
 
+/**
+ * @brief checks if a command is found by joining it with one of the paths
+ * 
+ * @param argument 	the command to find in the system functions
+ * @param paths 	the paths to all system functions
+ * @return char* 	the path to the command is the command is found, else NULL
+ */
 char	*command_in_paths(char	*argument, char **paths)
 {
 	int		i;
@@ -58,6 +71,11 @@ char	*command_in_paths(char	*argument, char **paths)
 	return (NULL);
 }
 
+/**
+ * @brief Get the paths from the global env variable
+ * 
+ * @return char** 	the paths, splitted on ':'
+ */
 char	**get_paths(void)
 {
 	char	**splitted_paths;
