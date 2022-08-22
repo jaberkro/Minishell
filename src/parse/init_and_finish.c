@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 16:20:37 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 15:47:58 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/22 17:38:27 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 #include "libft.h"
 #include <sys/wait.h>
 
+/**
+ * @brief calls the executer, wait for it to end, sets the exit code
+ * 
+ * @param count_pipe number of pipes and parts
+ * @param part_split parts with specified input from cmd line
+ */
 void	call_executer(int count_pipe, t_part_split *part_split)
 {
 	int		fd;
@@ -41,6 +47,13 @@ void	call_executer(int count_pipe, t_part_split *part_split)
 	}
 }
 
+/**
+ * @brief splits the input on the pipes, divides the input to parts in an array
+ * of structs, calls the executer and lastly cleans up malloced space and temp 
+ * files
+ * 
+ * @param input 
+ */
 void	parse_exec_minishell(char *input)
 {
 	char			**input_split;

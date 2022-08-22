@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/18 10:24:16 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 16:20:10 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/22 17:33:46 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 #include "libft.h"
 #include <readline/readline.h>
 #include <signal.h>
-#include <unistd.h>
-#include <termios.h>
-#include <stdlib.h>
 
 void	set_sigs_exec(void)
 {
@@ -29,15 +26,14 @@ void	set_sigs_exec(void)
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
-void	suppress_output_terminal(void)
+void	set_sigs_hd(void)
 {
-	struct termios	new_settings;
+	struct sigaction	sa;
 
-	if (tcgetattr(0, &new_settings))
-		error_exit("tcgetattr", 1);
-	new_settings.c_lflag &= ~ECHOCTL;
-	if (tcsetattr(0, 0, &new_settings))
-		error_exit("tcsetattr", 1);
+	sa.sa_handler = &sig_handler_hd;
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	sigaction(SIGINT, &sa, NULL);
 }
 
 void	sig_handler(int sig)

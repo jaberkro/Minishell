@@ -6,13 +6,18 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 16:21:10 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/19 17:13:40 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 17:02:31 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
 
+/**
+ * @brief deletes the temporary files used for the heredoc
+ * 
+ * @param heredocs the number of temp heredoc files
+ */
 void	delete_temp_heredoc_files(int heredocs)
 {
 	char	*tmp;
@@ -23,11 +28,9 @@ void	delete_temp_heredoc_files(int heredocs)
 	while (heredocs > 0)
 	{
 		itoa_hd = ft_itoa(heredocs);
-		if (itoa_hd == NULL)
-			error_exit("malloc", 1);
+		malloc_check(itoa_hd);
 		tmp = ft_strjoin(".heredoc", itoa_hd);
-		if (tmp == NULL)
-			error_exit("malloc", 1);
+		malloc_check(tmp);
 		unlink(tmp);
 		free(itoa_hd);
 		free(tmp);
@@ -35,6 +38,11 @@ void	delete_temp_heredoc_files(int heredocs)
 	}
 }
 
+/**
+ * @brief frees parts of the struct used in the parser
+ * 
+ * @param parts the struct used in the parser
+ */
 void	free_struct(t_part parts)
 {
 	free(parts.in);
@@ -43,6 +51,11 @@ void	free_struct(t_part parts)
 	free(parts.out_r);
 }
 
+/**
+ * @brief frees the parts of the split struct used in the parser
+ * 
+ * @param part_split the split struct used in the parser
+ */
 void	free_struct_split(t_part_split part_split)
 {
 	if (part_split.in != NULL)
@@ -55,6 +68,9 @@ void	free_struct_split(t_part_split part_split)
 		free(part_split.out_r);
 }
 
+/**
+ * @brief frees used struct arrays and deletes temp heredoc files
+ */
 void	clean_up(int heredocs, char **input_split, \
 t_part_split *part_split, int count)
 {

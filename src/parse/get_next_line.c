@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/29 13:49:34 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 11:45:42 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 17:03:57 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,12 @@ char	*gnl_arrange(int fd, t_gnl *gnl, t_gnl *stat, char *buf)
 	return (buf);
 }
 
+/**
+ * @brief Get the line written in heredoc mode
+ * 
+ * @param fd		the fd to which the lines will be written
+ * @return char*	the line written
+ */
 char	*get_next_line_shell(int fd)
 {
 	t_gnl			gnl;

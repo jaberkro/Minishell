@@ -6,7 +6,7 @@
 #    By: bsomers <bsomers@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/08/22 16:59:50 by jaberkro      ########   odam.nl          #
+#    Updated: 2022/08/22 17:34:33 by jaberkro      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,20 +28,24 @@ SRC = 	global/get_env.c \
 		executer/executer.c \
 		executer/fd_dup2.c \
 		protected.c \
-		dollar.c \
 		main.c \
 		error.c \
 		path.c \
 		signals.c \
 		parse/parse.c \
+		parse/dollar.c \
 		parse/get_next_line.c \
 		parse/split_pipes.c \
 		parse/heredoc.c \
+		parse/heredoc_read.c \
 		parse/utils.c \
+		parse/utils_checks.c \
 		parse/clean_and_free.c \
 		parse/init_and_finish.c \
 		parse/quotes.c \
 		parse/write_parts.c \
+		parse/write_parts_utils.c \
+		parse/set_terminal.c \
 		builtin/builtin.c \
 		builtin/cd.c \
 		builtin/echo.c \
@@ -66,11 +70,11 @@ all: $(NAME)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(dir $@)
-	$(CC) $(FLAGS) $(INC) -c $^ -o $@
+	CC $(FLAGS) $(INC) -c $^ -o $@
 
 $(NAME): $(LIBFT) $(OBJ)
 	cp $(LIBFT) ./$(NAME)
-	$(CC) $(OBJ) $(LDFLAGS) $(LIBFT) $(INC) -o $(NAME)
+	CC $(OBJ) $(LDFLAGS) $(LIBFT) $(INC) -o $(NAME)
 	@echo "$(RED)Done $(GREEN)COM$(YELLOW)PI$(BLUE)LING $(PINK)MINISHELL$(RESET):)"
 
 $(LIBFT):
