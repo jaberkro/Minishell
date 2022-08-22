@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/18 10:24:16 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 11:07:49 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 16:20:10 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,17 @@
 #include <unistd.h>
 #include <termios.h>
 #include <stdlib.h>
+
+void	set_sigs_exec(void)
+{
+	struct sigaction	sa;
+
+	sa.sa_handler = &sig_handler_exec;
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+}
 
 void	suppress_output_terminal(void)
 {
