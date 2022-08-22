@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 11:46:08 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 17:22:29 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,13 @@
 #include <readline/readline.h>
 #include <sys/wait.h>
 
+char	*choose_input_or_null(char *input)
+{
+	if (g_info.signal_status == 67)
+		return (NULL);
+	return (input);
+}
+
 static void	request_next_line(char **buf)
 {
 	write(1, "> ", 2);
@@ -24,32 +31,28 @@ static void	request_next_line(char **buf)
 
 char	*read_stdin_until(char *limiter)
 {
-	char	*input;
-	char	*buf;
+	char				*input;
+	char				*buf;
 	struct sigaction	sa;
-	sa.sa_handler = &sig_handler_hd;
 
+	sa.sa_handler = &sig_handler_hd;
+	sigaction(SIGINT, &sa, NULL);
 	input = ft_strdup("");
 	if (input == NULL)
 		error_exit("malloc", 1);
 	request_next_line(&buf);
-	if (buf == NULL && g_info.signal_status != 67)
-		return (input);
 	if (buf == NULL)
-		return (NULL);
+		return (choose_input_or_null(input));
 	while (!(ft_strncmp(buf, limiter, ft_strlen(limiter) - 1) == 0 && \
 			ft_strlen(buf) == ft_strlen(limiter)))
 	{
 		input = ft_strjoin_fr(input, buf);
-		sigaction(SIGINT, &sa, NULL);
 		if (input == NULL)
 			error_exit("malloc", 1);
 		free(buf);
 		request_next_line(&buf);
-		if (buf == NULL && g_info.signal_status != 67)
-			return (input);
 		if (buf == NULL)
-			return (NULL);
+			return (choose_input_or_null(input));
 	}
 	free(buf);
 	return (input);
