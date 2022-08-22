@@ -6,14 +6,14 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 17:29:23 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 16:51:27 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include <unistd.h>
-# include <stdio.h>	//laten staan
+# include <stdio.h>
 
 typedef struct s_env_info
 {
@@ -24,14 +24,6 @@ typedef struct s_env_info
 
 t_env_info	g_info;
 
-/*
-	t_part stores information about one part of the user input seperated by pipes
-	@in contains the name of the inputfile. 
-	@cmd contains the commands to be executed. 
-	@out contains the name of the outputfile. 
-	@in_r shows the sign before the infile. < or [
-	@out_r shows the sign before the outfile. > or ]
-*/
 typedef struct s_part
 {
 	char	*in;
@@ -77,12 +69,17 @@ int		execute_unset(char **commands, int max);
 //executer functions
 pid_t	executer(int i, int max, int readfd, t_part_split *parts);
 char	*command_in_paths(char	*argument, char **paths);
+int		set_exit_code(int exit_code);
+int		update_readfd(int i, int readfd, t_part_split *parts);
+int		update_writefd(int i, int max, int fd, t_part_split *parts);
+int		dup2_builtin(int i, int *readfd, int (*fd)[2], t_part_split *parts);
+
+//error functions
 void	error_exit(char *message, int exit_code);
 void	write_exit(char *message, int exit_code);
 void	write_exit_argument(char *argument, char *message, int exit_code);
 int		error_return(char *message, int exit_code);
 int		write_return(char *message, int return_code);
-int		set_exit_code(int exit_code);
 
 //protected functions
 void	protected_dup2s(int readfd, int writefd);
@@ -126,6 +123,7 @@ void	sig_handler(int sig);
 void	sig_handler_hd(int sig);
 void	sig_handler_exec(int sig);
 void	suppress_output_terminal(void);
+void	set_sigs_exec(void);
 
 //dollar functions
 char	*extend_dollars(char *input);
