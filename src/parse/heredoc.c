@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/18 17:10:26 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 17:20:32 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,42 @@
 #include <readline/readline.h>
 #include <stdio.h> //weggg
 #include <sys/wait.h>
+
+static void	request_next_line(char **buf)
+{
+	write(1, "> ", 2);
+	*buf = get_next_line_shell(0);
+}
+
+char	*read_stdin_until(char *limiter)
+{
+	char	*input;
+	char	*buf;
+
+	input = ft_strdup("");
+	if (input == NULL)
+		error_exit("malloc", 1);
+	request_next_line(&buf);
+	if (buf == NULL && g_info.signal_status != 67)
+		return (input);
+	if (buf == NULL)
+		return (NULL);
+	while (!(ft_strncmp(buf, limiter, ft_strlen(limiter) - 1) == 0 && \
+			ft_strlen(buf) == ft_strlen(limiter)))
+	{
+		input = ft_strjoin_fr(input, buf);
+		if (input == NULL)
+			error_exit("malloc", 1);
+		free(buf);
+		request_next_line(&buf);
+		if (buf == NULL && g_info.signal_status != 67)
+			return (input);
+		if (buf == NULL)
+			return (NULL);
+	}
+	free(buf);
+	return (input);
+}
 
 static char	*extend_dollars_hd(char *input)
 {
@@ -28,78 +64,34 @@ static char	*extend_dollars_hd(char *input)
 	return (input);
 }
 
-
 static int	read_from_stdin(char *stop, char *hd_filename, int len, int heredocs)
 {
-	int		cmp;
 	char	*input;
 	int		readfd;
 	struct sigaction	sa;
-	int	status;
-	int	pid;
 
+	(void)len;
 	sa.sa_handler = &sig_handler_hd;
-	cmp = 1;
 	input = NULL;
+	g_info.signal_status = 0;
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	sigaction(SIGINT, &sa, NULL);
-	signal(SIGUSR1, SIG_IGN);
-	rl_catch_signals = 0; //readline now doesn't install default signal handlers :)
-
 	readfd = open(hd_filename, O_CREAT | O_RDWR | O_APPEND, 0644);
 	if (readfd < 0)
-		error_exit("open failed", 1);
-	pid = protected_fork();
-	g_info.sigflag = status;
-	if (pid == 0)
+		error_exit("open", 1);
+	rl_catch_signals = 0; //readline now doesn't install default signal handlers :)
+	suppress_output_terminal();
+	input = read_stdin_until(stop);
+	if (input == NULL)
 	{
-		rl_catch_signals = 0; //readline now doesn't install default signal handlers :)
-		suppress_output_terminal();
-		while (cmp != 0)
-		{
-			if (g_info.sigflag == 67)
-		        exit(67);
-			if (g_info.sigflag != 67)
-				input = readline("> ");
-			input = ft_strjoin_fr(input, "\n");
-			if (input == NULL)
-			{
-				close(readfd);
-				exit (0);
-			}
-			if (g_info.sigflag == 67)
-		    {
-				delete_temp_heredoc_files(heredocs);
-				close(readfd);
-		        kill(pid, SIGUSR1);
-				exit(67);
-			}
-			cmp = ft_strncmp(input, stop, len + 1);
-			if (cmp == 0)
-				break ;
-			input = extend_dollars_hd(input);
-			ft_putstr_fd(input, readfd);
-			free (input);
-		}
-		close(readfd);
-		exit(0);
+		delete_temp_heredoc_files(heredocs);
+		return (-1);
 	}
-	// sigaction(SIGUSR1, &sa, NULL);
+	input = extend_dollars_hd(input);
+	ft_putstr_fd(input, readfd);
 	free (input);
 	close(readfd);
-	waitpid(pid, &status, 0);
-	sigaction(SIGUSR1, &sa, NULL);
-	printf("here: %d, pid = %d\n", WEXITSTATUS(status), pid);
-	// if (WIFEXITED(status))
-	// {
-	// 	printf("%d\n", WEXITSTATUS(status));
-		//if (WEXITSTATUS(status) == 67)
-		if (g_info.sigflag == 67)
-		{
-			printf("yessss%d\n", WEXITSTATUS(status));
-			delete_temp_heredoc_files(heredocs);
-			return (-1);
-		}
-	
 	return (0);
 }
 

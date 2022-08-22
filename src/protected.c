@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 17:25:30 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 15:57:40 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/19 17:02:00 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,30 +15,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-/**
- * @brief pipe and exit if pipe fails
- * 
- * @param fd the fd to pipe
- */
-void	protected_pipe(int fd[2])
+void	protected_close(int fd)
 {
-	if (pipe(fd) < 0)
-		error_exit("pipe failed", 1);
-}
-
-/**
- * @brief fork and exit if fork failed
- * 
- * @return int the pid created by fork
- */
-int	protected_fork(void)
-{
-	int	pid;
-
-	pid = fork();
-	if (pid < 0)
-		error_exit("fork failed", 1);
-	return (pid);
+	if (close(fd) < 0)
+		error_exit("close", 1);
 }
 
 /**
@@ -50,9 +30,9 @@ int	protected_fork(void)
 void	protected_dup2s(int readfd, int writefd)
 {
 	if (dup2(readfd, STDIN_FILENO) < 0)
-		error_exit("dup2 failed", 1);
+		error_exit("dup2", 1);
 	if (dup2(writefd, STDOUT_FILENO) < 0)
-		error_exit("dup2 failed", 1);
+		error_exit("dup2", 1);
 }
 
 /**
@@ -68,7 +48,7 @@ char	**protected_split(char *to_split, char delimiter)
 
 	output = ft_split(to_split, delimiter);
 	if (output == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	return (output);
 }
 
@@ -91,7 +71,7 @@ char	*protected_split_grep_one(char *to_split, char delimiter, int index)
 	splitted = protected_split(to_split, delimiter);
 	output = ft_strdup(splitted[index]);
 	if (output == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	while (splitted[i])
 	{
 		free(splitted[i]);

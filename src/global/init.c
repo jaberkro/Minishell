@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/08 14:46:35 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/18 14:20:12 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/19 15:35:28 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	increase_shlvl(void)
 	new_shlvl = ft_strjoin("SHLVL=", new_level);
 	free(new_level);
 	if (new_shlvl == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	set_env_variable(new_shlvl);
 	free(new_shlvl);
 }
@@ -53,12 +53,12 @@ void	init_env_variables(char **env)
 		len++;
 	g_info.env = malloc((len + 1) * sizeof(char *));
 	if (g_info.env == NULL)
-		error_exit("malloc failed", 1);
+		error_exit("malloc", 1);
 	while (i < len)
 	{
 		g_info.env[i] = ft_strdup(env[i]);
 		if (g_info.env[i] == NULL)
-			error_exit("malloc failed", 1);
+			error_exit("malloc", 1);
 		i++;
 	}
 	g_info.env[i] = NULL;
@@ -75,5 +75,5 @@ void	init_global(char **env)
 	g_info.paths = get_paths();
 	set_env_variable("?=0");
 	increase_shlvl();
-	g_info.pids = NULL;
+	g_info.signal_status = 0;
 }

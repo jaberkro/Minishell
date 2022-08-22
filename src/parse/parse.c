@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/17 16:21:05 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 13:51:26 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,11 @@ int	assign_parts(t_part *part, char *str, int heredocs)
 {
 	int	i;
 	int	q;
+	int	hd_flag;
 
 	i = 0;
 	q = 0;
+	hd_flag = 0;
 	while (i < ((int)ft_strlen(str)))
 	{
 		q = set_quote_flag(q, str[i]);
@@ -64,8 +66,14 @@ int	assign_parts(t_part *part, char *str, int heredocs)
 			str = from_infile(part, str, &q, &i);
 		else if (str[i] == '<' && str[i + 1] == '<')
 		{
-			heredocs++;
+			if (hd_flag == 0)
+			{
+				hd_flag = 1;
+				heredocs++;
+			}
 			str = from_heredoc(part, str, heredocs, &i);
+			// if (hd_flag == 1)
+			// 	hd_flag == 0;
 			if (str == NULL)
 				return (-1);
 		}

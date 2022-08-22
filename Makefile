@@ -6,7 +6,7 @@
 #    By: bsomers <bsomers@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/08/18 10:31:01 by bsomers       ########   odam.nl          #
+#    Updated: 2022/08/19 12:38:27 by bsomers       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRC = 	global/get_env.c \
 		path.c \
 		signals.c \
 		parse/parse.c \
+		parse/get_next_line.c \
 		parse/split_pipes.c \
 		parse/heredoc.c \
 		parse/utils.c \

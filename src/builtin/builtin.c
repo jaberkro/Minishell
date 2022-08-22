@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/22 14:04:02 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/16 15:01:23 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/19 15:26:08 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
  * @param exit_code the exit code of the builtin function that was executed
  * @return int 		the exit code of the builtin function that was executed
  */
-static int	set_exit_code(int exit_code)
+int	set_exit_code(int exit_code)
 {
 	char	*exit_num;
 	char	*exit_str;
@@ -29,7 +29,7 @@ static int	set_exit_code(int exit_code)
 	{
 		exit_num = ft_itoa(exit_code);
 		if (exit_num == NULL)
-			error_exit("mickeyshell: malloc failed", 1);
+			error_exit("malloc", 1);
 		exit_str = ft_strjoin("?=", exit_num);
 		set_env_variable(exit_str);
 		free(exit_str);

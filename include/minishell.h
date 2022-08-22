@@ -6,20 +6,20 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/18 12:21:50 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 17:18:15 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include <unistd.h>
+# include <stdio.h>	//laten staan
 
 typedef struct s_env_info
 {
 	char	**env;
 	char	**paths;
-	int		return_value;
-	pid_t	*pids;
+	int		signal_status;
 }	t_env_info;
 
 t_env_info	g_info;
@@ -75,19 +75,20 @@ int		execute_pwd(char **commands, int max);
 int		execute_unset(char **commands, int max);
 
 //executer functions
-void	executer(int i, int max, int readfd, t_part_split *parts);
+pid_t	executer(int i, int max, int readfd, t_part_split *parts);
 char	*command_in_paths(char	*argument, char **paths);
 void	error_exit(char *message, int exit_code);
 void	write_exit(char *message, int exit_code);
 void	write_exit_argument(char *argument, char *message, int exit_code);
 int		error_return(char *message, int exit_code);
+int		write_return(char *message, int return_code);
+int		set_exit_code(int exit_code);
 
 //protected functions
-void	protected_pipe(int fd[2]);
-int		protected_fork(void);
 void	protected_dup2s(int readfd, int writefd);
 char	**protected_split(char *to_split, char delimiter);
 char	*protected_split_grep_one(char *to_split, char delimiter, int index);
+void	protected_close(int fd);
 
 //parser functions
 int		calc_len_word_after(char *str, int i);
@@ -105,19 +106,20 @@ int		is_double_red(char *str);
 void	exec_minishell(char *input);
 void	free_struct(t_part parts);
 void	clean_up(int heredocs, char **input_split, t_part_split *part_split, int count);
-int	set_fill_split_parts(char **input_split, int count_pipe, t_part_split *part_split, int heredocs);
-int	count_pipes(char *str);
+int		set_fill_split_parts(char **input_split, int count_pipe, t_part_split *part_split, int heredocs);
+int		count_pipes(char *str);
 char	*set_value(char *to_set, char *str, int start, int len);
 char	*from_heredoc(t_part *part, char *str, int heredocs, int *i_ptr);
 char	*from_infile(t_part *part, char *str, int *q_ptr, int *i_ptr);
 char	*to_outfile_app(t_part *part, char *str, int *q_ptr, int *i_ptr);
 char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr);
+char	*get_next_line_shell(int fd);
 
+//signal functions
 void	sig_handler(int sig);
 void	sig_handler_hd(int sig);
 void	sig_handler_exec(int sig);
-void    suppress_output_terminal(void);
-
+void	suppress_output_terminal(void);
 
 //dollar functions
 char	*extend_dollars(char *input);

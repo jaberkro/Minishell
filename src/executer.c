@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/18 12:19:45 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/19 17:23:46 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	update_readfd(int i, int readfd, t_part_split *parts)
 	{
 		while (parts[i].in[j])
 		{
-			close(readfd);
+			protected_close(readfd);
 			if (access(parts[i].in[j], F_OK) == -1 || \
 			access(parts[i].in[j], R_OK) == -1)
 			{
@@ -69,7 +69,7 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 	{
 		while (parts[i].out[j])
 		{
-			close(fd);
+			protected_close(fd);
 			if (parts[i].out_r[j] == '>')
 				fd = open(parts[i].out[j], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 			else
@@ -81,10 +81,10 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 	}
 	else if (i == max - 1)
 	{
-		close(fd);
+		protected_close(fd);
 		fd = dup(1);
 		if (fd == -1)
-			error_exit("dup failed", 1);
+			error_exit("dup", 1);
 	}
 	return (fd);
 }
@@ -116,9 +116,9 @@ int	dup2_builtin(int i, int *readfd, int (*fd)[2], t_part_split *parts)
 	if (!parts[i].cmd[0] || ft_strncmp(parts[i].cmd[0], "", 1) == 0)
 		return (0);
 	protected_dup2s(*readfd, (*fd)[1]);
-	close(*readfd);
-	close((*fd)[1]);
-	close((*fd)[0]);
+	protected_close(*readfd);
+	protected_close((*fd)[1]);
+	protected_close((*fd)[0]);
 	return (find_builtin_function(parts[i].cmd, max));
 }
 
@@ -142,11 +142,11 @@ int	execute_builtin_reset(int i, int *readfd, int (*fd)[2], t_part_split *parts)
 	standard_in = dup(0);
 	standard_out = dup(1);
 	if (standard_in == -1 || standard_out == -1)
-		error_exit("dup failed", 1);
+		error_exit("dup", 1);
 	exit_code = dup2_builtin(i, readfd, fd, parts);
 	protected_dup2s(standard_in, standard_out);
-	close(standard_in);
-	close(standard_out);
+	protected_close(standard_in);
+	protected_close(standard_out);
 	return (exit_code);
 }
 
@@ -159,33 +159,43 @@ int	execute_builtin_reset(int i, int *readfd, int (*fd)[2], t_part_split *parts)
  * @param parts		array of t_part_split
  * @return int 		pid of inner child
  */
-void	executer(int i, int max, int readfd, t_part_split *parts)
+pid_t	executer(int i, int max, int readfd, t_part_split *parts)
 {
-	int		fd[2];
-	char	*path;
-	int		exit_code;
+	int					fd[2];
+	char				*path;
+	pid_t				pid;
+	int					exit_code;
 	struct sigaction	sa;
 
 	sa.sa_handler = &sig_handler_exec;
-	protected_pipe(fd);
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+	if (pipe(fd) < 0)
+	{
+		protected_close(readfd);
+		return (error_return("pipe", -1));
+	}
 	exit_code = -1;
 	if (max == 1)
 		exit_code = execute_builtin_reset(i, &readfd, &fd, parts);
-	sigaction(SIGINT, &sa, NULL);
-	g_info.pids[i] = protected_fork();
-	if (g_info.pids[i] == 0)
+	pid = fork();
+	if (pid < 0)
+		return (error_return("fork", -1));
+	if (pid == 0)
 	{
-		suppress_output_terminal();
 		if (exit_code == -1)
 			exit_code = dup2_builtin(i, &readfd, &fd, parts);
 		if (exit_code != -1)
 			exit(exit_code);
 		path = command_in_paths(parts[i].cmd[0], g_info.paths);
 		if (execve(path, parts[i].cmd, g_info.env) < 0)
-			error_exit("execve failed", 1);
+			error_exit("execve", 1);
 	}
-	close(readfd);
-	close(fd[1]);
+	protected_close(readfd);
+	protected_close(fd[1]);
 	if (i + 1 < max)
-		executer(i + 1, max, fd[0], parts);
+		pid = executer(i + 1, max, fd[0], parts);
+	return (pid);
 }
