@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/09 10:28:52 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/17 15:12:36 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/22 17:45:40 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  * @param to_check 	the char ** to check
  * @return int 		1 if sorted, 0 if not sorted
  */
-int	is_sorted(char **to_check)
+static int	is_sorted(char **to_check)
 {
 	int		i;
 	int		j;
@@ -44,7 +44,7 @@ int	is_sorted(char **to_check)
  * @param to_sort 	the char ** to sort
  * @return char** 	the sorted char **
  */
-char	**bubble_sort(char **to_sort)
+static char	**bubble_sort(char **to_sort)
 {
 	char	*tmp;
 	int		i;
@@ -75,7 +75,7 @@ char	**bubble_sort(char **to_sort)
  * 
  * @param to_print the line to print
  */
-void	print_key_value(char *to_print)
+static void	print_key_value(char *to_print)
 {
 	char	*key;
 	char	*value;
@@ -102,7 +102,7 @@ void	print_key_value(char *to_print)
  * 
  * @param sorted 	the sorted char ** to be printed
  */
-void	print_export(char **sorted)
+static void	print_export(char **sorted)
 {
 	char	*key;
 	int		i;
