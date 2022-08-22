@@ -6,33 +6,13 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/20 10:17:48 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 12:30:55 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 16:25:34 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
-#include <stdio.h>
-
-int	ft_isemptyline(char *str)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	if (ft_strncmp(str, "", 1) == 0)
-		return (0);
-	while (str[i] != '\0')
-	{
-		if (ft_isspace(str[i]) != 0)
-			j++;
-		i++;
-	}
-	if (j == i)
-		return (0);
-	return (1);
-}
+// #include <stdio.h>
 
 int	calc_len_word_after(char *str, int i)
 {
@@ -60,49 +40,6 @@ char	*set_space(char *str, int start, int len)
 		i++;
 	}
 	return (str);
-}
-
-static void	loop_until_red(int *i_ptr, int *j_ptr, char *str)
-{
-	int	i;
-	int	j;
-
-	i = *i_ptr;
-	j = *j_ptr;
-	while (ft_isred(str[i]) != 0)
-	{
-		i++;
-		j++;
-	}
-	*i_ptr = i;
-	*j_ptr = j;
-}
-
-int	is_double_red(char *str)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (str[i] != '\0')
-	{
-		if (ft_isred(str[i]) != 0)
-		{
-			loop_until_red(&i, &j, str);
-			if ((j == 2 && str[0] == '<' && str[1] == '>') || (j == 3 && \
-			(str[i - j + 1] == '<')) || (j == 3 && (str[i - j + 1] == '>')) || \
-			(j == 2 && (str[i - j + 1] != str[i - j])))
-				return (-1);
-			else if ((j > 3 && (str[i - j + 1] == '>')) || \
-			(j > 3 && (str[i - j + 1] == '<')))
-				return (-1);
-			else
-				j = 0;
-		}
-		i++;
-	}
-	return (0);
 }
 
 int	count_pipes(char *str)
@@ -138,4 +75,16 @@ void	malloc_check(char *str)
 {
 	if (str == NULL)
 		error_exit("malloc", 1);
+}
+
+void	set_zero_parts(t_part *part, t_part_split *part_split)
+{
+	part->in = NULL;
+	part->out = NULL;
+	part->cmd = NULL;
+	part->out_r = NULL;
+	part_split->in = NULL;
+	part_split->out = NULL;
+	part_split->cmd = NULL;
+	part_split->out_r = NULL;
 }

@@ -6,7 +6,7 @@
 #    By: bsomers <bsomers@student.42.fr>              +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/07/19 13:48:23 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/08/22 13:11:34 by bsomers       ########   odam.nl          #
+#    Updated: 2022/08/22 16:43:33 by bsomers       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,20 +27,24 @@ SRC = 	global/get_env.c \
 		global/unset_env.c \
 		executer.c \
 		protected.c \
-		dollar.c \
 		main.c \
 		error.c \
 		path.c \
 		signals.c \
 		parse/parse.c \
+		parse/dollar.c \
 		parse/get_next_line.c \
 		parse/split_pipes.c \
 		parse/heredoc.c \
+		parse/heredoc_read.c \
 		parse/utils.c \
+		parse/utils_checks.c \
 		parse/clean_and_free.c \
 		parse/init_and_finish.c \
 		parse/quotes.c \
 		parse/write_parts.c \
+		parse/write_parts_utils.c \
+		parse/set_terminal.c \
 		builtin/builtin.c \
 		builtin/cd.c \
 		builtin/echo.c \

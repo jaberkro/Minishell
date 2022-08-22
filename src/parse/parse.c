@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 13:33:05 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 17:25:07 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 #include "minishell.h"
 #include <stdlib.h>
 
+/**
+ * @brief calls functions to extend dollars and remove excessive quotes
+ * 
+ * @param array 	the array with strings to loop over
+ * @return char** 	the original array but with extended dollars and removed quotes
+ */
 char	**extend_dollars_remove_quotes(char **array)
 {
 	int		i;
@@ -31,6 +37,13 @@ char	**extend_dollars_remove_quotes(char **array)
 	return (array);
 }
 
+/**
+ * @brief splits strings in original array of structs into double arrays in new split structs,
+ * extends dollars and removes excessive quotes.
+ * 
+ * @param part 			original struct
+ * @param part_split 	new struct where words are split into double arrays
+ */
 void	split_parts(t_part *part, t_part_split *part_split)
 {
 	if (part->out_r != NULL)
@@ -46,16 +59,15 @@ void	split_parts(t_part *part, t_part_split *part_split)
 	part_split->in = extend_dollars_remove_quotes(part_split->in);
 }
 
-int	set_hd_values(int *hd_flag, int heredocs)
-{
-	if (*hd_flag == 0)
-	{
-		*hd_flag = 1;
-		heredocs++;
-	}
-	return (heredocs);
-}
-
+/**
+ * @brief checks which redirector is found and calls corresponding function
+ * 
+ * @param part 	struct with strings to assign to
+ * @param str 	user input string from cmd line
+ * @param q_ptr pointer to flag that shows if you're reading in between quotes
+ * @param i_ptr pointer to index on str
+ * @return char* user input string from cmd line without word assigned
+ */
 char	*select_red(t_part *part, char *str, int *q_ptr, int *i_ptr)
 {
 	int	i;
@@ -74,6 +86,15 @@ char	*select_red(t_part *part, char *str, int *q_ptr, int *i_ptr)
 	return (str);
 }
 
+/**
+ * @brief loops through string from cmd line, checks for redirectors and then assigns the filenames
+ * and commands to corresponding parts in the structs
+ * 
+ * @param part 		struct with strings to assign to
+ * @param str 		user input string from cmd line
+ * @param heredocs 	number of temp heredoc documents
+ * @return int 		number of temp heredoc documents
+ */
 int	assign_parts(t_part *part, char *str, int heredocs)
 {
 	int	i;
@@ -91,7 +112,7 @@ int	assign_parts(t_part *part, char *str, int heredocs)
 			str = select_red(part, str, &q, &i);
 		else if (str[i] == '<' && str[i + 1] == '<')
 		{
-			heredocs = set_hd_values(&hd_flag, heredocs);
+			heredocs++;
 			str = from_heredoc(part, str, heredocs, &i);
 			if (str == NULL)
 				return (-1);
@@ -103,18 +124,10 @@ int	assign_parts(t_part *part, char *str, int heredocs)
 	return (heredocs);
 }
 
-void	set_zero_parts(t_part *part, t_part_split *part_split)
-{
-	part->in = NULL;
-	part->out = NULL;
-	part->cmd = NULL;
-	part->out_r = NULL;
-	part_split->in = NULL;
-	part_split->out = NULL;
-	part_split->cmd = NULL;
-	part_split->out_r = NULL;
-}
-
+/**
+ * @brief makes struct with parts and assigns with corresponding word from cmd line input.
+ * 
+ */
 int	set_fill_split_parts(char **input_split, int count_pipe, \
 t_part_split *part_split, int heredocs)
 {

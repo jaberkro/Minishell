@@ -6,14 +6,14 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/22 15:19:19 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 16:51:19 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include <unistd.h>
-# include <stdio.h>	//laten staan
+# include <stdio.h>
 
 typedef struct s_env_info
 {
@@ -97,13 +97,16 @@ char	*remove_quotes(char *str);
 char	*remove_double_quotes(char *str);
 int		set_quote_flag(int q, char c);
 void	parse_exec_minishell(char *input);
-int		set_fill_split_parts(char **input_split, int count_pipe, t_part_split *part_split, int heredocs);
+int		set_fill_split_parts(char **input_split, int count_pipe, \
+t_part_split *part_split, int heredocs);
 int		count_pipes(char *str);
-char	*set_value(char *to_set, char *str, int start, int len);
+char	*assign_filename(char *to_set, char *str, int start, int len);
 char	*from_heredoc(t_part *part, char *str, int heredocs, int *i_ptr);
 char	*from_infile(t_part *part, char *str, int *q_ptr, int *i_ptr);
 char	*to_outfile_app(t_part *part, char *str, int *q_ptr, int *i_ptr);
 char	*to_outfile(t_part *part, char *str, int *q_ptr, int *i_ptr);
+char	*assign_redirector(char *str, char *red);
+void	loop_to_end_word(int *i_ptr, int *q_ptr, char *str);
 
 //parser utils functions
 int		calc_len_word_after(char *str, int i);
@@ -112,14 +115,18 @@ char	ft_isred(char c);
 int		is_double_red(char *str);
 char	*set_space(char *str, int start, int len);
 void	malloc_check(char *str);
+void	set_zero_parts(t_part *part, t_part_split *part_split);
 
 //clean and free functions
 void	free_struct(t_part parts);
-void	clean_up(int heredocs, char **input_split, t_part_split *part_split, int count);
+void	clean_up(int heredocs, char **input_split, \
+t_part_split *part_split, int count);
 
 //heredoc functions
 char	*handle_heredoc(char *str, int i, int heredocs);
+char	*extend_dollars_hd(char *input);
 void	delete_temp_heredoc_files(int heredocs);
+int		read_from_stdin(char *stop, char *hd_filename, int heredocs);
 char	*get_next_line_shell(int fd);
 
 //signal functions
@@ -127,6 +134,7 @@ void	sig_handler(int sig);
 void	sig_handler_hd(int sig);
 void	sig_handler_exec(int sig);
 void	set_output_terminal(int flag);
+void	set_sigs_hd(void);
 
 //dollar functions
 char	*extend_dollars(char *input);

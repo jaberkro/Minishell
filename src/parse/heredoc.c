@@ -6,51 +6,20 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/29 17:30:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 15:19:22 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 17:14:54 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
-#include <signal.h>
-#include <readline/readline.h>
-#include <sys/wait.h>
 
-static void	request_next_line(char **buf)
-{
-	write(1, "> ", 2);
-	*buf = get_next_line_shell(0);
-}
-
-char	*read_stdin_until(char *limiter)
-{
-	char	*input;
-	char	*buf;
-
-	input = ft_strdup("");
-	malloc_check(input);
-	request_next_line(&buf);
-	if (buf == NULL && g_info.signal_status != 67)
-		return (input);
-	if (buf == NULL)
-		return (NULL);
-	while (!(ft_strncmp(buf, limiter, ft_strlen(limiter) - 1) == 0 && \
-			ft_strlen(buf) == ft_strlen(limiter)))
-	{
-		input = ft_strjoin_fr(input, buf);
-		malloc_check(input);
-		free(buf);
-		request_next_line(&buf);
-		if (buf == NULL && g_info.signal_status != 67)
-			return (input);
-		if (buf == NULL)
-			return (NULL);
-	}
-	free(buf);
-	return (input);
-}
-
-static char	*extend_dollars_hd(char *input)
+/**
+ * @brief checks for dollar signs in heredoc input and extends the dollar value
+ * 
+ * @param input 	the string passed in heredoc mode
+ * @return char* 	the string from heredoc mode with dollars extended
+ */
+char	*extend_dollars_hd(char *input)
 {
 	char	*tmp;
 
@@ -62,43 +31,13 @@ static char	*extend_dollars_hd(char *input)
 	return (input);
 }
 
-static void	set_sigs(void)
-{
-	struct sigaction	sa;
-
-	sa.sa_handler = &sig_handler_hd;
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
-	sigaction(SIGINT, &sa, NULL);
-}
-
-static int	read_from_stdin(char *stop, char *hd_filename, int heredocs)
-{
-	char				*input;
-	int					readfd;
-
-	input = NULL;
-	g_info.signal_status = 0;
-	set_sigs();
-	readfd = open(hd_filename, O_CREAT | O_RDWR | O_APPEND, 0644);
-	if (readfd < 0)
-		error_exit("open", 1);
-	rl_catch_signals = 0;
-	set_output_terminal(0);
-	input = read_stdin_until(stop);
-	set_output_terminal(1);
-	if (input == NULL)
-	{
-		delete_temp_heredoc_files(heredocs);
-		return (-1);
-	}
-	input = extend_dollars_hd(input);
-	ft_putstr_fd(input, readfd);
-	free (input);
-	protected_close(readfd);
-	return (0);
-}
-
+/**
+ * @brief get the word to end the heredoc mode
+ * 
+ * @param str 		the input on the cmd line
+ * @param i 		the current position on the input string of the cmd line
+ * @return char* 	the stopping word to end heredoc mode
+ */
 static char	*get_stop(char *str, int i)
 {
 	int		j;
@@ -120,6 +59,15 @@ static char	*get_stop(char *str, int i)
 	return (stop);
 }
 
+/**
+ * @brief creates the nam for the temp heredoc files, gets the stopping 
+ * word for heredoc and calls function to start reading from stdin.
+ * 
+ * @param str 		the input on the cmd line
+ * @param i 		the current position on the input string of the cmd line
+ * @param heredocs 	the number of temp heredoc files
+ * @return char* 	the name of the temp heredoc file
+ */
 char	*handle_heredoc(char *str, int i, int heredocs)
 {
 	char	*stop;
