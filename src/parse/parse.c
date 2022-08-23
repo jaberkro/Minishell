@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 14:08:32 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 18:06:38 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/23 11:11:19 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,8 @@ int	assign_parts(t_part *part, char *str, int heredocs)
 	while (i < ((int)ft_strlen(str)))
 	{
 		q = set_quote_flag(q, str[i]);
-		if ((str[i] == '>' && str[i + 1] != '>') || (str[i] == '>' && \
-		str[i + 1] == '>') || (str[i] == '<' && str[i + 1] != '<'))
+		if (((str[i] == '>' && str[i + 1] != '>') || (str[i] == '>' && \
+		str[i + 1] == '>') || (str[i] == '<' && str[i + 1] != '<')) && q == 0)
 			str = select_red(part, str, &q, &i);
 		else if (str[i] == '<' && str[i + 1] == '<')
 		{
