@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/22 17:13:27 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/23 13:31:38 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ static int	builtin_reset(int i, int *readfd, int (*fd)[2], t_part_split *parts)
 		error_exit("dup", 1);
 	exit_code = dup2_builtin(i, readfd, fd, parts);
 	protected_dup2s(standard_in, standard_out);
-	protected_close(standard_in);
-	protected_close(standard_out);
+	close(standard_in);
+	close(standard_out);
 	return (exit_code);
 }
 
@@ -83,7 +83,7 @@ static int	pipe_close_readfd(int (*fd_to_pipe)[2], int readfd)
 {
 	if (pipe(*fd_to_pipe) < 0)
 	{
-		protected_close(readfd);
+		close(readfd);
 		return (error_return("pipe", -1));
 	}
 	return (0);
@@ -120,8 +120,8 @@ pid_t	executer(int i, int max, int readfd, t_part_split *parts)
 		check_exit(exit_code);
 		execute_sysfunc(i, parts);
 	}
-	protected_close(readfd);
-	protected_close(fd[1]);
+	close(readfd);
+	close(fd[1]);
 	if (i + 1 < max)
 		pid = executer(i + 1, max, fd[0], parts);
 	return (pid);

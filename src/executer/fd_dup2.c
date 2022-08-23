@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/22 16:40:36 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/22 17:11:51 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/23 13:30:56 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	update_readfd(int i, int readfd, t_part_split *parts)
 	{
 		while (parts[i].in[j])
 		{
-			protected_close(readfd);
+			close(readfd);
 			if (access(parts[i].in[j], F_OK) == -1 || \
 			access(parts[i].in[j], R_OK) == -1)
 			{
@@ -64,7 +64,7 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 	{
 		while (parts[i].out[j])
 		{
-			protected_close(fd);
+			close(fd);
 			if (parts[i].out_r[j] == '>')
 				fd = open(parts[i].out[j], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 			else
@@ -76,7 +76,7 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 	}
 	else if (i == max - 1)
 	{
-		protected_close(fd);
+		close(fd);
 		fd = dup(1);
 		if (fd == -1)
 			error_exit("dup", 1);
@@ -114,10 +114,10 @@ int	dup2_builtin(int i, int *readfd, int (*fd)[2], t_part_split *parts)
 	protected_dup2s(*readfd, (*fd)[1]);
 	if (max != 1)
 	{
-		protected_close(*readfd);
-		protected_close((*fd)[1]);
+		close(*readfd);
+		close((*fd)[1]);
 	}
-	protected_close((*fd)[0]);
+	close((*fd)[0]);
 	exit_code = find_builtin_function(parts[i].cmd, max);
 	return (exit_code);
 }

@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 15:26:56 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/22 17:39:07 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/23 13:32:27 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ int		write_return(char *message, int return_code);
 void	protected_dup2s(int readfd, int writefd);
 char	**protected_split(char *to_split, char delimiter);
 char	*protected_split_grep_one(char *to_split, char delimiter, int index);
-void	protected_close(int fd);
 
 //parser functions
 char	**ft_split_pipes(char const *s, char c);

@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 17:25:30 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/22 15:51:09 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/23 13:32:33 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,6 @@
 #include "libft.h"
 #include <unistd.h>
 #include <stdlib.h>
-
-/**
- * @brief close, exit if close fails. (in theory close only fails if you pass an 
- * invalid or already freed fd to it)
- * 
- * @param fd the fd to close
- */
-void	protected_close(int fd)
-{
-	if (close(fd) < 0)
-		error_exit("close", 1);
-}
 
 /**
  * @brief dup2 twice for STDIN and STDOUT and in case one of them fails exit
