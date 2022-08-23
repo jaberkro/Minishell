@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 16:20:37 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 18:06:01 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/23 13:36:14 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void	call_executer(int count_pipe, t_part_split *part_split)
 		wait(NULL);
 		i++;
 	}
-	protected_close (fd);
 }
 
 /**

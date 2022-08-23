@@ -1,23 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   executer.c                                         :+:    :+:            */
+/*   fd_dup2.c                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: bsomers <bsomers@student.42.fr>              +#+                     */
+/*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/07/19 13:54:03 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 17:23:46 by jaberkro      ########   odam.nl         */
+/*   Created: 2022/08/22 16:40:36 by jaberkro      #+#    #+#                 */
+/*   Updated: 2022/08/23 13:30:56 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
-#include <unistd.h>
 #include <fcntl.h>
-#include <stdio.h>
-#include <signal.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 
 /**
  * @brief updates the readfd 
@@ -36,7 +31,7 @@ int	update_readfd(int i, int readfd, t_part_split *parts)
 	{
 		while (parts[i].in[j])
 		{
-			protected_close(readfd);
+			close(readfd);
 			if (access(parts[i].in[j], F_OK) == -1 || \
 			access(parts[i].in[j], R_OK) == -1)
 			{
@@ -69,7 +64,7 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 	{
 		while (parts[i].out[j])
 		{
-			protected_close(fd);
+			close(fd);
 			if (parts[i].out_r[j] == '>')
 				fd = open(parts[i].out[j], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 			else
@@ -81,7 +76,7 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 	}
 	else if (i == max - 1)
 	{
-		protected_close(fd);
+		close(fd);
 		fd = dup(1);
 		if (fd == -1)
 			error_exit("dup", 1);
@@ -103,6 +98,7 @@ int	update_writefd(int i, int max, int fd, t_part_split *parts)
 int	dup2_builtin(int i, int *readfd, int (*fd)[2], t_part_split *parts)
 {
 	int	max;
+	int	exit_code;
 
 	max = 0;
 	while (parts[max].cmd)
@@ -116,86 +112,12 @@ int	dup2_builtin(int i, int *readfd, int (*fd)[2], t_part_split *parts)
 	if (!parts[i].cmd[0] || ft_strncmp(parts[i].cmd[0], "", 1) == 0)
 		return (0);
 	protected_dup2s(*readfd, (*fd)[1]);
-	protected_close(*readfd);
-	protected_close((*fd)[1]);
-	protected_close((*fd)[0]);
-	return (find_builtin_function(parts[i].cmd, max));
-}
-
-/**
- * @brief save the standard in and output, go to dup2_builtin and reset the 
- * stdin and stdout afterwards
- * 
- * @param i 		the index of the part to execute
- * @param readfd 	the fd to read from
- * @param fd		a pipe. fd[1] is the writefd to update
- * @param parts 	the array of parts
- * @return int -1 if everything went right and no builtin function was executed.
- * Otherwise return the exit_code to exit with
- */
-int	execute_builtin_reset(int i, int *readfd, int (*fd)[2], t_part_split *parts)
-{
-	int	standard_in;
-	int	standard_out;
-	int	exit_code;
-
-	standard_in = dup(0);
-	standard_out = dup(1);
-	if (standard_in == -1 || standard_out == -1)
-		error_exit("dup", 1);
-	exit_code = dup2_builtin(i, readfd, fd, parts);
-	protected_dup2s(standard_in, standard_out);
-	protected_close(standard_in);
-	protected_close(standard_out);
+	if (max != 1)
+	{
+		close(*readfd);
+		close((*fd)[1]);
+	}
+	close((*fd)[0]);
+	exit_code = find_builtin_function(parts[i].cmd, max);
 	return (exit_code);
-}
-
-/**
- * @brief executes the commands per part, returns pid of inner child
- * 
- * @param i 		index of the current part we execute
- * @param max 		amount of parts
- * @param readfd	the fd to start reading from
- * @param parts		array of t_part_split
- * @return int 		pid of inner child
- */
-pid_t	executer(int i, int max, int readfd, t_part_split *parts)
-{
-	int					fd[2];
-	char				*path;
-	pid_t				pid;
-	int					exit_code;
-	struct sigaction	sa;
-
-	sa.sa_handler = &sig_handler_exec;
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
-	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGQUIT, &sa, NULL);
-	if (pipe(fd) < 0)
-	{
-		protected_close(readfd);
-		return (error_return("pipe", -1));
-	}
-	exit_code = -1;
-	if (max == 1)
-		exit_code = execute_builtin_reset(i, &readfd, &fd, parts);
-	pid = fork();
-	if (pid < 0)
-		return (error_return("fork", -1));
-	if (pid == 0)
-	{
-		if (exit_code == -1)
-			exit_code = dup2_builtin(i, &readfd, &fd, parts);
-		if (exit_code != -1)
-			exit(exit_code);
-		path = command_in_paths(parts[i].cmd[0], g_info.paths);
-		if (execve(path, parts[i].cmd, g_info.env) < 0)
-			error_exit("execve", 1);
-	}
-	protected_close(readfd);
-	protected_close(fd[1]);
-	if (i + 1 < max)
-		pid = executer(i + 1, max, fd[0], parts);
-	return (pid);
 }

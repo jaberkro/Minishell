@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/22 15:36:13 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 18:05:38 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/23 13:36:42 by bsomers       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,6 @@ int	read_from_stdin(char *stop, char *hd_filename, int heredocs)
 	input = extend_dollars_hd(input);
 	ft_putstr_fd(input, readfd);
 	free (input);
-	protected_close(readfd);
+	close(readfd);
 	return (0);
 }

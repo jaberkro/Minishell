@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/18 10:24:16 by bsomers       #+#    #+#                 */
-/*   Updated: 2022/08/22 16:26:16 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/22 17:33:46 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,17 @@
 #include "libft.h"
 #include <readline/readline.h>
 #include <signal.h>
+
+void	set_sigs_exec(void)
+{
+	struct sigaction	sa;
+
+	sa.sa_handler = &sig_handler_exec;
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+}
 
 void	set_sigs_hd(void)
 {

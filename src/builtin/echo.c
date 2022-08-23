@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/15 15:28:58 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/18 13:04:16 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/08/22 17:45:03 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
  * @param command 	the command to check
  * @return int  	-n returns 1, -nnnnnn returns 1, otherwise return 0
  */
-int	is_option_n(char *command)
+static int	is_option_n(char *command)
 {
 	int	i;
 

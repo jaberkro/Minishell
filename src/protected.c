@@ -6,7 +6,7 @@
 /*   By: bsomers <bsomers@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/07/19 17:25:30 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/08/19 17:31:41 by bsomers       ########   odam.nl         */
+/*   Updated: 2022/08/23 13:32:33 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-void	protected_close(int fd)
-{
-	close(fd);
-	//if (close(fd) < 0)
-		//error_exit("close", 1);
-}
-
 /**
- * @brief dup2 twice and in case one of them fails exit
+ * @brief dup2 twice for STDIN and STDOUT and in case one of them fails exit
  * 
  * @param readfd 	the fd to dup2 with STDIN_FILENO
  * @param writefd 	the fd to dup2 with STDOUT_FILENO
@@ -37,7 +30,7 @@ void	protected_dup2s(int readfd, int writefd)
 }
 
 /**
- * @brief ft_split and exits if malloc failed
+ * @brief ft_split and exit if malloc failed
  * 
  * @param to_split 	the string to be splitted by ft_split
  * @param delimiter the delimiter to split on
